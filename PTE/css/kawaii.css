@@ -1,0 +1,613 @@
+* {
+	margin: 0;
+	padding: 0;
+	font-family: tahoma, sans-serif;
+	box-sizing: border-box;
+}
+
+html, body{
+	height: 100%;
+	background-image: url("../assets/pink_background.jpg");
+}
+
+/* Transition for initial info  */
+
+#hideMe {
+    -moz-animation: cssAnimation 0s ease-in 3s forwards;
+    -webkit-animation: cssAnimation 0s ease-in 3s forwards;
+    -o-animation: cssAnimation 0s ease-in 3s forwards;
+    animation: cssAnimation 0s ease-in 3s forwards;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+
+    font-size: 2vw;
+    text-align: center;
+    background-color: #fbfbfb;
+	margin-bottom: 10px;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	padding: 15px;
+}
+
+@keyframes cssAnimation {
+    to {
+        width:0;
+        height:0;
+        overflow:hidden;
+        padding: 0;
+    }
+}
+@-webkit-keyframes cssAnimation {
+    to {
+        width:0;
+        height:0;
+        visibility:hidden;
+    }
+}
+
+/* ***************************************************************************/
+/*  .trans -> style for the profile and the trans. background  */
+.trans
+{
+	display: none;
+	position: fixed;
+    padding: 30px;
+    background-color: rgba(0,0,0,0.75);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#roominput{
+	background: none;
+	width: 20%;
+	height: 50px;
+	border: 3px solid #000000;
+	resize: none;
+	font-size: 1.5vw;
+	color: #FFFFFF;
+	padding-top: 10px;
+	padding-left: 10px;
+	display: block;
+	margin: auto;
+}
+
+.content{
+	width: 100%;
+	height: 100%;
+	position: relative;
+	display: inline-block;
+}
+
+
+.heading{
+	background: rgba(255,255,255,0.2);
+	color: white;
+	font-size: 30px;
+	margin-bottom: 10px;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	display: flex;
+	padding: 15px;
+	position: relative;
+	border-radius: 5px;
+}
+
+.heading .logo{
+	width: 50px;
+	height: 50px;
+	background: #eee;
+	border-radius: 50%;
+	display: flex;
+}
+.logo img{
+	width: 60%;
+	height: 60%;
+	margin: auto;
+	cursor: pointer;
+}
+
+.personalInfo {
+	display: block;
+	position: absolute;
+	height: 37vh;
+	background: rgba(255,255,255,0.2); 
+	padding: 25px;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	width: 20%;
+}
+
+.personalInfo p{
+	font-size: 1.5vw;
+	text-align: center;
+	color: white;
+}
+
+.personalInfo .pic{
+	display: flex;
+	margin-top: 10px;
+}
+
+.personalInfo #gn{
+	margin-top: 20px;
+	text-align: center;
+	font-size: 1vw;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
+	background: rgba(255,255,255,0.5); 
+	vertical-align: middle;
+	padding: 5px;
+	width: 70%;
+	margin: 0 auto;
+	margin-top: 10px;
+}
+
+.personalInfo .pic img{
+	width: 40%;
+	height: 40%;
+	margin: 20px;
+	position: static;
+	overflow: auto;
+	margin: auto;
+}
+
+.personalInfo .pic img:hover{
+	border-radius: 50%;
+	background-color: rgba(100, 100, 100, 0.25);
+}
+
+.personalInfo .profileOptions {
+	display: flex;
+	margin-top: 20px;
+	position: relative;
+	width: 100%;
+	font-size: 1vw;
+}
+
+.personalInfo .profileOptions button {
+	width: 30%;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	position: relative;
+    background-color: #707eb2;
+    border-radius: 10%;
+    color: #FFFFFF;
+    padding: 5px 0px;
+    margin: 2%;
+    text-decoration: none;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.newname{
+	display: none;
+	padding: 10px;
+	margin: 10px 2%;
+	z-index: 20;
+}
+
+.accept{
+	display: none;
+	padding: 10px;
+	margin: 10px 2%;
+	position: relative;
+    background-color: #707eb2;
+    border-radius: 10%;
+    color: #FFFFFF;
+    padding: 5px 15px;
+    margin: 0 3%;
+    text-decoration: none;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.change_name
+{
+	display: none;
+	position: fixed;
+	width: 16%;
+    padding: 30px;
+    background-color: rgba(0,0,0,0.8);
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.6);
+    z-index: 20;
+}
+
+.personalInfo .avatars{
+	display: none;
+    background-color: rgba(0,0,0,0.8);
+    margin-bottom: 50px;
+    width: 16%;
+	height: 350px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    position: fixed;
+    overflow: scroll;
+    z-index: 20;
+}
+
+/* todo este dropdown es para los avatares*/
+.dropdown {
+    display: inline-block;
+    border-radius: 5px;
+    margin-top: 20px;
+    z-index: 3;
+    max-width: 27%;
+    margin-left: 9px;
+}
+
+.dropdown img{
+	width: 100%;
+	height: 100%;
+	cursor: pointer;
+}
+
+.dropdown img:hover{
+	background-color: #fbfbfb;
+	border-radius: 50%;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5); 
+}
+
+/* hasta aquí */
+
+/*******************************************************/
+
+/* CHAT BOX */
+
+.chat{
+	display: none;
+	position: absolute;
+	width: 20%;
+	height: 78vh;
+	background: rgba(255,255,255,0.2); 
+	padding: 15px;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	float: left;
+}
+
+.msgs{
+	padding: 10px;
+	width: 100%;
+	height: 60vh;
+	background: rgba(255,255,255,0.2); 
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+
+.msg{
+	display: flex;
+	flex-flow: row wrap;
+	align-items: flex-start;
+	margin-bottom: 10px;
+}
+
+.private .message{
+	background: red;
+	max-width: 80%;
+	font-size: 15vw;
+}
+
+.msg .avatar{
+	width: 17%;
+	height: 17%;
+	border-radius: 50%;
+}
+
+.avatar img {
+	width: 100%;
+	height: 100%;
+	cursor: pointer;
+}
+
+.avatar:hover {
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
+}
+
+.msg .myavatar{
+	width: 17%;
+	height: 17%;
+	border-radius: 50%;
+}
+
+.myavatar img {
+	width: 100%;
+	height: 100%;
+	cursor: pointer;
+}
+
+.msg .message{
+	padding: 8px 8px;
+	margin: 5px 5px 0;
+	border-radius: 10px;
+	color: white;
+	font-size: 0.9vw;
+	word-wrap: break-word;
+}
+
+.received .message{
+	background: #1adda4;
+	max-width: 80%;
+}
+
+.guest_console{
+	display: none;
+}
+
+.sent .message{
+	background: #1ddced;
+	max-width: 80%;
+	order: -1;
+	margin-left: auto;
+}
+
+/********* Enviados privado****************/
+
+.sent_private .message{
+	background: red;
+	order: -1;
+	margin-left: auto;
+	max-width: 80%;
+}
+
+.sent_private .guest_console{
+	background: red;
+	order: -1;
+	margin-left: auto;
+	max-width: 80%;
+	display: block;
+
+	padding: 8px 8px;
+	margin: 5px 10px 0;
+	border-radius: 10px;
+	color: white;
+	font-size: 0.9vw;
+	word-wrap: break-word;
+}
+
+
+/****  INPUT Y OPCIONES DE ENVIO *********************************************/
+
+.chatinput{
+	margin-top: 20px;
+	width: 100%;
+	display: flex;
+}
+
+.chatinput textarea{
+	background: rgba(220,220,220,0.8); 
+	width: 80%;
+	height: 30px;
+	border: 2px solid #eee;
+	resize: none;
+	padding: 2%;
+	font-size: 1vw;
+	color: #000000;
+	margin-right: 15px;
+}
+
+.chatinput img {
+    width: 13%;
+    height: 13%;
+    overflow: hidden;
+    cursor: pointer;
+    z-index: 1;
+    float: right;
+    padding-top: 5px;
+}
+
+.chatinput img:active {
+	border-style: inset;
+    background-color: #ccc;
+}
+
+.uppercase{
+	display: flex;
+	margin-top: 10px;
+	margin-left: 2px;
+}
+
+.uppercase p{
+	font-size: 1vw;
+	color: #ffffff;
+}
+
+.uppercase .ucselection{
+	margin: auto; 
+}
+
+
+/*******************************************************/
+
+/* MENU BOX */
+
+.logo:hover, .logo:focus {
+    background-color: #eee;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+    z-index: 10;
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 1.6vw;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+    min-width: 500px;
+}
+
+.sidenav a:hover, .offcanvas a:focus{
+    color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    font-size: 38px;
+}
+
+#main {
+    transition: margin-left .5s;
+    padding: 16px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+
+/*******************************************************/
+/* SKINS */
+
+.skintab{
+	display: none;
+}
+
+.skin {
+    position: relative;
+    display: inline-block;
+
+}
+
+.skin:hover .skin_image {
+    display: block;
+}
+
+/*******************************************************/
+
+/* PROFILE BOX */
+
+#image_avatar img{ /* zoom del avatar de la otra persona */
+	display: block;
+	margin: auto;
+}
+
+#contact_name{
+    padding: 12px 16px;
+    display: block;
+    font-size: 2vw;
+    text-align: center;
+    color: #818181;
+}
+
+#contact_name:hover{
+    color: white;
+}
+
+/* *************************************** */
+
+/*  CONTACTS   */
+#connected{
+	height: 40vh;
+	padding: 25px;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	background: rgba(255,255,255,0.2); 
+	width: 20%;
+	margin-top: 18.9%;
+	position: absolute;
+}
+
+#connected p{
+	text-align: center;
+	color: white;
+}
+
+#con_title{
+	font-size: 1.5vw;
+}
+
+.people{
+	overflow-y: scroll;
+}
+
+.user {
+	display: flex;
+	flex-flow: row wrap;
+	align-items: flex-start;
+	margin-bottom: 10px;
+	margin-top: 20px;
+}
+
+.user .avatar{
+	width: 20%;
+	height: 20%;
+	border-radius: 50%;
+}
+
+.user p{
+	padding: 10px 15px;
+	margin: 5px 10px 0;
+	border-radius: 10px;
+	border-color: #eee;
+	border-style: outset;
+	font-size: 1vw;
+	word-wrap: break-word;
+	background: rgba(255,255,255,0.25); 
+}
+
+/* *************************************** */
+
+/* PRACTICA 2 */
+
+.screen{
+	display: flex;
+}
+
+.rest_org{
+	display: block;
+	position: absolute;
+	width: 100%;
+	margin-left: 80%; 
+}
+
+.canvas_container{
+	display: block;
+	width: 100%;
+	height: 78vh;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	margin: 0 auto;
+}
+
+#painter{
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
+}
+
+#gui_id{
+	position: absolute;
+	min-height: 50vh;
+	top: 15%;
+	right: 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

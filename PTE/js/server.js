@@ -35,9 +35,6 @@ server.on_message = function( user_id, message){
 	if(objectReceived.info == 5){
 		confetiExplosion();
 		return;
-	}else if(objectReceived.info == 6){
-		changeRingColor(objectReceived.ring_hex);
-		return;
 	}else if(objectReceived.info == 8){
 		removeConfeti();
 		return;

@@ -7,9 +7,9 @@ var app = {
 
 // player move controls
 var w = false, a = false, s = false, d = false, k = false, l = false;
-// var space = false, begin = false;
+var velocity = new THREE.Vector3();
 
-var camera, scene, renderer, startTime;
+var camera, scene, controls, renderer, startTime;
 var baseRing, ground;
 var container = document.querySelector(".canvas_container");
 
@@ -25,8 +25,32 @@ var audio = new Audio('assets/audio.mp3');;
 function loadCube(){
 	
 	function init() {
-		camera = new THREE.PerspectiveCamera(36, tam.width / tam.height, 1, 1000 );
-		camera.position.set( 5, 10, 18 );
+
+		// MAP
+
+		// Get a reference to the image you want the pixels of and its dimensions
+		var myImage = document.getElementById('maze_img');
+		var w = myImage.width, h = myImage.height;
+
+		// Create a Canvas element
+		var canvas = document.createElement('canvas');
+
+		// Size the canvas to the element
+		canvas.width = w;
+		canvas.height = h;
+
+		// Draw image onto the canvas
+		var ctx = canvas.getContext('2d');
+		ctx.drawImage(myImage, 0, 0);
+
+		// Finally, get the image data
+		// ('data' is an array of RGBA pixel values for each pixel)
+		var data = ctx.getImageData(0, 0, w, h);
+//		window.mazeImage = data;
+
+
+		camera = new THREE.PerspectiveCamera(10, tam.width / tam.height, 1, 1000 );
+		camera.position.set( -24, 9, -93 );
 		scene = new THREE.Scene();
 		scene.background = new THREE.Color( 0x00032 );
 		
@@ -35,7 +59,7 @@ function loadCube(){
 		scene.fog = new THREE.Fog(0xffffff, 750);
 
 		// Lights
-		scene.add( new THREE.AmbientLight( 0x505050, 0.2 ) );
+		scene.add( new THREE.AmbientLight( 0x505050, 0.5 ) );
 
 		var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.25 );
 		directionalLight.position.set( 0, 3, 0 );
@@ -46,7 +70,7 @@ function loadCube(){
 
 		// Objects
 
-		var floorGeo = new THREE.PlaneGeometry( 30, 30, 1, 1 )
+		var floorGeo = new THREE.PlaneGeometry( 120, 120, 1, 1 )
 		var flootMat = new THREE.MeshPhongMaterial( { color: 0xf1f4f1, shininess: 5 } );
 
 		// Ground
@@ -56,75 +80,25 @@ function loadCube(){
 		collidableMeshList.push(ground);
 		scene.add( ground );
 
-		// BaseRing
-		var RingMat = new THREE.MeshPhongMaterial( {
-				color: 0xffffff,
-				shininess: 20,
-				specular: 0xffffff,
-				side: THREE.DoubleSide
-			} );
-		var baseRingGeo = new THREE.BoxGeometry( 10, 1, 10 );
+		// WALLS
+		for(var i = 0; i < data.height; i++){
+			for(var j = 0; j < data.width; j++){
+				if(data.data[(i*myImage.width + j)*4] == 0){
+					var wallGeo = new THREE.BoxGeometry(1, 5, 1);
+					var wallMat = new THREE.MeshPhongMaterial( {
+							color: 0xeee,
+							shininess: 100,
+							side: THREE.DoubleSide
+					});
 
-		baseRing = new THREE.Mesh( baseRingGeo, RingMat );
-		baseRing.castShadow = true;
-		baseRing.receiveShadow = true;
-		baseRing.position.x = 0;
-		baseRing.position.y = 1;
-		scene.add( baseRing );
-		collidableMeshList.push(baseRing);
-
-		// 4 corners
-
-		var cornerRingGeo = new THREE.CylinderGeometry(0.25, 0.25, 3, 32, 32, false);
-
-		var cornerRing;
-
-		for(var i = -5; i <= 5; i += 10){
-			for(var j = -5; j <= 5; j += 10){
-				cornerRing  = new THREE.Mesh( cornerRingGeo, RingMat );
-				cornerRing.castShadow = true;
-				cornerRing.receiveShadow = true;
-				cornerRing.position.x = i;
-				cornerRing.position.y = 2;
-				cornerRing.position.z = j;
-				scene.add( cornerRing );
+					var wall = new THREE.Mesh(wallGeo, wallMat);
+					wall.position.x = i - 58.5;
+					wall.position.y = 0.5;
+					wall.position.z = j - 58.5;
+					scene.add(wall);
+				} 
 			}
 		}
-
-		// 8 cuerdas
-
-		var ropeRingGeo = new THREE.CylinderGeometry(0.05, 0.05, 10, 32, 32, false);
-
-		var ropeRing;
-
-		for(var i = -5; i <= 10; i += 10){
-			for(var j = 2; j <= 3; j += 1){
-				ropeRing  = new THREE.Mesh( ropeRingGeo, RingMat );
-				ropeRing.castShadow = true;
-				ropeRing.receiveShadow = true;
-				ropeRing.position.x = i;
-				ropeRing.position.y = j;
-				ropeRing.position.z = 0;
-				ropeRing.rotation.x = - Math.PI / 2;
-				scene.add( ropeRing );
-			}
-		}
-
-		for(var i = -5; i <= 10; i += 10){
-			for(var j = 2; j <= 3; j += 1){
-				ropeRing  = new THREE.Mesh( ropeRingGeo, RingMat );
-				ropeRing.castShadow = true;
-				ropeRing.receiveShadow = true;
-				ropeRing.position.x = 0;
-				ropeRing.position.y = j;
-				ropeRing.position.z = i;
-				ropeRing.rotation.x = - Math.PI/2;
-				ropeRing.rotation.z = - Math.PI/2;
-				scene.add( ropeRing );
-			}
-		}
-
-		createChairs();
 
 		// Renderer
 		renderer = new THREE.WebGLRenderer();
@@ -136,9 +110,7 @@ function loadCube(){
 		container.appendChild( renderer.domElement );		
 
 		// Controls
-		var controls = new THREE.OrbitControls( camera, renderer.domElement );
-		controls.target.set( 0, 1, 0 );
-		controls.update();
+		controls = new THREE.OrbitControls( camera, renderer.domElement );
 
 		// GUI
 
@@ -150,19 +122,10 @@ function loadCube(){
 		{
 			a: function(){ confetiExplosion(); send("confeti") },
 			b: function(){ removeConfeti(); send("rem_confeti") },
-			c: 100, // numeric slider
 			d: function(){
 				camera.position.x = 5;
 				camera.position.y = 10;
 				camera.position.z = 18;
-
-				controls.target.set( 0, 1, 0 );
-				controls.update();
-			},
-			e: "#fff000", // color (hex)
-			f: function(){ changeRingColor(parameters.e); send("ring_hex", parameters.e) },
-			g: function () {
-				initFight();
 			},
 			h: function(){ removePopped(); send("rem_popped"); }
 		};
@@ -170,23 +133,8 @@ function loadCube(){
 		gui.add( parameters, 'a' ).name('Confeti explosion');
 		gui.add( parameters, 'b' ).name('Remove confeti');		
 
-		
-		var ring_folder = gui.addFolder('Ring options');
+		gui.add( parameters, 'h' ).name('Clean');
 
-		ring_folder.add( baseRing.material, 'shininess' , 0, 50).step(1).name('Ring shininess');
-
-		ring_folder.add( parameters, 'h' ).name('Clean');
-
-		var change_color = ring_folder.addColor( parameters, 'e' ).name('Ring Color');
-
-		change_color.onChange( function( colorValue  )
- 	    {
- 	      changeRingColor(colorValue);
- 	    });
-
-		ring_folder.add( parameters, 'f' ).name('Send color');
-		ring_folder.close();
-		
 		// manera de hacer un grupo de parametros
 		var folder = gui.addFolder('Camera position');
 		folder.add(parameters, 'd').name('Default camera');
@@ -199,7 +147,7 @@ function loadCube(){
 		gui.close();
 
 		// Start
-		startTime = Date.now();
+		startTime = performance.now();
 	}
 
 	function collides(mesh){
@@ -276,10 +224,26 @@ function loadCube(){
 			var px = scene.getObjectByName("player_body").position.x;
 			var pz = scene.getObjectByName("player_body").position.z;
 
-			if(w && movementLimits(px, pz - 0.1)) scene.getObjectByName("player_body").position.z -= 0.1;
-			if(a && movementLimits(px - 0.1, pz)) scene.getObjectByName("player_body").position.x -= 0.1;
-			if(s && movementLimits(px, pz + 0.1)) scene.getObjectByName("player_body").position.z += 0.1;
-			if(d && movementLimits(px + 0.1, pz)) scene.getObjectByName("player_body").position.x += 0.1;
+			//velocity.x -= velocity.x * 10.0 * time;
+			//velocity.z -= velocity.z * 10.0 * time;
+
+			// if ( w ) velocity.z -= 0.1 * time;
+			// if ( s ) velocity.z += 0.1 * time;
+
+			// if ( a ) velocity.x -= 0.1 * time;
+			// if ( d ) velocity.x += 0.1 * time;
+
+			// scene.getObjectByName("player_body").position.x = velocity.x * time;
+			// scene.getObjectByName("player_body").position.z = velocity.z * time;
+
+			if(w && movementLimits(px, pz - 0.1)) scene.getObjectByName("player_body").position.z += 0.1;
+			if(a && movementLimits(px - 0.1, pz)) scene.getObjectByName("player_body").position.x += 0.1;
+			if(s && movementLimits(px, pz + 0.1)) scene.getObjectByName("player_body").position.z -= 0.1;
+			if(d && movementLimits(px + 0.1, pz)) scene.getObjectByName("player_body").position.x -= 0.1;
+
+			//controls.target.set( 0, 10, 0 );
+			controls.target.set( scene.getObjectByName("player_body").position.x, 2.5, scene.getObjectByName("player_body").position.z );
+			controls.update();
 
 			if(k) scene.getObjectByName("player_body").rotation.y += 0.05;
 			if(l) scene.getObjectByName("player_body").rotation.y -= 0.05;
@@ -295,6 +259,8 @@ function loadCube(){
 
 		// PASSING POSITION TO OTHERS TO PRINT IT
 		if(window.server_on) server.sendMessage(playerPosition);
+
+		console.log(camera)
 
 	}
 
@@ -376,7 +342,7 @@ function createFigure(id, colorf, path){
 	var playerArmGeo = new THREE.CylinderGeometry(0.18, 0.15, 1.5, 32);
 		
 	var playerHead = new THREE.Mesh(playerHeadGeo, new THREE.MultiMaterial(materials));
-	playerHead.position.y = 3.8;
+	playerHead.position.y = 2.25;
 	playerHead.rotation.x = - Math.PI / 2;   
 	playerHead.rotation.y = Math.PI / 2;
 	playerHead.castShadow = true;
@@ -385,8 +351,12 @@ function createFigure(id, colorf, path){
 	
 	var playerBody = new THREE.Mesh(playerBodyGeo, playerBodyMat);
 	playerBody.castShadow = true;
-	playerBody.position.y = 2.25;
+	playerBody.position.y = 0.75;
 	group.add(playerBody);
+
+	// posición inicial en el laberinto
+	group.position.x = -32.5;
+	group.position.z = -58;
 
 	scene.add(group);
 }
@@ -426,70 +396,6 @@ function createNewLight(list, colorl, user_id, path){
 	createFigure(user_id, colorl, path);
 }
 
-function createChairs(){
-
-		// Sillas
-
-		var chairMat = new THREE.MeshPhongMaterial( {
-				color: 0xffffff,
-				shininess: 20,
-				specular: 0xffffff,
-				side: THREE.DoubleSide
-			} );
-
-		var chairGeo = new THREE.BoxGeometry( 1, 1, 1 );
-
-		var chair;
-
-		for(var i = 0.5; i <= 4; i += 1){
-			for(var j = -15; j <= 15; j += 1){
-				chair  = new THREE.Mesh( chairGeo, chairMat );
-				chair.castShadow = true;
-				chair.receiveShadow = true;
-				chair.position.x = j;
-				chair.position.y = i;
-				chair.position.z = -15 - i;
-				scene.add( chair );
-			}
-		}
-
-		for(var i = 0.5; i <= 4; i += 1){
-			for(var j = -15; j <= 15; j += 1){
-				chair  = new THREE.Mesh( chairGeo, chairMat );
-				chair.castShadow = true;
-				chair.receiveShadow = true;
-				chair.position.x = -15 - i;
-				chair.position.y = i;
-				chair.position.z = j;
-				scene.add( chair );
-			}
-		}
-
-		for(var i = 0.5; i <= 4; i += 1){
-			for(var j = -15; j <= 15; j += 1){
-				chair  = new THREE.Mesh( chairGeo, chairMat );
-				chair.castShadow = true;
-				chair.receiveShadow = true;
-				chair.position.x = j;
-				chair.position.y = i;
-				chair.position.z = 15 + i;
-				scene.add( chair );
-			}
-		}
-
-		for(var i = 0.5; i <= 4; i += 1){
-			for(var j = -15; j <= 15; j += 1){
-				chair  = new THREE.Mesh( chairGeo, chairMat );
-				chair.castShadow = true;
-				chair.receiveShadow = true;
-				chair.position.x = 15 + i;
-				chair.position.y = i;
-				chair.position.z = j;
-				scene.add( chair );
-			}
-		}
-}
-
 function updateMeshPosition(user_id, ox, oy, oz){
 
 	if(scene.getObjectByName(user_id)){
@@ -513,11 +419,6 @@ function updateTexture(id, path){
 	var head = scene.getObjectByName(id).children[0];
 	head.material.materials[2].map = new THREE.ImageUtils.loadTexture(path);
 	head.material.needsUpdate = true;
-}
-
-function updateRingColor(hex_color){
-
-	baseRing.material.color.setHex(hex_color);
 }
 
 function deleteUser(user_id){
@@ -558,16 +459,6 @@ function changeRingColor(color) {
   color = color.replace( '#','0x' );
   //set the color in the object
   baseRing.material.color.setHex(color);
-}
-
-function getRingColor(){
-
-	return baseRing.material.color.getHex();
-}
-
-function initFight(){
-
-	//begin = true;
 }
 
 function popCube(argumentx, argumentz){
@@ -671,8 +562,8 @@ var onKeyUp = function (event){
 }
 
 function movementLimits(x, z){
-	if(x > 4.35 || x < -4.35) return false;
-	if(z > 4.5 || z < -4.35) return false;
+	if(x > 60 || x < -60) return false;
+	if(z > 4.5 || z < -60) return false;
 	return true;
 }
 

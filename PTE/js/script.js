@@ -418,9 +418,6 @@ function send(argument, hex_color, list){
     objectToSend.avatar = avatarPath;
     if(argument == "confeti"){
       objectToSend.info = 5;
-    }else if(argument == "ring_hex"){
-      objectToSend.info = 6;
-      objectToSend.ring_hex = hex_color;
     }else if(argument == "newlight"){
       objectToSend.info = 7;
       objectToSend.l_list = list;

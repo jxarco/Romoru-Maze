@@ -39,9 +39,10 @@ ctx.drawImage(myImage, 0, 0);
 // ('data' is an array of RGBA pixel values for each pixel)
 var data = ctx.getImageData(0, 0, w, h);
 
+var camera, scene, renderer;
 
 function example(){
-	var camera, scene, renderer;
+	
 	var geometry, material, mesh;
 	var controls;
 	var objects = [];
@@ -331,7 +332,7 @@ function createFigure(id, colorf, path){
 	group.position.x = -32.5;
 	group.position.z = -58;
 
-	//scene.add(group);
+	scene.add(group);
 }
 
 function createNewLight(list, colorl, user_id, path){
@@ -364,7 +365,7 @@ function createNewLight(list, colorl, user_id, path){
 	// cada uno guarda su propia luz
 	window.player = group;
 
-	//scene.add(group);
+	scene.add(group);
 
 	createFigure(user_id, colorl, path);
 }

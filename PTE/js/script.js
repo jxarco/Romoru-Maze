@@ -107,7 +107,6 @@ function new_connection(user_id){
   objectToSend.info = 1;
   objectToSend.hex_color = color; // color de la luz
   objectToSend.l_list = list; // posicion de la luz
-  objectToSend.ring = getRingColor();
 
   // esto podria ser un array
   var send_to = user_id;

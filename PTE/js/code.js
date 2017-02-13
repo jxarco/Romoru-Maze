@@ -172,7 +172,7 @@ function example(){
 		// objects
 
 		// WALLS
-		for(var i = 0; i < data.height; i++){
+		/*for(var i = 0; i < data.height; i++){
 			for(var j = 0; j < data.width; j++){
 				if(data.data[(i*myImage.width + j)*4] == 0){
 					var wallGeo = new THREE.BoxGeometry(1, 5, 1);
@@ -189,7 +189,7 @@ function example(){
 					scene.add(wall);
 				} 
 			}
-		}
+		}*/
 
 		// renderer
 		renderer = new THREE.WebGLRenderer();

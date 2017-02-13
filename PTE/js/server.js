@@ -74,8 +74,6 @@ server.on_message = function( user_id, message){
 		// su registro:
 
 		if(objectReceived.info == 1){
-			updateRingColor(objectReceived.ring); // los que estan en la sala me dicen de que color
-												// es el ring
 			accept_handshaking(user_id);
 		}
 

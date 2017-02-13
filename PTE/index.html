@@ -69,7 +69,15 @@
 				</div>
 
 				<div class="canvas_container" width="400">
-					<!--<canvas id="painter" class="c_painter">Your browser does not support canvas.</canvas> -->
+					<div id="blocker">
+
+						<div id="instructions">
+							<span style="font-size:40px">Click to play</span>
+							<br />
+							(W, A, S, D = Move, SPACE = Jump, MOUSE = Look around)
+						</div>
+
+					</div>
 				</div>
 
 				<div class="rest_org" id="right_info">				
@@ -177,6 +185,7 @@
 <script src="js/Projector.js"></script>
 <script src="js/CanvasRenderer.js"></script>
 <script src="js/OrbitControls.js"></script>
+<script src="js/PointerLockControls.js"></script>
 <script src="js/dat.gui.min.js"></script>
 
 <!--<script> app.init() </script> -->

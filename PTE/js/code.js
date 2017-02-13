@@ -1,18 +1,13 @@
 var app = {
 
 	start3D: function(){
-		loadCube();
+		example();
 	}
 }
-
-// player move controls
-var w = false, a = false, s = false, d = false, k = false, l = false;
-var velocity = new THREE.Vector3();
 
 var camera, scene, controls, renderer, startTime;
 var baseRing, ground;
 var container = document.querySelector(".canvas_container");
-
 var tam = container.getBoundingClientRect();
 
 var confeti_list = [];
@@ -22,63 +17,158 @@ var materials;
 
 var audio = new Audio('assets/audio.mp3');;
 
-function loadCube(){
-	
+
+// MAP
+
+// Get a reference to the image you want the pixels of and its dimensions
+var myImage = document.getElementById('maze_img');
+var w = myImage.width, h = myImage.height;
+
+// Create a Canvas element
+var canvas = document.createElement('canvas');
+
+// Size the canvas to the element
+canvas.width = w;
+canvas.height = h;
+
+// Draw image onto the canvas
+var ctx = canvas.getContext('2d');
+ctx.drawImage(myImage, 0, 0);
+
+// Finally, get the image data
+// ('data' is an array of RGBA pixel values for each pixel)
+var data = ctx.getImageData(0, 0, w, h);
+
+
+function example(){
+	var camera, scene, renderer;
+	var geometry, material, mesh;
+	var controls;
+	var objects = [];
+	var raycaster;
+	var blocker = document.getElementById( 'blocker' );
+	var instructions = document.getElementById( 'instructions' );
+	// http://www.html5rocks.com/en/tutorials/pointerlock/intro/
+	var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
+	if ( havePointerLock ) {
+		var element = document.body;
+		var pointerlockchange = function ( event ) {
+			if ( document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element ) {
+				controlsEnabled = true;
+				controls.enabled = true;
+				blocker.style.display = 'none';
+			} else {
+				controls.enabled = false;
+				blocker.style.display = '-webkit-box';
+				blocker.style.display = '-moz-box';
+				blocker.style.display = 'box';
+				instructions.style.display = '';
+			}
+		};
+		var pointerlockerror = function ( event ) {
+			instructions.style.display = '';
+		};
+		// Hook pointer lock state change events
+		document.addEventListener( 'pointerlockchange', pointerlockchange, false );
+		document.addEventListener( 'mozpointerlockchange', pointerlockchange, false );
+		document.addEventListener( 'webkitpointerlockchange', pointerlockchange, false );
+		document.addEventListener( 'pointerlockerror', pointerlockerror, false );
+		document.addEventListener( 'mozpointerlockerror', pointerlockerror, false );
+		document.addEventListener( 'webkitpointerlockerror', pointerlockerror, false );
+		instructions.addEventListener( 'click', function ( event ) {
+			instructions.style.display = 'none';
+			// Ask the browser to lock the pointer
+			element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+			element.requestPointerLock();
+		}, false );
+	} else {
+		instructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
+	}
+	init();
+	animate();
+	var controlsEnabled = false;
+	var moveForward = false;
+	var moveBackward = false;
+	var moveLeft = false;
+	var moveRight = false;
+	var canJump = false;
+	var prevTime = performance.now();
+	var velocity = new THREE.Vector3();
 	function init() {
-
-		// MAP
-
-		// Get a reference to the image you want the pixels of and its dimensions
-		var myImage = document.getElementById('maze_img');
-		var w = myImage.width, h = myImage.height;
-
-		// Create a Canvas element
-		var canvas = document.createElement('canvas');
-
-		// Size the canvas to the element
-		canvas.width = w;
-		canvas.height = h;
-
-		// Draw image onto the canvas
-		var ctx = canvas.getContext('2d');
-		ctx.drawImage(myImage, 0, 0);
-
-		// Finally, get the image data
-		// ('data' is an array of RGBA pixel values for each pixel)
-		var data = ctx.getImageData(0, 0, w, h);
-//		window.mazeImage = data;
-
-
-		camera = new THREE.PerspectiveCamera(10, tam.width / tam.height, 1, 1000 );
-		camera.position.set( -24, 9, -93 );
+		camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
 		scene = new THREE.Scene();
-		scene.background = new THREE.Color( 0x00032 );
+		scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
+		var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
+		light.position.set( 0.5, 1, 0.75 );
+		scene.add( light );
+		controls = new THREE.PointerLockControls( camera );
+		scene.add( controls.getObject() );
+		var onKeyDown = function ( event ) {
+			switch ( event.keyCode ) {
+				case 38: // up
+				case 87: // w
+					moveForward = true;
+					break;
+				case 37: // left
+				case 65: // a
+					moveLeft = true; break;
+				case 40: // down
+				case 83: // s
+					moveBackward = true;
+					break;
+				case 39: // right
+				case 68: // d
+					moveRight = true;
+					break;
+				case 32: // space
+					if ( canJump === true ) velocity.y += 350;
+					canJump = false;
+					break;
+			}
+		};
+		var onKeyUp = function ( event ) {
+			switch( event.keyCode ) {
+				case 38: // up
+				case 87: // w
+					moveForward = false;
+					break;
+				case 37: // left
+				case 65: // a
+					moveLeft = false;
+					break;
+				case 40: // down
+				case 83: // s
+					moveBackward = false;
+					break;
+				case 39: // right
+				case 68: // d
+					moveRight = false;
+					break;
+			}
+		};
+		document.addEventListener( 'keydown', onKeyDown, false );
+		document.addEventListener( 'keyup', onKeyUp, false );
+		raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );
+		// floor
+		geometry = new THREE.PlaneGeometry( 2000, 2000, 100, 100 );
+		geometry.rotateX( - Math.PI / 2 );
+		for ( var i = 0, l = geometry.vertices.length; i < l; i ++ ) {
+			var vertex = geometry.vertices[ i ];
+			vertex.x += Math.random() * 20 - 10;
+			vertex.y += Math.random() * 2;
+			vertex.z += Math.random() * 20 - 10;
+		}
+		for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
+			var face = geometry.faces[ i ];
+			face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+			face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+			face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+		}
+		material = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
+		mesh = new THREE.Mesh( geometry, material );
+		scene.add( mesh );
 		
-		// Fog
-
-		scene.fog = new THREE.Fog(0xffffff, 750);
-
-		// Lights
-		scene.add( new THREE.AmbientLight( 0x505050, 0.5 ) );
-
-		var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.25 );
-		directionalLight.position.set( 0, 3, 0 );
-		directionalLight.castShadow = true;
-		directionalLight.shadow.camera.near = 1;
-		directionalLight.shadow.camera.far = 10;
-		scene.add( directionalLight );
-
-		// Objects
-
-		var floorGeo = new THREE.PlaneGeometry( 120, 120, 1, 1 )
-		var flootMat = new THREE.MeshPhongMaterial( { color: 0xf1f4f1, shininess: 5 } );
-
-		// Ground
-		ground = new THREE.Mesh(floorGeo, flootMat );
-		ground.rotation.x = - Math.PI / 2;
-		ground.receiveShadow = true;
-		collidableMeshList.push(ground);
-		scene.add( ground );
+		// objects
 
 		// WALLS
 		for(var i = 0; i < data.height; i++){
@@ -100,173 +190,56 @@ function loadCube(){
 			}
 		}
 
-		// Renderer
+		// renderer
 		renderer = new THREE.WebGLRenderer();
-		renderer.domElement.id = "my_canvas";
-		renderer.shadowMap.enabled = true;
+		renderer.setClearColor( 0xffffff );
 		renderer.setPixelRatio( window.devicePixelRatio );
 		renderer.setSize( tam.width, tam.height );
+		renderer.domElement.id = "my_canvas";
+		container.appendChild( renderer.domElement );
+
+		//
 		window.addEventListener( 'resize', onWindowResize, false );
-		container.appendChild( renderer.domElement );		
-
-		// Controls
-		controls = new THREE.OrbitControls( camera, renderer.domElement );
-
-		// GUI
-
-		var gui = new dat.GUI();
-		container.appendChild(gui.domElement);
-		gui.domElement.id = "gui_id";
-	
-		var parameters = 
-		{
-			a: function(){ confetiExplosion(); send("confeti") },
-			b: function(){ removeConfeti(); send("rem_confeti") },
-			d: function(){
-				camera.position.x = 5;
-				camera.position.y = 10;
-				camera.position.z = 18;
-			},
-			h: function(){ removePopped(); send("rem_popped"); }
-		};
-		
-		gui.add( parameters, 'a' ).name('Confeti explosion');
-		gui.add( parameters, 'b' ).name('Remove confeti');		
-
-		gui.add( parameters, 'h' ).name('Clean');
-
-		// manera de hacer un grupo de parametros
-		var folder = gui.addFolder('Camera position');
-		folder.add(parameters, 'd').name('Default camera');
-		folder.add( camera.position , 'x', -10, 50 ).step(1);
-		folder.add( camera.position , 'y', -10, 50 ).step(1);
-		folder.add( camera.position , 'z', -10, 50 ).step(1);
-		folder.close();
-
-		// inicialmente los controles cerrados
-		gui.close();
-
-		// Start
-		startTime = performance.now();
 	}
-
-	function collides(mesh){
-
-		var originPoint = mesh.position.clone();
-		var localVertex = mesh.geometry.vertices[0].clone(); // solo utilizamos el primer vertex para la colision
-		var globalVertex = localVertex.applyMatrix4( mesh.matrix );
-		var directionVector = globalVertex.sub( mesh.position );
-		
-		var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
-		var collisionResults = ray.intersectObjects( collidableMeshList );
-		if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ){
-			return true;
-		}
-	}
-
 	function onWindowResize() {
-		camera.aspect = tam.width / tam.height;
+		camera.aspect = window.innerWidth / window.innerHeight;
 		camera.updateProjectionMatrix();
-		renderer.setSize( tam.width, tam.height );
+		renderer.setSize( window.innerWidth, window.innerHeight );
 	}
-
 	function animate() {
-		var currentTime = performance.now();
-		var time = ( currentTime - startTime ) / 1000;
 		requestAnimationFrame( animate );
-
-    	for(var i = 0; i < confeti_list.length; i++)
-    	{
-			if(confeti_list[i].position.y < 1.5){
-    			if(!collides(confeti_list[i])){
-    				confeti_list[i].position.y -= 0.03;
-					confeti_list[i].rotation.x = Math.random() * time;
-					confeti_list[i].rotation.y = Math.random() * time;
-					confeti_list[i].scale.setScalar( Math.cos( time ) * 0.125 + 0.875 );
-    			}
-			}else{
-				confeti_list[i].position.y -= 0.03;
-				confeti_list[i].rotation.x = Math.random()  * time;
-				confeti_list[i].rotation.y = Math.random()  * time;
-				confeti_list[i].scale.setScalar( Math.cos( time ) * 0.125 + 0.875 );
+		if ( controlsEnabled ) {
+			raycaster.ray.origin.copy( controls.getObject().position );
+			raycaster.ray.origin.y -= 10;
+			var intersections = raycaster.intersectObjects( objects );
+			var isOnObject = intersections.length > 0;
+			var time = performance.now();
+			var delta = ( time - prevTime ) / 1000;
+			velocity.x -= velocity.x * 10.0 * delta;
+			velocity.z -= velocity.z * 10.0 * delta;
+			velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+			if ( moveForward ) velocity.z -= 400.0 * delta;
+			if ( moveBackward ) velocity.z += 400.0 * delta;
+			if ( moveLeft ) velocity.x -= 400.0 * delta;
+			if ( moveRight ) velocity.x += 400.0 * delta;
+			if ( isOnObject === true ) {
+				velocity.y = Math.max( 0, velocity.y );
+				canJump = true;
 			}
-
-			if(confeti_list[i].position.y < 0){
-				scene.remove(confeti_list[i])
+			controls.getObject().translateX( velocity.x * delta );
+			controls.getObject().translateY( velocity.y * delta );
+			controls.getObject().translateZ( velocity.z * delta );
+			if ( controls.getObject().position.y < 10 ) {
+				velocity.y = 0;
+				controls.getObject().position.y = 10;
+				canJump = true;
 			}
-    	}
-
+			prevTime = time;
+		}
 		renderer.render( scene, camera );
-
-		var groupPosition = {
-			px: camera.position.x,
-			py: camera.position.y,
-			pz: camera.position.z,
-			info: 10
-		}
-
-		// LIGHT AND SPHERE MOVEMENTS
-
-		// a veces carga antes --> evitamos fallos	
-		if(scene.getObjectByName("player")){
-			scene.getObjectByName("player").position.x = camera.position.x;
-			scene.getObjectByName("player").position.y = camera.position.y;
-			scene.getObjectByName("player").position.z = camera.position.z;
-		}
-
-		// PASSING POSITION TO OTHERS TO PRINT IT
-		if(window.server_on) server.sendMessage(groupPosition);
-
-		// PLAYER IN RING MOVEMENTS
-
-		if(scene.getObjectByName("player_body")){
-
-			var px = scene.getObjectByName("player_body").position.x;
-			var pz = scene.getObjectByName("player_body").position.z;
-
-			//velocity.x -= velocity.x * 10.0 * time;
-			//velocity.z -= velocity.z * 10.0 * time;
-
-			// if ( w ) velocity.z -= 0.1 * time;
-			// if ( s ) velocity.z += 0.1 * time;
-
-			// if ( a ) velocity.x -= 0.1 * time;
-			// if ( d ) velocity.x += 0.1 * time;
-
-			// scene.getObjectByName("player_body").position.x = velocity.x * time;
-			// scene.getObjectByName("player_body").position.z = velocity.z * time;
-
-			if(w && movementLimits(px, pz - 0.1)) scene.getObjectByName("player_body").position.z += 0.1;
-			if(a && movementLimits(px - 0.1, pz)) scene.getObjectByName("player_body").position.x += 0.1;
-			if(s && movementLimits(px, pz + 0.1)) scene.getObjectByName("player_body").position.z -= 0.1;
-			if(d && movementLimits(px + 0.1, pz)) scene.getObjectByName("player_body").position.x -= 0.1;
-
-			//controls.target.set( 0, 10, 0 );
-			controls.target.set( scene.getObjectByName("player_body").position.x, 2.5, scene.getObjectByName("player_body").position.z );
-			controls.update();
-
-			if(k) scene.getObjectByName("player_body").rotation.y += 0.05;
-			if(l) scene.getObjectByName("player_body").rotation.y -= 0.05;
-
-			var playerPosition = {
-				px : scene.getObjectByName("player_body").position.x,
-				py : scene.getObjectByName("player_body").position.y,
-				pz : scene.getObjectByName("player_body").position.z,
-				ry : scene.getObjectByName("player_body").rotation.y,
-				info: 11
-			}
-		}
-
-		// PASSING POSITION TO OTHERS TO PRINT IT
-		if(window.server_on) server.sendMessage(playerPosition);
-
-		console.log(camera)
-
 	}
-
-	init();
-	animate();
 }
+
 function confetiExplosion(){
 
 	removeConfeti();
@@ -358,7 +331,7 @@ function createFigure(id, colorf, path){
 	group.position.x = -32.5;
 	group.position.z = -58;
 
-	scene.add(group);
+	//scene.add(group);
 }
 
 function createNewLight(list, colorl, user_id, path){
@@ -391,7 +364,7 @@ function createNewLight(list, colorl, user_id, path){
 	// cada uno guarda su propia luz
 	window.player = group;
 
-	scene.add(group);
+	//scene.add(group);
 
 	createFigure(user_id, colorl, path);
 }
@@ -453,14 +426,6 @@ function removePopped(){
 	}
 }
 
-function changeRingColor(color) {
-  //the return value by the chooser is like as: #ffff so
-  //remove the # and replace by 0x
-  color = color.replace( '#','0x' );
-  //set the color in the object
-  baseRing.material.color.setHex(color);
-}
-
 function popCube(argumentx, argumentz){
 
 	if(!argumentx){
@@ -496,79 +461,9 @@ function popCube(argumentx, argumentz){
 	}
 }
 
-var onKeyDown = function (event){
-
-	if(document.activeElement.localName == "textarea" || document.activeElement.localName == "input"){
-		return;
-	}
-
-	switch(event.keyCode){
-		case 87:
-			w = true;
-			break;
-		case 65:
-			a = true;
-			break;
-		case 83:
-			s = true;
-			break;
-		case 68:
-			d = true;
-			break;
-		case 75:
-			k = true;
-			break;
-		case 76:
-			l = true;
-			break;
-	}
-}
-
-var onKeyUp = function (event){
-
-	if(document.activeElement.localName == "textarea" || document.activeElement.localName == "input"){
-		return;
-	}
-
-	switch(event.keyCode){
-		case 87:
-			w = false;
-			break;
-		case 65:
-			a = false;
-			break;
-		case 83:
-			s = false;
-			break;
-		case 68:
-			d = false;
-			break;
-		case 75:
-			k = false;
-			break;
-		case 76:
-			l = false;
-			break;
-		case 32:
-			popCube();
-			break;
-		case 67:
-			openChat();
-			break;
-		case 80:
-			privateInfo();
-			break;
-	}
-}
-
 function movementLimits(x, z){
 	if(x > 60 || x < -60) return false;
 	if(z > 4.5 || z < -60) return false;
 	return true;
 }
-
-
-document.addEventListener('keydown', onKeyDown, false);
-document.addEventListener('keyup', onKeyUp, false);	
-
 

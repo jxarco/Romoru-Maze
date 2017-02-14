@@ -1,7 +1,7 @@
 var app = {
 
 	start3D: function(){
-		example();
+		INTERACTION();
 	}
 }
 
@@ -41,7 +41,7 @@ var camera, scene, renderer;
 var controls;
 var mesh;
 
-function setCamera(list, index){
+function setCamera(list){
 
 	var x = list.posx;
 	var z = list.posz;
@@ -50,13 +50,9 @@ function setCamera(list, index){
 	camera.position.x = x;
 	camera.position.z = z;
 	camera.rotation.y += rotation;
-
-	console.log("setting player camera")
-	console.log("SET TO GRID: x(" + (camera.position.x / 4) + "), z(" + (camera.position.z / 4) + ") with rotation: ");
-	console.log(rotation)
 }
 
-function example(){
+function INTERACTION(){
 	
 	var geometry, material;
 	var objects = [];
@@ -67,25 +63,11 @@ function example(){
 	var moveBackward = false;
 	var moveLeft = false;
 	var moveRight = false;
-	var canJump = false;
 	var prevTime = performance.now();
 
 	function init() {
 
 		camera = new THREE.PerspectiveCamera( 50, tam.width / tam.height, 1, 1000 );
-
-		// camera position for 4 players
-
-		//camera.position.set(4, 0, 4); //TR 		POSICION 1
-		//camera.rotation.y -= Math.PI;
-		//camera.position.set(4, 0, 124);  //BR 	POSICION 2
-		//camera.rotation.y -= Math.PI / 2;
-		//camera.position.set(124, 0, 124);  //TL 	POSICION 3
-		//camera.rotation.y += Math.PI / 2;
-		//camera.position.set(124, 0, 4);  //BL 	POSICION 4
-		//camera.rotation.y += Math.PI / 2;
-
-
 		scene = new THREE.Scene();
 		scene.fog = new THREE.Fog( 0xffffff, 0, 1000 );
 		var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
@@ -115,7 +97,6 @@ function example(){
 					moveRight = true;
 					break;
 				case 32: // space
-					canJump = true;
 					break;
 			}
 		};
@@ -150,7 +131,6 @@ function example(){
 					break;
 				case 32: // space
 					console.log("GRID: x(" + (camera.position.x / 4) + "), z(" + (camera.position.z / 4) + ")");
-					canJump = false;
 					break;
 			}
 		};
@@ -300,125 +280,6 @@ function confetiExplosion(){
 		scene.add( confetiMesh );
 	}
 }
-
-function createFigure(list, id, colorf, path){
-
-	var group = new THREE.Group();
-	group.name = id + "_body";
-
-	var playerBodyMat = new THREE.MeshPhongMaterial( {
-			color: colorf,
-			shininess: 15,
-			side: THREE.DoubleSide
-		} ); // -> player
-
-	materials = [
-
-		new THREE.MeshPhongMaterial( {
-			color: colorf,
-			shininess: 15,
-			side: THREE.DoubleSide
-		} ),
-
-		new THREE.MeshPhongMaterial( {
-			color: colorf,
-			shininess: 15,
-			side: THREE.DoubleSide
-		} ),
-
-		new THREE.MeshPhongMaterial( {
-			map: new THREE.TextureLoader().load(path),
-			shininess: 15,
-			side: THREE.DoubleSide
-		} )// -> head
-	]
-
-
-	var playerHeadGeo = new THREE.CylinderGeometry(0.75, 0.75, 0.35, 32);
-	var playerBodyGeo = new THREE.BoxGeometry(1, 1.5, 1);
-	var playerArmGeo = new THREE.CylinderGeometry(0.18, 0.15, 1.5, 32);
-		
-	var playerHead = new THREE.Mesh(playerHeadGeo, new THREE.MultiMaterial(materials));
-	playerHead.position.y = 2.25;
-	playerHead.rotation.x = - Math.PI / 2;   
-	playerHead.rotation.y = Math.PI / 2;
-	playerHead.castShadow = true;
-	group.add(playerHead);
-
-	
-	var playerBody = new THREE.Mesh(playerBodyGeo, playerBodyMat);
-	playerBody.castShadow = true;
-	playerBody.position.y = 0.75;
-	group.add(playerBody);
-
-	// posición inicial en el laberinto
-	//group.position.x = list[0];
-	//group.position.z = list[2];
-
-	scene.add(group);
-}
-
-function createNewLight(list, colorl, user_id, path){
-
-	var group = new THREE.Group();
-	group.name = user_id;
-
-	var spotLight = new THREE.SpotLight( colorl, 0.75 );
-	spotLight.angle = Math.PI / 5;
-	spotLight.penumbra = 0.2;
-	spotLight.castShadow = true;
-
-	spotLight.target.position.set(0, 0, 0);
-    scene.add( spotLight.target );
-
-	group.add( spotLight );
-
-	var lightGeometry = new THREE.SphereGeometry( 0.8, 32, 32 );
-	var lightMat = new THREE.MeshPhongMaterial( {
-			map: new THREE.TextureLoader().load("assets/sphere.png"),
-			shininess: 15,
-			side: THREE.DoubleSide
-		} );
-	var light_sphere = new THREE.Mesh( lightGeometry, lightMat );
-
-	if(user_id != "player") group.add( light_sphere );
-
-	//group.position.x = list[0];
-	//group.position.y = list[1];
-	//group.position.z = list[2];
-
-	// cada uno guarda su propia luz
-	window.player = group;
-
-	scene.add(group);
-
-	createFigure(list, user_id, colorl, path);
-}
-
-function updateMeshPosition(user_id, ox, oy, oz){
-
-	if(scene.getObjectByName(user_id)){
-		scene.getObjectByName(user_id).position.x = ox;
-		scene.getObjectByName(user_id).position.y = oy;
-		scene.getObjectByName(user_id).position.z = oz;
-	}
-}
-
-function updatePlayerPosition(user_id, ox, oy, oz, ry){
-
-	if(scene.getObjectByName(user_id + "_body")){
-		scene.getObjectByName(user_id + "_body").position.x = ox;
-		scene.getObjectByName(user_id + "_body").position.y = oy;
-		scene.getObjectByName(user_id + "_body").position.z = oz;
-		scene.getObjectByName(user_id + "_body").rotation.y = ry;
-	}
-}
-
-// function updateTexture(id, path){
-// 	var head = scene.getObjectByName(id).children[0];
-// 	head.material.materials[2].map = new THREE.ImageUtils.loadTexture(path);
-// 	head.material.needsUpdate = true;
-// }
 
 function deleteUser(user_id){
 	for( var i = 0; i < scene.children.length; i++){

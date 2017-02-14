@@ -65,7 +65,6 @@ server.on_message = function( user_id, message){
 		// su registro:
 
 		if(objectReceived.info == 1){
-			console.log(objectReceived.activePosList);
 			accept_handshaking(user_id, objectReceived.activePosList);
 		}
 

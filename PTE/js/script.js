@@ -110,16 +110,11 @@ function appear_connected(){
 
   // EL PRIMERO QUE SE CONECTE NO NECESITA 
   // NINGUN TIPO DE HANDSHAKING
-  setCamera(list[0], 0);
+  setCamera(list[0]);
   list[0].active = true;
-
-  console.log("ON MY CONECTION")
-  console.log(list)
 }
 
 function updatePosList(UPlist){
-  console.log("updating with exchanged info...")
-  console.log(UPlist)
   list = UPlist;
 }
 
@@ -166,10 +161,7 @@ function accept_handshaking(user_id, UPlist){
       unactiveIndex++;
     }
 
-    console.log("updating position to index: ");
-    console.log(unactiveIndex)
-
-    setCamera(list[unactiveIndex], unactiveIndex);
+    setCamera(list[unactiveIndex]);
     list[unactiveIndex].active = true;
   }
 }

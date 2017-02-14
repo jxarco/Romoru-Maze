@@ -203,7 +203,13 @@ function example(){
 						z: camera.position.z + direction.multiplyScalar(1).z,
 			}, 200 ).easing( TWEEN.Easing.Sinusoidal.In).start();
 		}
-		if(moveBackward) camera.position.sub( direction );
+		if(moveBackward){
+			new TWEEN.Tween( camera.position ).to( {
+						x: camera.position.x - direction.multiplyScalar(1).x,
+						y: camera.position.y - direction.multiplyScalar(1).y,
+						z: camera.position.z - direction.multiplyScalar(1).z,
+			}, 200 ).easing( TWEEN.Easing.Sinusoidal.In).start();
+		}
 		if(moveLeft){
 			new TWEEN.Tween( camera.rotation ).to( {
 						y: camera.rotation.y + Math.PI / 2

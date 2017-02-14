@@ -71,10 +71,10 @@ function init(){
   // aquí asignaremos a cada PLAYER del laberinto una posición hasta ser 4. El 5 no tiene posición
 
   list = [];
-  list.push( {posx: 124, posz: 4, rot: (Math.PI / 2), active: false} );
-  list.push( {posx: 124, posz: 124, rot: (Math.PI / 2) - (Math.PI / 2), active: false} );
-  list.push( {posx: 4, posz: 124, rot: (-1 * Math.PI / 2) - Math.PI / 2, active: false} );
-  list.push( {posx: 4, posz: 4, rot: (-1 * Math.PI) - Math.PI / 2, active: false} );
+  list.push( {posx: 155, posz: 5, rot: (Math.PI / 2), active: false} );
+  list.push( {posx: 155, posz: 155, rot: (Math.PI / 2) - (Math.PI / 2), active: false} );
+  list.push( {posx: 5, posz: 155, rot: (-1 * Math.PI / 2) - Math.PI / 2, active: false} );
+  list.push( {posx: 5, posz: 5, rot: (-1 * Math.PI) - Math.PI / 2, active: false} );
 
   // *********************************************************************************************
 

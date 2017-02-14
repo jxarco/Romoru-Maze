@@ -37,6 +37,33 @@ ctx.drawImage(myImage, 0, 0);
 // ('data' is an array of RGBA pixel values for each pixel)
 var data = ctx.getImageData(0, 0, w, h);
 
+var MAT = CREATE_MATRIX();
+// var s = "";
+// for(var i = 0; i < MAT.length; i++){
+// 	for(var j = 0; j < MAT.length; j++){
+// 		s += "\t" + MAT[i][j]
+// 	}
+
+// 	s += "\n";
+// }
+
+// console.log(s);
+// console.log(MAT)
+
+var MAT2 = TRANSFORM_MATRIX(MAT, 5);
+// console.log(MAT2)
+
+// var s = "";
+// for(var i = 0; i < MAT2.length; i++){
+// 	for(var j = 0; j < MAT2[i].length; j++){
+// 		s += "\t" + MAT2[i][j]
+// 	}
+
+// 	s += "\n";
+// }
+
+// console.log(s);
+
 var camera, scene, renderer;
 var controls;
 var mesh;
@@ -67,7 +94,7 @@ function INTERACTION(){
 
 	function init() {
 
-		camera = new THREE.PerspectiveCamera( 50, tam.width / tam.height, 1, 1000 );
+		camera = new THREE.PerspectiveCamera( 50, tam.width / tam.height, 0.1, 1000 );
 		scene = new THREE.Scene();
 		scene.fog = new THREE.Fog( 0xffffff, 0, 1000 );
 		var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
@@ -130,7 +157,8 @@ function INTERACTION(){
 					openChat();
 					break;
 				case 32: // space
-					console.log("GRID: x(" + (camera.position.x / 4) + "), z(" + (camera.position.z / 4) + ")");
+					console.log("GRID: x(" + Math.floor(camera.position.x / 4) + "), z(" + Math.floor(camera.position.z / 4) + ")");
+					console.log("IS A " + data.data[(Math.floor(camera.position.x / 4)*myImage.width + Math.floor(camera.position.z / 4))*4] + "IN THE MAZE")
 					break;
 			}
 		};
@@ -144,7 +172,7 @@ function INTERACTION(){
 		var floorTexture =  new THREE.TextureLoader().load( 'assets/grass_texture.png' );
 		
 		// geometry
-	    var geometry = new THREE.PlaneGeometry(140, 140, 100, 100);
+	    var geometry = new THREE.PlaneGeometry(165, 165, 100, 100);
 	    geometry.rotateX( - Math.PI / 2 );
 
 	    // materials
@@ -162,18 +190,24 @@ function INTERACTION(){
 
 	    // mesh
 	    mesh = new THREE.Mesh(geometry, new THREE.MultiMaterial(materials));
-	    mesh.position.x = 63;
+	    mesh.position.x = 80;
 		mesh.position.y = -1.5;
-		mesh.position.z = 63;
+		mesh.position.z = 80;
 		mesh.receiveShadow = true;
 		scene.add( mesh );
 
-		// WALLS
+		var AUX = new THREE.MeshPhongMaterial( {
+							color: "red",
+							shininess: 100,
+							side: THREE.DoubleSide
+					});
+
+		//WALLS
 		var wallTexture =  new THREE.TextureLoader().load( 'assets/wall2.jpg' );
-		for(var i = 0; i < data.height; i++){
-			for(var j = 0; j < data.width; j++){
-				if(data.data[(i*myImage.width + j)*4] == 0){
-					var wallGeo = new THREE.BoxGeometry(4, 3, 4);
+		for(var i = 0; i < MAT.length; i++){
+			for(var j = 0; j < MAT.length; j++){
+				if(MAT[i][j] == 0){ // 0 NEGRO + AZUL + VERDE
+					var wallGeo = new THREE.BoxGeometry(5, 3, 5);
 					var wallMat = new THREE.MeshPhongMaterial( {
 							map: wallTexture,
 							shininess: 100,
@@ -181,11 +215,72 @@ function INTERACTION(){
 					});
 
 					var wall = new THREE.Mesh(wallGeo, wallMat);
-					wall.position.x = i * 4;
+					wall.position.x = i * 5;
 					wall.position.y = 0;
-					wall.position.z = j * 4;
+					wall.position.z = j * 5;
 					wall.receiveShadow = true;
 					scene.add(wall);
+				} 
+				// if(data.data[(i*myImage.width + j)*4] == 255){ // 255 ROSA + ROJO + NARANJA
+				// 	var wallGeo = new THREE.BoxGeometry(4, 2, 4);
+				// 	var wallMat = new THREE.MeshPhongMaterial( {
+				// 			map: wallTexture,
+				// 			shininess: 100,
+				// 			side: THREE.DoubleSide
+				// 	});
+
+				// 	var wall = new THREE.Mesh(wallGeo, wallMat);
+				// 	wall.position.x = i * 4;
+				// 	wall.position.y = 0;
+				// 	wall.position.z = j * 4;
+				// 	wall.receiveShadow = true;
+				// 	scene.add(wall);
+				// }
+				// if(data.data[(i*myImage.width + j)*4] == 252){ // 252 AMARILLO
+				// 	var wallGeo = new THREE.BoxGeometry(4, 2, 4);
+				// 	var wallMat = new THREE.MeshPhongMaterial( {
+				// 			map: wallTexture,
+				// 			shininess: 100,
+				// 			side: THREE.DoubleSide
+				// 	});
+
+				// 	var wall = new THREE.Mesh(wallGeo, wallMat);
+				// 	wall.position.x = i * 4;
+				// 	wall.position.y = 0;
+				// 	wall.position.z = j * 4;
+				// 	wall.receiveShadow = true;
+				// 	scene.add(wall);
+				// } 
+				// if(data.data[(i*myImage.width + j)*4] == 177){ // 177 LILA
+				// 	var wallGeo = new THREE.BoxGeometry(4, 2, 4);
+				// 	var wallMat = new THREE.MeshPhongMaterial( {
+				// 			map: wallTexture,
+				// 			shininess: 100,
+				// 			side: THREE.DoubleSide
+				// 	});
+
+				// 	var wall = new THREE.Mesh(wallGeo, wallMat);
+				// 	wall.position.x = i * 4;
+				// 	wall.position.y = 0;
+				// 	wall.position.z = j * 4;
+				// 	wall.receiveShadow = true;
+				// 	scene.add(wall);
+				// }
+			}
+		}
+
+
+		// WALLS
+		for(var i = 0; i < MAT2.length; i++){
+			for(var j = 0; j < MAT2.length; j++){
+				if(MAT2[i][j] == 0){ // 0 NEGRO + AZUL + VERDE
+					var wallGeo = new THREE.BoxGeometry(1, 3.1, 1);
+
+					var wall = new THREE.Mesh(wallGeo, AUX);
+					wall.position.x = i;
+					wall.position.y = 0;
+					wall.position.z = j;
+					//scene.add(wall);
 				} 
 			}
 		}
@@ -199,8 +294,8 @@ function INTERACTION(){
 		container.appendChild( renderer.domElement );
 
 		// controls (mouse)
-		// controls = new THREE.OrbitControls( camera, renderer.domElement );
-		// controls.update();
+		//controls = new THREE.OrbitControls( camera, renderer.domElement );
+		//controls.update();
 
 		window.addEventListener( 'resize', onWindowResize, false );
 	}
@@ -209,24 +304,40 @@ function INTERACTION(){
 		camera.updateProjectionMatrix();
 		renderer.setSize( tam.width, tam.height );
 	}
+
+	function limits(direction){
+		
+		// x = Math.floor(x);
+		// z = Math.floor(z);
+
+		var x = camera.position.x + direction.x;
+		var z = camera.position.z + direction.z;
+
+		console.log(x)
+		console.log(z)
+
+		if (MAT2[x][z] == 0){
+		 	return false;
+		}
+		return true;
+	}
+
 	function animate() {
 		requestAnimationFrame( animate );
 
 		var direction = camera.getWorldDirection();
 
-		if(moveForward){
+		if(moveForward && limits(direction)){
 			new TWEEN.Tween( camera.position ).to( {
-						x: camera.position.x + direction.multiplyScalar(1).x,
-						y: camera.position.y + direction.multiplyScalar(1).y,
-						z: camera.position.z + direction.multiplyScalar(1).z,
-			}, 100 ).easing( TWEEN.Easing.Linear.None).start();
+						x: camera.position.x + direction.x,
+						z: camera.position.z + direction.z,
+			}, 1 ).easing( TWEEN.Easing.Linear.None).start();
 		}
 		if(moveBackward){
 			new TWEEN.Tween( camera.position ).to( {
-						x: camera.position.x - direction.multiplyScalar(1).x,
-						y: camera.position.y - direction.multiplyScalar(1).y,
-						z: camera.position.z - direction.multiplyScalar(1).z,
-			}, 200 ).easing( TWEEN.Easing.Linear.None).start();
+						x: camera.position.x - direction.x,
+						z: camera.position.z - direction.z,
+			}, 1 ).easing( TWEEN.Easing.Linear.None).start();
 		}
 		if(moveLeft){
 			new TWEEN.Tween( camera.rotation ).to( {
@@ -346,5 +457,78 @@ function popCube(argumentx, argumentz){
 
 		if(window.server_on) server.sendMessage(poppedPosition);
 	}
+}
+
+function CREATE_MATRIX(){
+	var matrix = [];
+
+	for(var i = 0; i < data.height; i++){
+
+		var newRow = [];
+		for(var j = 0; j < data.width; j++){
+
+			newRow.push( data.data[(i*myImage.width + j)*4] );
+		}
+
+		matrix.push( newRow );
+	}
+
+	// for(var i = 0; i < 3; i++){
+
+	// 	var newRow = [];
+	// 	for(var j = 0; j < 3; j++){
+
+	// 		newRow.push( i+j );
+	// 	}
+
+	// 	matrix.push( newRow );
+	// }
+	
+	return matrix;	
+}
+
+function TRANSFORM_MATRIX( m, space ){
+
+	// if(space%2 == 0){
+	// 	console.log( "Matrix has not been transformed" )
+	// 	return m; 	
+	// } 
+
+	var matrix = [];
+	var LEN = m.length;
+	var fillIn = (space - 1) / 2;
+	var fillOut = (space - 1);
+
+	for(var i = 0; i < LEN; i++){
+		
+		var newRow = [];
+
+		for(var j = 0; j < LEN; j++){
+			
+			if(j == 0 || j == LEN - 1){
+
+				for(var z = 0; z < fillIn + 1; z++){
+					newRow.push(m[i][j]);
+				}
+			}else{
+				for(var z = 0; z < fillOut + 1; z++){
+					newRow.push(m[i][j]);
+				}
+			}
+		}
+
+		if(i == 0 || i == LEN - 1){
+
+			for(var z = 0; z < fillIn + 1; z++){
+				matrix.push( newRow );
+			}
+		}else{
+			for(var z = 0; z < fillOut + 1; z++){
+				matrix.push( newRow );
+			}
+		}
+	}
+
+	return matrix;
 }
 

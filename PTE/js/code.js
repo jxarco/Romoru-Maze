@@ -58,10 +58,21 @@ function example(){
 	function init() {
 
 		camera = new THREE.PerspectiveCamera( 50, tam.width / tam.height, 1, 1000 );
-		camera.position.set(4, 0, 4);
-		camera.rotation.y -= Math.PI;
+
+		// camera position for 4 players
+
+		//camera.position.set(4, 0, 4); //TR 		POSICION 1
+		//camera.rotation.y -= Math.PI;
+		//camera.position.set(4, 0, 124);  //BR 	POSICION 2
+		//camera.rotation.y -= Math.PI / 2;
+		//camera.position.set(124, 0, 124);  //TL 	POSICION 3
+		//camera.rotation.y += Math.PI / 2;
+		camera.position.set(124, 0, 4);  //BL 	POSICION 4
+		camera.rotation.y += Math.PI / 2;
+
+
 		scene = new THREE.Scene();
-		//scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
+		scene.fog = new THREE.Fog( 0xffffff, 0, 1000 );
 		var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
 		light.position.set( 0.5, 1, 0.75 );
 		scene.add( light );
@@ -123,7 +134,7 @@ function example(){
 					openChat();
 					break;
 				case 32: // space
-					console.log(camera)
+					console.log("GRID: x(" + (camera.position.x / 4) + "), z(" + (camera.position.z / 4) + ")");
 					canJump = false;
 					break;
 			}
@@ -132,33 +143,45 @@ function example(){
 		document.addEventListener( 'keydown', onKeyDown, false );
 		document.addEventListener( 'keyup', onKeyUp, false );
 
+		// objects
+
 		// floor
 		var floorTexture =  new THREE.TextureLoader().load( 'assets/grass_texture.png' );
-		geometry = new THREE.PlaneGeometry( 140, 140, 1, 1 );
-		geometry.rotateX( - Math.PI / 2 );
-		for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
-			var face = geometry.faces[ i ];
-			face.vertexColors[ 0 ] = new THREE.Color().setHSL( 0, 0.7, 0.2 );
-			face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.1 + 0.25, 0.6, 0.4 );
-			face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.25 + 0.25, 0.6, 0.85 );
-		}
-		material = new THREE.MeshBasicMaterial( { map:floorTexture } );
-		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.x = 63;
+
+		
+		// geometry
+	    var geometry = new THREE.PlaneGeometry(140, 140, 100, 100);
+	    geometry.rotateX( - Math.PI / 2 );
+
+	    // materials
+	    var materials = [];
+	    materials.push(new THREE.MeshBasicMaterial({
+	        map: floorTexture
+	    }));
+
+	    // Add materialIndex to face
+	    var l = geometry.faces.length / 2;
+	    for (var i = 0; i < l; i++) {
+	        geometry.faces[i].materialIndex = 0;
+	    }
+
+
+	    // mesh
+	    mesh = new THREE.Mesh(geometry, new THREE.MultiMaterial(materials));
+	    mesh.position.x = 63;
 		mesh.position.y = -1.5;
 		mesh.position.z = 63;
 		mesh.receiveShadow = true;
 		scene.add( mesh );
 		
-		// objects
+		
 
 		// WALLS
-		//var texture = new THREE.TextureLoader().load( 'textures/crate.gif' );
 		var wallTexture =  new THREE.TextureLoader().load( 'assets/wall2.jpg' );
 		for(var i = 0; i < data.height; i++){
 			for(var j = 0; j < data.width; j++){
 				if(data.data[(i*myImage.width + j)*4] == 0){
-					var wallGeo = new THREE.BoxGeometry(4, 2, 4);
+					var wallGeo = new THREE.BoxGeometry(4, 3, 4);
 					var wallMat = new THREE.MeshPhongMaterial( {
 							map: wallTexture,
 							shininess: 100,
@@ -183,8 +206,8 @@ function example(){
 		container.appendChild( renderer.domElement );
 
 		// controls (mouse)
-		controls = new THREE.OrbitControls( camera, renderer.domElement );
-		controls.update();
+		// controls = new THREE.OrbitControls( camera, renderer.domElement );
+		// controls.update();
 
 		//
 		window.addEventListener( 'resize', onWindowResize, false );

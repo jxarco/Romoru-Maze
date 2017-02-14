@@ -7,7 +7,7 @@
 
 html, body{
 	height: 100%;
-	background: rgba(46, 51, 58, 0.5);
+	background: rgb(0, 0, 0);
 	margin: 0;
 	overflow: hidden;
 	font-family: arial;

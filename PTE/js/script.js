@@ -66,7 +66,7 @@ function init(){
   num_rand_avatar = Math.floor((Math.random() * 21) + 1);
   num_rand_avatar = 1; // esto podemos quitarlo despues
   avatarPath = "assets/avatar" + num_rand_avatar +".png";
-  list = [2 + (Math.random() * 3 + 1), 4 + (Math.random() * 3 + 1), 10]; // posicion de nuestra luz canvas 3d 
+  list = [40, 10, 90]; // posicion de nuestra luz canvas 3d 
   color = "#" + ((1<<24) * Math.random() | 0).toString(16);
 
   // actualizamos los datos en la página

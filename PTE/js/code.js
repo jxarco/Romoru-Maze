@@ -5,8 +5,6 @@ var app = {
 	}
 }
 
-var camera, scene, controls, renderer, startTime;
-var baseRing, ground;
 var container = document.querySelector(".canvas_container");
 var tam = container.getBoundingClientRect();
 
@@ -40,10 +38,11 @@ ctx.drawImage(myImage, 0, 0);
 var data = ctx.getImageData(0, 0, w, h);
 
 var camera, scene, renderer;
+var mesh;
 
 function example(){
 	
-	var geometry, material, mesh;
+	var geometry, material;
 	var objects = [];
 	
 	init();
@@ -54,15 +53,22 @@ function example(){
 	var moveRight = false;
 	var canJump = false;
 	var prevTime = performance.now();
+
 	function init() {
 		camera = new THREE.PerspectiveCamera( 26, tam.width / tam.height, 1, 1000 );
-		camera.position.set(0, 5, 0);
+		camera.position.set(40, 10, 90);
 		scene = new THREE.Scene();
 		scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
 		var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
 		light.position.set( 0.5, 1, 0.75 );
 		scene.add( light );
+
 		var onKeyDown = function ( event ) {
+
+			if(document.activeElement.localName == "textarea" || document.activeElement.localName == "input"){
+				return;
+			}
+
 			switch ( event.keyCode ) {
 				case 38: // up
 				case 87: // w
@@ -80,12 +86,16 @@ function example(){
 					moveRight = true;
 					break;
 				case 32: // space
-					if ( canJump === true ) velocity.y += 350;
-					canJump = false;
+					canJump = true;
 					break;
 			}
 		};
 		var onKeyUp = function ( event ) {
+
+			if(document.activeElement.localName == "textarea" || document.activeElement.localName == "input"){
+				return;
+			}
+
 			switch( event.keyCode ) {
 				case 38: // up
 				case 87: // w
@@ -103,11 +113,21 @@ function example(){
 				case 68: // d
 					moveRight = false;
 					break;
+				case 80: // p
+					privateInfo();
+					break;
+				case 67: // c
+					openChat();
+					break;
+				case 32: // space
+					canJump = false;
+					break;
 			}
 		};
+
 		document.addEventListener( 'keydown', onKeyDown, false );
 		document.addEventListener( 'keyup', onKeyUp, false );
-		raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );
+
 		// floor
 		geometry = new THREE.PlaneGeometry( 200, 200, 100, 100 );
 		geometry.rotateX( - Math.PI / 2 );
@@ -119,21 +139,22 @@ function example(){
 		}
 		for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
 			var face = geometry.faces[ i ];
-			face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-			face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-			face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+			face.vertexColors[ 0 ] = new THREE.Color().setHSL( 0, 0.7, 0.2 );
+			face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.1 + 0.25, 0.6, 0.4 );
+			face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.25 + 0.25, 0.6, 0.85 );
 		}
 		material = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
 		mesh = new THREE.Mesh( geometry, material );
+		mesh.receiveShadow = true;
 		scene.add( mesh );
 		
 		// objects
 
 		// WALLS
-		/*for(var i = 0; i < data.height / 2; i++){
+		for(var i = 0; i < data.height / 2; i++){
 			for(var j = 0; j < data.width / 2; j++){
 				if(data.data[(i*myImage.width + j)*4] == 0){
-					var wallGeo = new THREE.BoxGeometry(1, 5, 1);
+					var wallGeo = new THREE.BoxGeometry(2, 15, 2);
 					var wallMat = new THREE.MeshPhongMaterial( {
 							color: 0xeee,
 							shininess: 100,
@@ -144,10 +165,11 @@ function example(){
 					wall.position.x = i - 58.5;
 					wall.position.y = 0.5;
 					wall.position.z = j - 58.5;
+					wall.receiveShadow = true;
 					scene.add(wall);
 				} 
 			}
-		}*/
+		}
 
 		// renderer
 		renderer = new THREE.WebGLRenderer();
@@ -166,10 +188,38 @@ function example(){
 	}
 	function animate() {
 		requestAnimationFrame( animate );
-		if(moveForward) camera.position.z -= 1;
-		if(moveBackward) camera.position.z += 1;
-		if(moveLeft) camera.position.x -= 1;
-		if(moveRight) camera.position.x += 1;
+
+		var direction = camera.getWorldDirection();
+
+		if(moveForward) camera.position.add( direction );
+		if(moveBackward) camera.position.sub( direction );
+		if(moveLeft){
+			new TWEEN.Tween( camera.rotation ).to( {
+						y: camera.rotation.y + Math.PI / 2
+			}, 2000 ).easing( TWEEN.Easing.Elastic.Out).start();
+		}
+		if(moveRight){
+			new TWEEN.Tween( camera.rotation ).to( {
+						y: camera.rotation.y - Math.PI / 2
+			}, 2000 ).easing( TWEEN.Easing.Elastic.Out).start();
+		}
+
+		if(window.server_on){
+			var PLAYER_LIGHT = scene.getObjectByName("player");
+			PLAYER_LIGHT.position.x = camera.position.x;
+			PLAYER_LIGHT.position.y = camera.position.y;
+			PLAYER_LIGHT.position.z = camera.position.z;	
+
+			var light = PLAYER_LIGHT.children[0];
+
+			light.target.position.set(direction.x, direction.y, direction.z);
+			
+		}
+
+
+		
+
+		TWEEN.update();
 		renderer.render( scene, camera );
 	}
 }
@@ -211,7 +261,7 @@ function confetiExplosion(){
 	}
 }
 
-function createFigure(id, colorf, path){
+function createFigure(list, id, colorf, path){
 
 	var group = new THREE.Group();
 	group.name = id + "_body";
@@ -262,8 +312,8 @@ function createFigure(id, colorf, path){
 	group.add(playerBody);
 
 	// posición inicial en el laberinto
-	group.position.x = -32.5;
-	group.position.z = -58;
+	group.position.x = list[0];
+	group.position.z = list[2];
 
 	scene.add(group);
 }
@@ -278,6 +328,8 @@ function createNewLight(list, colorl, user_id, path){
 	spotLight.penumbra = 0.2;
 	spotLight.castShadow = true;
 
+	spotLight.target.position.set(0, 0, 0);
+    scene.add( spotLight.target );
 
 	group.add( spotLight );
 
@@ -300,7 +352,7 @@ function createNewLight(list, colorl, user_id, path){
 
 	scene.add(group);
 
-	createFigure(user_id, colorl, path);
+	createFigure(list, user_id, colorl, path);
 }
 
 function updateMeshPosition(user_id, ox, oy, oz){

@@ -38,6 +38,7 @@ ctx.drawImage(myImage, 0, 0);
 var data = ctx.getImageData(0, 0, w, h);
 
 var camera, scene, renderer;
+var controls;
 var mesh;
 
 function example(){
@@ -178,6 +179,10 @@ function example(){
 		renderer.domElement.id = "my_canvas";
 		container.appendChild( renderer.domElement );
 
+		// controls (mouse)
+		//controls = new THREE.OrbitControls( camera, renderer.domElement );
+		//controls.update();
+
 		//
 		window.addEventListener( 'resize', onWindowResize, false );
 	}
@@ -191,17 +196,23 @@ function example(){
 
 		var direction = camera.getWorldDirection();
 
-		if(moveForward) camera.position.add( direction );
+		if(moveForward){
+			new TWEEN.Tween( camera.position ).to( {
+						x: camera.position.x + direction.multiplyScalar(1).x,
+						y: camera.position.y + direction.multiplyScalar(1).y,
+						z: camera.position.z + direction.multiplyScalar(1).z,
+			}, 200 ).easing( TWEEN.Easing.Sinusoidal.In).start();
+		}
 		if(moveBackward) camera.position.sub( direction );
 		if(moveLeft){
 			new TWEEN.Tween( camera.rotation ).to( {
 						y: camera.rotation.y + Math.PI / 2
-			}, 2000 ).easing( TWEEN.Easing.Elastic.Out).start();
+			}, 750 ).easing( TWEEN.Easing.Sinusoidal.In).start();
 		}
 		if(moveRight){
 			new TWEEN.Tween( camera.rotation ).to( {
 						y: camera.rotation.y - Math.PI / 2
-			}, 2000 ).easing( TWEEN.Easing.Elastic.Out).start();
+			}, 750 ).easing( TWEEN.Easing.Sinusoidal.In).start();
 		}
 
 		if(window.server_on){

@@ -501,6 +501,7 @@ function openChat() {
 
   document.getElementById("chatBox").style.display = "block";
   document.getElementById("textinput").focus();
+  document.getElementById("openMenu").style.display = "none";
   closeNav();
 
 }
@@ -536,6 +537,7 @@ function keyListener(event){
     closeNav();
     document.getElementById("avatarslist").style.display = "none";
     document.getElementById("right_info").style.display = "none";
+    document.getElementById("openMenu").style.display = "block";
 
     hideDivs();
     closeChat();

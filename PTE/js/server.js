@@ -38,12 +38,6 @@ server.on_message = function( user_id, message){
 	}else if(objectReceived.info == 8){
 		removeConfeti();
 		return;
-	}else if(objectReceived.info == 10){
-		updateMeshPosition(user_id, objectReceived.px, objectReceived.py, objectReceived.pz);
-		return;
-	}else if(objectReceived.info == 11){
-		updatePlayerPosition(user_id, objectReceived.px, objectReceived.py, objectReceived.pz, objectReceived.ry);
-		return;
 	}else if(objectReceived.info == 12){
 		popCube(objectReceived.x, objectReceived.z);
 		return;
@@ -65,16 +59,14 @@ server.on_message = function( user_id, message){
         
 		var people = document.querySelector("#pp"); // cogemos el sitio donde iran los conectados
 		people.appendChild(conectados);
-
-		// crear la luz de la otra persona
-		createNewLight(objectReceived.l_list, objectReceived.hex_color, user_id, pathBueno);
 		
 		// una vez el nuevo recibe la información de cada uno, 
 		// devuelve su información para que los demás completen
 		// su registro:
 
 		if(objectReceived.info == 1){
-			accept_handshaking(user_id);
+			console.log(objectReceived.activePosList);
+			accept_handshaking(user_id, objectReceived.activePosList);
 		}
 
 		// añadir posibilidad de chat privado para cada

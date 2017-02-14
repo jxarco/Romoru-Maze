@@ -25,7 +25,7 @@ else{ // en caso de estar en modo local y no usar el host
 // INICIO
 
 var random, guestname, avatarPath, num_rand_avatar;
-var room_bool = false;
+var room_bool = false, UPDATED_BEFORE = false;
 var list;
 var color;
 window.player = new THREE.Group();
@@ -65,9 +65,19 @@ function init(){
   // asignamos también un avatar por defecto 
   num_rand_avatar = Math.floor((Math.random() * 21) + 1);
   num_rand_avatar = 1; // esto podemos quitarlo despues
-  avatarPath = "assets/avatar" + num_rand_avatar +".png";
-  list = [40, 10, 90]; // posicion de nuestra luz canvas 3d 
+  avatarPath = "assets/avatar" + num_rand_avatar +".png"; 
   color = "#" + ((1<<24) * Math.random() | 0).toString(16);
+
+  // aquí asignaremos a cada PLAYER del laberinto una posición hasta ser 4. El 5 no tiene posición
+
+  list = [];
+  list.push( {posx: 124, posz: 4, rot: (Math.PI / 2), active: false} );
+  list.push( {posx: 124, posz: 124, rot: (Math.PI / 2) - (Math.PI / 2), active: false} );
+  list.push( {posx: 4, posz: 124, rot: (-1 * Math.PI / 2) - Math.PI / 2, active: false} );
+  list.push( {posx: 4, posz: 4, rot: (-1 * Math.PI) - Math.PI / 2, active: false} );
+
+  // *********************************************************************************************
+
 
   // actualizamos los datos en la página
   update();
@@ -78,6 +88,7 @@ function init(){
 }
 
 function hideIntro(){
+
   document.getElementById("hideMe").style.display = "none";  
 }
 
@@ -95,7 +106,21 @@ function appear_connected(){
   var people = document.querySelector("#pp"); // cogemos el sitio donde iran los conectados
   people.appendChild(conectados);
 
-  createNewLight(list, color, "player", avatarPath);  
+  //createNewLight(list, color, "player", avatarPath); 
+
+  // EL PRIMERO QUE SE CONECTE NO NECESITA 
+  // NINGUN TIPO DE HANDSHAKING
+  setCamera(list[0], 0);
+  list[0].active = true;
+
+  console.log("ON MY CONECTION")
+  console.log(list)
+}
+
+function updatePosList(UPlist){
+  console.log("updating with exchanged info...")
+  console.log(UPlist)
+  list = UPlist;
 }
 
 function new_connection(user_id){
@@ -105,8 +130,7 @@ function new_connection(user_id){
   objectToSend.name = guestname;
   objectToSend.avatar = avatarPath;
   objectToSend.info = 1;
-  objectToSend.hex_color = color; // color de la luz
-  objectToSend.l_list = list; // posicion de la luz
+  objectToSend.activePosList = list;
 
   // esto podria ser un array
   var send_to = user_id;
@@ -114,19 +138,40 @@ function new_connection(user_id){
   server.sendMessage(objectToSend, send_to); // empezamos el handshaking
 }
 
-function accept_handshaking(user_id){
+function accept_handshaking(user_id, UPlist){
   var objectToSend = {}; // nuestro objeto a enviar
 
   objectToSend.name = guestname;
   objectToSend.avatar = avatarPath;
   objectToSend.info = 2; // una vez se acaba el handshaking, no queremos volver a hacerlo
-  objectToSend.hex_color = color;
-  objectToSend.l_list = list;
 
   // esto podria ser un array
   var send_to = user_id;
 
   server.sendMessage(objectToSend, send_to);
+
+  /*
+  SOLO CUANDO NO HAYAMOS ACTUALIZADO YA.
+  EL SEGUNDO MENSAJE DE OTRA PERSONA YA SOBRA!!!
+  */
+
+  if(!UPDATED_BEFORE){
+    updatePosList(UPlist);
+
+    // UNA VEZ TENGAMOS LA LISTA DE POSICIONES
+    // ACTIVAS, PODREMOS MOVER LA CÁMARA A DONDE
+    // TOQUE.
+    var unactiveIndex = 0;
+    while(list[unactiveIndex].active == true){
+      unactiveIndex++;
+    }
+
+    console.log("updating position to index: ");
+    console.log(unactiveIndex)
+
+    setCamera(list[unactiveIndex], unactiveIndex);
+    list[unactiveIndex].active = true;
+  }
 }
 
 // funcion para los chats privados
@@ -191,7 +236,7 @@ function add_privateChat_event(id, sendto_name){
 
 }
 
-// característica mayúsculas en el chat ***************************************
+// característica mayúsculas en el chat 
 // inicialmente activado
 var checked = true;
 document.getElementById("check1").checked = true;
@@ -258,7 +303,7 @@ function send_name_info(newname){
   server.sendMessage(objectToSend);
 }
 
-function changeSuInfo(path, id, name){
+function changeSuInfo(path, id, name, updatedList){
 
   // avatares de todos sus mensajes
   var img_usuarios = document.querySelectorAll(".avatar_" + id + " img");
@@ -322,7 +367,6 @@ function hideDivs(){
   document.getElementById("change_id").style.display = "none";
 }
   
-
 // añadir funcionalidad: boton USERNAME cambia el nombre de usuario
 var ubutton = document.querySelector("#ubutton");
 ubutton.addEventListener("click", function(){
@@ -337,7 +381,6 @@ ubutton.addEventListener("click", function(){
 
   // set focus to text area to write directly
   document.getElementById("uinput").focus();
-
 });
 
 // añadir funcionalidad: boton accept modifica el nombre de usuario
@@ -417,9 +460,6 @@ function send(argument, hex_color, list){
     objectToSend.avatar = avatarPath;
     if(argument == "confeti"){
       objectToSend.info = 5;
-    }else if(argument == "newlight"){
-      objectToSend.info = 7;
-      objectToSend.l_list = list;
     }else if(argument == "rem_confeti"){
       objectToSend.info = 8;
     }else if (argument == "rem_popped"){
@@ -503,13 +543,11 @@ function openChat() {
   document.getElementById("textinput").focus();
   document.getElementById("openMenu").style.display = "none";
   closeNav();
-
 }
 
 function closeChat() {
 
   document.getElementById("chatBox").style.display = "none";
-
 }
 
 // ****************************************************************************

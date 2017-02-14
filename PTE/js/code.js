@@ -41,6 +41,21 @@ var camera, scene, renderer;
 var controls;
 var mesh;
 
+function setCamera(list, index){
+
+	var x = list.posx;
+	var z = list.posz;
+	var rotation = list.rot;
+
+	camera.position.x = x;
+	camera.position.z = z;
+	camera.rotation.y += rotation;
+
+	console.log("setting player camera")
+	console.log("SET TO GRID: x(" + (camera.position.x / 4) + "), z(" + (camera.position.z / 4) + ") with rotation: ");
+	console.log(rotation)
+}
+
 function example(){
 	
 	var geometry, material;
@@ -67,8 +82,8 @@ function example(){
 		//camera.rotation.y -= Math.PI / 2;
 		//camera.position.set(124, 0, 124);  //TL 	POSICION 3
 		//camera.rotation.y += Math.PI / 2;
-		camera.position.set(124, 0, 4);  //BL 	POSICION 4
-		camera.rotation.y += Math.PI / 2;
+		//camera.position.set(124, 0, 4);  //BL 	POSICION 4
+		//camera.rotation.y += Math.PI / 2;
 
 
 		scene = new THREE.Scene();
@@ -143,11 +158,10 @@ function example(){
 		document.addEventListener( 'keydown', onKeyDown, false );
 		document.addEventListener( 'keyup', onKeyUp, false );
 
-		// objects
+		// objects *************************************************************************************************
 
 		// floor
 		var floorTexture =  new THREE.TextureLoader().load( 'assets/grass_texture.png' );
-
 		
 		// geometry
 	    var geometry = new THREE.PlaneGeometry(140, 140, 100, 100);
@@ -173,8 +187,6 @@ function example(){
 		mesh.position.z = 63;
 		mesh.receiveShadow = true;
 		scene.add( mesh );
-		
-		
 
 		// WALLS
 		var wallTexture =  new THREE.TextureLoader().load( 'assets/wall2.jpg' );
@@ -198,7 +210,8 @@ function example(){
 			}
 		}
 
-		// renderer
+		// renderer ************************************************************************************************
+
 		renderer = new THREE.WebGLRenderer();
 		renderer.setPixelRatio( window.devicePixelRatio );
 		renderer.setSize( tam.width, tam.height );
@@ -209,7 +222,6 @@ function example(){
 		// controls = new THREE.OrbitControls( camera, renderer.domElement );
 		// controls.update();
 
-		//
 		window.addEventListener( 'resize', onWindowResize, false );
 	}
 	function onWindowResize() {
@@ -246,21 +258,6 @@ function example(){
 						y: camera.rotation.y - Math.PI / 2
 			}, 250 ).easing( TWEEN.Easing.Sinusoidal.In).start();
 		}
-
-		if(window.server_on){
-			var PLAYER_LIGHT = scene.getObjectByName("player");
-			PLAYER_LIGHT.position.x = camera.position.x;
-			PLAYER_LIGHT.position.y = camera.position.y;
-			PLAYER_LIGHT.position.z = camera.position.z;	
-
-			var light = PLAYER_LIGHT.children[0];
-
-			light.target.position.set(direction.x, direction.y, direction.z);
-			
-		}
-
-
-		
 
 		TWEEN.update();
 		renderer.render( scene, camera );
@@ -355,8 +352,8 @@ function createFigure(list, id, colorf, path){
 	group.add(playerBody);
 
 	// posición inicial en el laberinto
-	group.position.x = list[0];
-	group.position.z = list[2];
+	//group.position.x = list[0];
+	//group.position.z = list[2];
 
 	scene.add(group);
 }
@@ -386,9 +383,9 @@ function createNewLight(list, colorl, user_id, path){
 
 	if(user_id != "player") group.add( light_sphere );
 
-	group.position.x = list[0];
-	group.position.y = list[1];
-	group.position.z = list[2];
+	//group.position.x = list[0];
+	//group.position.y = list[1];
+	//group.position.z = list[2];
 
 	// cada uno guarda su propia luz
 	window.player = group;
@@ -417,11 +414,11 @@ function updatePlayerPosition(user_id, ox, oy, oz, ry){
 	}
 }
 
-function updateTexture(id, path){
-	var head = scene.getObjectByName(id).children[0];
-	head.material.materials[2].map = new THREE.ImageUtils.loadTexture(path);
-	head.material.needsUpdate = true;
-}
+// function updateTexture(id, path){
+// 	var head = scene.getObjectByName(id).children[0];
+// 	head.material.materials[2].map = new THREE.ImageUtils.loadTexture(path);
+// 	head.material.needsUpdate = true;
+// }
 
 function deleteUser(user_id){
 	for( var i = 0; i < scene.children.length; i++){

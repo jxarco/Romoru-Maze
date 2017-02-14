@@ -56,8 +56,10 @@ function example(){
 	var prevTime = performance.now();
 
 	function init() {
-		camera = new THREE.PerspectiveCamera( 26, tam.width / tam.height, 1, 1000 );
-		camera.position.set(40, 10, 90);
+
+		camera = new THREE.PerspectiveCamera( 50, tam.width / tam.height, 1, 1000 );
+		camera.position.set(4, 0, 4);
+		camera.rotation.y -= Math.PI;
 		scene = new THREE.Scene();
 		scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
 		var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
@@ -121,6 +123,7 @@ function example(){
 					openChat();
 					break;
 				case 32: // space
+					console.log(camera)
 					canJump = false;
 					break;
 			}
@@ -130,14 +133,14 @@ function example(){
 		document.addEventListener( 'keyup', onKeyUp, false );
 
 		// floor
-		geometry = new THREE.PlaneGeometry( 200, 200, 100, 100 );
+		geometry = new THREE.PlaneGeometry( 140, 140, 1, 1 );
 		geometry.rotateX( - Math.PI / 2 );
-		for ( var i = 0, l = geometry.vertices.length; i < l; i ++ ) {
+		/*for ( var i = 0, l = geometry.vertices.length; i < l; i ++ ) {
 			var vertex = geometry.vertices[ i ];
 			vertex.x += Math.random() * 20 - 10;
 			vertex.y += Math.random() * 2;
 			vertex.z += Math.random() * 20 - 10;
-		}
+		}*/
 		for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
 			var face = geometry.faces[ i ];
 			face.vertexColors[ 0 ] = new THREE.Color().setHSL( 0, 0.7, 0.2 );
@@ -146,16 +149,19 @@ function example(){
 		}
 		material = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
 		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.x = 63;
+		mesh.position.y = -1.5;
+		mesh.position.z = 63;
 		mesh.receiveShadow = true;
 		scene.add( mesh );
 		
 		// objects
 
 		// WALLS
-		for(var i = 0; i < data.height / 2; i++){
-			for(var j = 0; j < data.width / 2; j++){
+		for(var i = 0; i < data.height; i++){
+			for(var j = 0; j < data.width; j++){
 				if(data.data[(i*myImage.width + j)*4] == 0){
-					var wallGeo = new THREE.BoxGeometry(2, 15, 2);
+					var wallGeo = new THREE.BoxGeometry(4, 2, 4);
 					var wallMat = new THREE.MeshPhongMaterial( {
 							color: 0xeee,
 							shininess: 100,
@@ -163,9 +169,9 @@ function example(){
 					});
 
 					var wall = new THREE.Mesh(wallGeo, wallMat);
-					wall.position.x = i - 58.5;
-					wall.position.y = 0.5;
-					wall.position.z = j - 58.5;
+					wall.position.x = i * 4;
+					wall.position.y = 0;
+					wall.position.z = j * 4;
 					wall.receiveShadow = true;
 					scene.add(wall);
 				} 
@@ -201,24 +207,24 @@ function example(){
 						x: camera.position.x + direction.multiplyScalar(1).x,
 						y: camera.position.y + direction.multiplyScalar(1).y,
 						z: camera.position.z + direction.multiplyScalar(1).z,
-			}, 200 ).easing( TWEEN.Easing.Sinusoidal.In).start();
+			}, 100 ).easing( TWEEN.Easing.Elastic.Out).start();
 		}
 		if(moveBackward){
 			new TWEEN.Tween( camera.position ).to( {
 						x: camera.position.x - direction.multiplyScalar(1).x,
 						y: camera.position.y - direction.multiplyScalar(1).y,
 						z: camera.position.z - direction.multiplyScalar(1).z,
-			}, 200 ).easing( TWEEN.Easing.Sinusoidal.In).start();
+			}, 200 ).easing( TWEEN.Easing.Elastic.Out).start();
 		}
 		if(moveLeft){
 			new TWEEN.Tween( camera.rotation ).to( {
 						y: camera.rotation.y + Math.PI / 2
-			}, 750 ).easing( TWEEN.Easing.Sinusoidal.In).start();
+			}, 250 ).easing( TWEEN.Easing.Sinusoidal.In).start();
 		}
 		if(moveRight){
 			new TWEEN.Tween( camera.rotation ).to( {
 						y: camera.rotation.y - Math.PI / 2
-			}, 750 ).easing( TWEEN.Easing.Sinusoidal.In).start();
+			}, 250 ).easing( TWEEN.Easing.Sinusoidal.In).start();
 		}
 
 		if(window.server_on){

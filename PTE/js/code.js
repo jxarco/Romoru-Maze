@@ -45,6 +45,15 @@ function funZero(){
 
 	MAT = CREATE_MATRIX(data, myImage);
 	MAT2 = TRANSFORM_MATRIX(MAT, 5);
+
+	var s = "";
+	for (var i = 0; i < MAT.length; i++) {
+		for (var j = 0; j < MAT.length; j++) {
+			s = s + MAT[i][j] + "\t"
+		}
+		s += "\n"
+	}
+	console.log(s);
 }
 
 function INTERACTION(){

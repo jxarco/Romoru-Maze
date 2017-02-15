@@ -41,11 +41,6 @@ function init(){
   var label_name = document.querySelector("#contact_name");
   label_name.innerHTML = "Create or join a room to begin:";
 
-  var roominput = document.querySelector("#roominput");
-
-  // ROOM SELECTOR
-  roominput.focus();
-
   document.getElementById("roominput").addEventListener("keyup", function(event){
   event.preventDefault();
     if(event.keyCode == 13)
@@ -79,6 +74,10 @@ function init(){
   // estados inicials de ciertos elementos visuales
   document.getElementById("opacitypanel").style.display = "block";
   document.getElementById("opacitypanel").style.zIndex = "20";
+
+  // ROOM SELECTOR
+  var roominput = document.querySelector("#roominput");
+  roominput.focus();
 }
 
 function hideIntro(){
@@ -99,8 +98,6 @@ function appear_connected(){
               "</div>";
   var people = document.querySelector("#pp"); // cogemos el sitio donde iran los conectados
   people.appendChild(conectados);
-
-  //createNewLight(list, color, "player", avatarPath); 
 
   // EL PRIMERO QUE SE CONECTE NO NECESITA 
   // NINGUN TIPO DE HANDSHAKING

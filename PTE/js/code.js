@@ -14,7 +14,7 @@ var MAT, MAT2, data;
 var floorMESH, materials;
 var container, tam, audio;
 
-window.walls_on = false;
+window.walls_on = true;
 
 funZero();
 
@@ -43,23 +43,19 @@ function funZero(){
 	// ('data' is an array of RGBA pixel values for each pixel)
 	var data = ctx.getImageData(0, 0, w, h);
 	var pixelsData = data.data;
-	// console.log(data2)
-	// console.log(data2[0])
-	// console.log(data2[1])
-	// console.log(data2[2])
-	// console.log(data2[3]/255)
 
 	MAT = CREATE_MATRIX(pixelsData, myImage);
-	// MAT2 = TRANSFORM_MATRIX(MAT, 5);
+	MAT = MODIFY_MATRIX(MAT);
+	MAT2 = TRANSFORM_MATRIX(MAT, 5);
 
-	var s = "";
-	for (var i = 0; i < MAT.length; i++) {
-		for (var j = 0; j < MAT[i].length; j++) {
-			s = s + MAT[i][j] + "\t";
-		}
-		s += "\n"
-	}
-	console.log(s);
+	// var s = "";
+	// for (var i = 0; i < MAT.length; i++) {
+	// 	for (var j = 0; j < MAT[i].length; j++) {
+	// 		s = s + MAT[i][j] + "\t";
+	// 	}
+	// 	s += "\n"
+	// }
+	// console.log(s);
 }
 
 function INTERACTION(){
@@ -80,7 +76,7 @@ function INTERACTION(){
 		camera = new THREE.PerspectiveCamera( 50, tam.width / tam.height, 0.1, 1000 );
 		scene = new THREE.Scene();
 		scene.fog = new THREE.Fog( 0xffffff, 0, 1000 );
-		var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
+		var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.25 );
 		light.position.set( 0.5, 1, 0.75 );
 		scene.add( light );
 
@@ -151,33 +147,44 @@ function INTERACTION(){
 
 		// floor
 		var floorTexture =  new THREE.TextureLoader().load( 'assets/grass_texture.png' );
-	    var geometry = new THREE.PlaneGeometry(165, 165, 100, 100);
+	    var geometry = new THREE.PlaneGeometry(165, 165, 1, 1);
 	    geometry.rotateX( - Math.PI / 2 );
-	    var materials = [];
-	    materials.push(new THREE.MeshBasicMaterial({
-	        map: floorTexture
-	    }));
+	    
+		var material1 = new THREE.MeshPhongMaterial( { color: 0xffffff, map: floorTexture } );
+		floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+		floorTexture.repeat.set( 16, 16 );
 
-	    // Add materialIndex to face
-	    var l = geometry.faces.length / 2;
-	    for (var i = 0; i < l; i++) {
-	        geometry.faces[i].materialIndex = 0;
-	    }
-
-	    floorMESH = new THREE.Mesh(geometry, new THREE.MultiMaterial(materials));
+	    floorMESH = new THREE.Mesh(geometry, material1);
 	    floorMESH.position.x = 80;
 		floorMESH.position.y = -1.5;
 		floorMESH.position.z = 80;
 		floorMESH.receiveShadow = true;
 		scene.add( floorMESH );
 
+		// // roof
+		// var roofTexture =  new THREE.TextureLoader().load( 'assets/space.png' );
+	 //    var geometry2 = new THREE.PlaneGeometry(165, 165, 2, 1, 1);
+	 //    geometry2.rotateX( - Math.PI / 2 );
+	 //    geometry2.rotateZ( - Math.PI );
+	    
+		// var material2 = new THREE.MeshPhongMaterial( { color: 0xffffff, map: roofTexture } );
+		// roofTexture.wrapS = roofTexture.wrapT = THREE.RepeatWrapping;
+		// roofTexture.repeat.set( 256, 256 );
+
+	 //    roofMESH = new THREE.Mesh(geometry2, material2);
+	 //    roofMESH.position.x = 80;
+		// roofMESH.position.y = 2;
+		// roofMESH.position.z = 80;
+		// roofMESH.receiveShadow = true;
+		// scene.add( roofMESH );
+
 		//WALLS
 		if(window.walls_on){
 			var wallTexture =  new THREE.TextureLoader().load( 'assets/wall2.jpg' );
 			for(var i = 0; i < MAT.length; i++){
 				for(var j = 0; j < MAT.length; j++){
-					if(MAT[i][j] == 0){ // 0 NEGRO + AZUL + VERDE
-						var wallGeo = new THREE.BoxGeometry(5, 3, 5);
+					if(MAT[i][j] == 0){ // 0 NEGRO
+						var wallGeo = new THREE.BoxGeometry(5, 4, 5);
 						var wallMat = new THREE.MeshPhongMaterial( {
 								map: wallTexture,
 								shininess: 100,
@@ -191,55 +198,70 @@ function INTERACTION(){
 						wall.receiveShadow = true;
 						scene.add(wall);
 					} 
-					// if(data.data[(i*myImage.width + j)*4] == 255){ // 255 ROSA + ROJO + NARANJA
-					// 	var wallGeo = new THREE.BoxGeometry(4, 2, 4);
-					// 	var wallMat = new THREE.MeshPhongMaterial( {
-					// 			map: wallTexture,
-					// 			shininess: 100,
-					// 			side: THREE.DoubleSide
-					// 	});
-
-					// 	var wall = new THREE.Mesh(wallGeo, wallMat);
-					// 	wall.position.x = i * 4;
-					// 	wall.position.y = 0;
-					// 	wall.position.z = j * 4;
-					// 	wall.receiveShadow = true;
-					// 	scene.add(wall);
-					// }
-
-
-					// HACKER MODE ***********************************************************************
-					else if(MAT[i][j] == 252){ // 252 AMARILLO 
-						wallGeo = new THREE.BoxGeometry(5, 1, 5);
+					else if(MAT[i][j] == 2){ // 2 VERDE MODIFICADO
+						var wallGeo = new THREE.BoxGeometry(5, 4, 5);
 						var AUX = new THREE.MeshPhongMaterial( {
-								color: "yellow",
-								shininess: 100,
-								side: THREE.DoubleSide
-						});
-						wall = new THREE.Mesh(wallGeo, AUX);
+					 			color: "green",
+					 			shininess: 100,
+					 			side: THREE.DoubleSide
+					 	});
+
+						var wall = new THREE.Mesh(wallGeo, AUX);
 						wall.position.x = i * 5;
-						wall.position.y = -1.5;
+						wall.position.y = 0;
 						wall.position.z = j * 5;
 						wall.receiveShadow = true;
 						scene.add(wall);
 					} 
-					// ***********************************************************************************
-
-					else if(MAT[i][j] == 177){ // 177 LILA
-						wallGeo = new THREE.BoxGeometry(5, 1, 5);
+					else if(MAT[i][j] == 3){ // 3 ROJO MODIFICADO
+						var wallGeo = new THREE.BoxGeometry(5, 4, 5);
 						var AUX = new THREE.MeshPhongMaterial( {
-								color: "pink",
-								shininess: 100,
-								side: THREE.DoubleSide
-						});
+					 			color: "red",
+					 			shininess: 100,
+					 			side: THREE.DoubleSide
+					 	});
 
-						wall = new THREE.Mesh(wallGeo, AUX);
+						var wall = new THREE.Mesh(wallGeo, AUX);
 						wall.position.x = i * 5;
-						wall.position.y = -1.5;
+						wall.position.y = 0;
 						wall.position.z = j * 5;
 						wall.receiveShadow = true;
 						scene.add(wall);
 					}
+
+
+					// HACKER MODE ***********************************************************************
+					// else if(MAT[i][j] == 252){ // 252 AMARILLO 
+					// 	wallGeo = new THREE.BoxGeometry(5, 1, 5);
+					// 	var AUX = new THREE.MeshPhongMaterial( {
+					// 			color: "yellow",
+					// 			shininess: 100,
+					// 			side: THREE.DoubleSide
+					// 	});
+					// 	wall = new THREE.Mesh(wallGeo, AUX);
+					// 	wall.position.x = i * 5;
+					// 	wall.position.y = -1.5;
+					// 	wall.position.z = j * 5;
+					// 	wall.receiveShadow = true;
+					// 	scene.add(wall);
+					// } 
+					// ***********************************************************************************
+
+					// else if(MAT[i][j] == 177){ // 177 LILA
+					// 	wallGeo = new THREE.BoxGeometry(5, 1, 5);
+					// 	var AUX = new THREE.MeshPhongMaterial( {
+					// 			color: "pink",
+					// 			shininess: 100,
+					// 			side: THREE.DoubleSide
+					// 	});
+
+					// 	wall = new THREE.Mesh(wallGeo, AUX);
+					// 	wall.position.x = i * 5;
+					// 	wall.position.y = -1.5;
+					// 	wall.position.z = j * 5;
+					// 	wall.receiveShadow = true;
+					// 	scene.add(wall);
+					// }
 				}
 			}
 		}
@@ -270,8 +292,8 @@ function INTERACTION(){
 		container.appendChild( renderer.domElement );
 
 		// controls (mouse)
-		//controls = new THREE.OrbitControls( camera, renderer.domElement );
-		//controls.update();
+		controls = new THREE.OrbitControls( camera, renderer.domElement );
+		controls.update();
 
 		window.addEventListener( 'resize', onWindowResize, false );
 	}
@@ -449,34 +471,34 @@ function setCamera(list){
 function CREATE_MATRIX(data, myImage){
 	var matrix = [];
 
-	for(var i = 0; i < data.length; i += 4){
-		// 	var newRow = [];
-		//for(var j = 0; j < myImage.height; j++){
-			var pixelr = data[i];
-			var pixelg = data[i+1];
-			var pixelb = data[i+2];
-			var pixela = data[i+3];
+	// for(var i = 0; i < data.length; i += 4){
+	// 	// 	var newRow = [];
+	// 	//for(var j = 0; j < myImage.height; j++){
+	// 		var pixelr = data[i];
+	// 		var pixelg = data[i+1];
+	// 		var pixelb = data[i+2];
+	// 		var pixela = data[i+3];
 
-			var s = "r: " + pixelr + ", g: " + pixelg + ", b: " + pixelb + ", a: " + pixela;
+	// 		var s = "r: " + pixelr + ", g: " + pixelg + ", b: " + pixelb + ", a: " + pixela;
 			
-			//newRow.push( s );
-		//}
+	// 		//newRow.push( s );
+	// 	//}
 
-		matrix.push( s );
-	}
-
-
-
-	// for(var i = 0; i < myImage.height; i++){
-
-	// 	var newRow = [];
-	// 	for(var j = 0; j < myImage.width; j++){
-
-	// 		newRow.push( data[(i*myImage.width + j)*4] );
-	// 	}
-
-	// 	matrix.push( newRow );
+	// 	matrix.push( s );
 	// }
+
+
+
+	for(var i = 0; i < myImage.height; i++){
+
+		var newRow = [];
+		for(var j = 0; j < myImage.width; j++){
+
+			newRow.push( data[(i*myImage.width + j)*4] );
+		}
+
+		matrix.push( newRow );
+	}
 
 	// for(var i = 0; i < 3; i++){
 
@@ -490,6 +512,33 @@ function CREATE_MATRIX(data, myImage){
 	// }
 	
 	return matrix;	
+}
+
+function MODIFY_MATRIX( m ){
+
+	// GREEN DOTS
+
+	m[22][2] = 2;
+	m[8][2] = 2;
+	m[19][3] = 2;
+	m[13][9] = 2;
+	m[2][24] = 2;
+	m[5][19] = 2;
+	m[31][21] = 2;
+	m[28][22] = 2;
+
+	// RED DOTS
+
+	m[23][4] = 3;//
+	m[10][1] = 3;//
+	m[15][20] = 3;//
+	m[14][15] = 3;//
+	m[3][22] = 3;//
+	m[19][14] = 3;//
+	m[20][19] = 3;
+	m[26][21] = 3;//
+
+	return m;
 }
 
 function TRANSFORM_MATRIX( m, space ){

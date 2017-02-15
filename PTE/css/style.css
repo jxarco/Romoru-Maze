@@ -457,23 +457,6 @@ html, body{
 }
 
 /*******************************************************/
-/* SKINS */
-
-.skintab{
-	display: none;
-}
-
-.skin {
-    position: relative;
-    display: inline-block;
-
-}
-
-.skin:hover .skin_image {
-    display: block;
-}
-
-/*******************************************************/
 
 /* PROFILE BOX */
 

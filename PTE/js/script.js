@@ -2,11 +2,11 @@
 // SCRIPT FOR U TALK CHAT
 
 
-/* IMPORTANTE: *****************************************************************
- * Necesitamos abrir el chat desde el host de github para hacer funcionar las  *
- * notificaciones. Disponible aquí:  https://jxarco.github.io/ECV1/            *
- * Si no es así, evitaremos preguntar por permisos.                            *
- *******************************************************************************/
+/* IMPORTANTE: *************************************************************************
+ * Necesitamos abrir el chat desde el host de github O XAMPP para hacer funcionar las  *
+ * notificaciones. Disponible aquí:  https://jxarco.github.io/ECV1/                    *
+ * Si no es así, evitaremos preguntar por permisos.                                    *
+ ***************************************************************************************/
 
 var url = window.location.href;
 
@@ -35,7 +35,6 @@ init();
 
 function init(){
 
-  // cambiar el zoom del perfil
   var intro_logo = document.querySelector("#image_avatar img");
   intro_logo.src = "assets/favicon.png";
 
@@ -44,10 +43,7 @@ function init(){
 
   var roominput = document.querySelector("#roominput");
 
-  // show all
-  document.getElementById("opacitypanel").style.display = "block";
-  document.getElementById("opacitypanel").style.zIndex = "20";
-
+  // ROOM SELECTOR
   roominput.focus();
 
   document.getElementById("roominput").addEventListener("keyup", function(event){
@@ -64,7 +60,6 @@ function init(){
 
   // asignamos también un avatar por defecto 
   num_rand_avatar = Math.floor((Math.random() * 21) + 1);
-  num_rand_avatar = 1; // esto podemos quitarlo despues
   avatarPath = "assets/avatar" + num_rand_avatar +".png"; 
   color = "#" + ((1<<24) * Math.random() | 0).toString(16);
 
@@ -77,7 +72,6 @@ function init(){
   list.push( {posx: 5, posz: 5, rot: (-1 * Math.PI) - Math.PI / 2, active: false} );
 
   // *********************************************************************************************
-
 
   // actualizamos los datos en la página
   update();
@@ -115,6 +109,7 @@ function appear_connected(){
 }
 
 function updatePosList(UPlist){
+
   list = UPlist;
 }
 
@@ -225,7 +220,6 @@ function add_privateChat_event(id, sendto_name){
     var p_connected_id = document.getElementById("console_change_"+ id);
     sendTo(id, p_connected_id.dataset['newname']);
   });
-
 }
 
 // característica mayúsculas en el chat 
@@ -240,6 +234,7 @@ function validateBox(){
 }
 
 String.prototype.capitalize = function() {
+
     return this.charAt(0).toUpperCase() + this.slice(1);
 }
 
@@ -608,26 +603,6 @@ window.onclick = function(event) {
 function hideOpPanel(){
   document.getElementById("opacitypanel").style.display = "none";
   document.getElementById("opacitypanel").style.zIndex = "1";
-}
-
-// SKINS *************************************************************
-
-function openSkinTab(){
-  document.getElementById("stab").style.display = "block";
-}
-
-function applySkin(cssFile, cssLinkIndex) {
-
-    var oldlink = document.getElementsByTagName("link").item(cssLinkIndex);
-
-    var newlink = document.createElement("link");
-    newlink.setAttribute("rel", "stylesheet");
-    newlink.setAttribute("type", "text/css");
-    newlink.setAttribute("href", cssFile);
-
-    document.getElementsByTagName("head").item(0).replaceChild(newlink, oldlink);
-
-    closeNav();
 }
 
 // NOTIFICACIONES *************************************************************

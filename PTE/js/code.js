@@ -125,8 +125,6 @@ function INTERACTION(){
 					openChat();
 					break;
 				case 32: // space
-					console.log("GRID: x(" + Math.floor(camera.position.x / 4) + "), z(" + Math.floor(camera.position.z / 4) + ")");
-					console.log("IS A " + data.data[(Math.floor(camera.position.x / 4)*myImage.width + Math.floor(camera.position.z / 4))*4] + "IN THE MAZE")
 					break;
 			}
 		};

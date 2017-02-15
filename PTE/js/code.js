@@ -13,6 +13,9 @@ var camera, scene, renderer, controls;
 var MAT, MAT2, data;
 var floorMESH, materials;
 var container, tam, audio;
+var light, light2;
+var direction = new THREE.Vector3();
+var co = 1;
 
 window.walls_on = true;
 
@@ -47,15 +50,6 @@ function funZero(){
 	MAT = CREATE_MATRIX(pixelsData, myImage);
 	MAT = MODIFY_MATRIX(MAT);
 	MAT2 = TRANSFORM_MATRIX(MAT, 5);
-
-	// var s = "";
-	// for (var i = 0; i < MAT.length; i++) {
-	// 	for (var j = 0; j < MAT[i].length; j++) {
-	// 		s = s + MAT[i][j] + "\t";
-	// 	}
-	// 	s += "\n"
-	// }
-	// console.log(s);
 }
 
 function INTERACTION(){
@@ -69,6 +63,7 @@ function INTERACTION(){
 	var moveBackward = false;
 	var moveLeft = false;
 	var moveRight = false;
+	var q = false, e = false;
 	var prevTime = performance.now();
 
 	function init() {
@@ -76,9 +71,16 @@ function INTERACTION(){
 		camera = new THREE.PerspectiveCamera( 50, tam.width / tam.height, 0.1, 1000 );
 		scene = new THREE.Scene();
 		scene.fog = new THREE.Fog( 0xffffff, 0, 1000 );
-		var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.25 );
+
+		// LIGHTS
+		light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.1 );
 		light.position.set( 0.5, 1, 0.75 );
 		scene.add( light );
+
+		light2 = new THREE.PointLight( 0xffffff, 1, 15, 1 );
+		light2.penumbra = 0.1;
+
+		scene.add(light2)
 
 		var onKeyDown = function ( event ) {
 
@@ -102,7 +104,11 @@ function INTERACTION(){
 				case 68: // d
 					moveRight = true;
 					break;
-				case 32: // space
+				case 81: // q
+					q = true;
+					break;
+				case 69: // e
+					e = true;
 					break;
 			}
 		};
@@ -135,7 +141,11 @@ function INTERACTION(){
 				case 67: // c
 					openChat();
 					break;
-				case 32: // space
+				case 81: // q
+					q = false;
+					break;
+				case 69: // e
+					e = false;
 					break;
 			}
 		};
@@ -303,16 +313,16 @@ function INTERACTION(){
 		renderer.setSize( tam.width, tam.height );
 	}
 
-	function limits(direction){
-		
-		// x = Math.floor(x);
-		// z = Math.floor(z);
+	function limits(dir){
 
-		var x = camera.position.x + direction.x;
-		var z = camera.position.z + direction.z;
+		// Si va para atrás, tenemos que restar la dirección!!!
+		if(dir) co = 1;
+		else co = -1;
 
-		console.log(x)
-		console.log(z)
+		var x = camera.position.x + (co * direction.x);
+		var z = camera.position.z + (co * direction.z);
+
+		if(isFloat(x) || isFloat(z)) return false;
 
 		if (MAT2[x][z] == 0){
 		 	return false;
@@ -323,30 +333,38 @@ function INTERACTION(){
 	function animate() {
 		requestAnimationFrame( animate );
 
-		var direction = camera.getWorldDirection();
+		camera.getWorldDirection( direction );
 
-		if(moveForward && limits(direction)){
+		if(moveForward && limits(1)){
 			new TWEEN.Tween( camera.position ).to( {
 						x: camera.position.x + direction.x,
 						z: camera.position.z + direction.z,
-			}, 1 ).easing( TWEEN.Easing.Linear.None).start();
+			}, 200 ).easing( TWEEN.Easing.Linear.None).start();
+
+			// console.log(camera.position.x)
+			// console.log(camera.position.z)
+			
 		}
-		if(moveBackward){
+		if(moveBackward && limits(0)){
 			new TWEEN.Tween( camera.position ).to( {
 						x: camera.position.x - direction.x,
 						z: camera.position.z - direction.z,
-			}, 1 ).easing( TWEEN.Easing.Linear.None).start();
+			}, 200 ).easing( TWEEN.Easing.Linear.None).start();
 		}
 		if(moveLeft){
 			new TWEEN.Tween( camera.rotation ).to( {
 						y: camera.rotation.y + Math.PI / 2
-			}, 250 ).easing( TWEEN.Easing.Sinusoidal.In).start();
+			}, 300 ).easing( TWEEN.Easing.Sinusoidal.In).start();
 		}
 		if(moveRight){
 			new TWEEN.Tween( camera.rotation ).to( {
 						y: camera.rotation.y - Math.PI / 2
-			}, 250 ).easing( TWEEN.Easing.Sinusoidal.In).start();
+			}, 300 ).easing( TWEEN.Easing.Sinusoidal.In).start();
 		}
+
+		light2.position.x = camera.position.x;
+		light2.position.y = camera.position.y;
+		light2.position.z = camera.position.z;
 
 		TWEEN.update();
 		renderer.render( scene, camera );
@@ -584,5 +602,13 @@ function TRANSFORM_MATRIX( m, space ){
 	}
 
 	return matrix;
+}
+
+function isInt(n){
+    return Number(n) === n && n % 1 === 0;
+}
+
+function isFloat(n){
+    return Number(n) === n && n % 1 !== 0;
 }
 

@@ -449,34 +449,34 @@ function setCamera(list){
 function CREATE_MATRIX(data, myImage){
 	var matrix = [];
 
-	// for(var i = 0; i < data.length; i += 4){
-	// 	// 	var newRow = [];
-	// 	//for(var j = 0; j < myImage.height; j++){
-	// 		var pixelr = data[i];
-	// 		var pixelg = data[i+1];
-	// 		var pixelb = data[i+2];
-	// 		var pixela = data[i+3];
+	for(var i = 0; i < data.length; i += 4){
+		// 	var newRow = [];
+		//for(var j = 0; j < myImage.height; j++){
+			var pixelr = data[i];
+			var pixelg = data[i+1];
+			var pixelb = data[i+2];
+			var pixela = data[i+3];
 
-	// 		var s = "r: " + pixelr + ", g: " + pixelg + ", b: " + pixelb + ", a: " + pixela;
+			var s = "r: " + pixelr + ", g: " + pixelg + ", b: " + pixelb + ", a: " + pixela;
 			
-	// 		//newRow.push( s );
-	// 	//}
+			//newRow.push( s );
+		//}
 
-	// 	matrix.push( s );
-	// }
-
-
-
-	for(var i = 0; i < myImage.height; i++){
-
-		var newRow = [];
-		for(var j = 0; j < myImage.width; j++){
-
-			newRow.push( data[(i*myImage.width + j)*4] );
-		}
-
-		matrix.push( newRow );
+		matrix.push( s );
 	}
+
+
+
+	// for(var i = 0; i < myImage.height; i++){
+
+	// 	var newRow = [];
+	// 	for(var j = 0; j < myImage.width; j++){
+
+	// 		newRow.push( data[(i*myImage.width + j)*4] );
+	// 	}
+
+	// 	matrix.push( newRow );
+	// }
 
 	// for(var i = 0; i < 3; i++){
 

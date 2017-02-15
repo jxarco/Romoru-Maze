@@ -317,9 +317,6 @@ function changeSuInfo(path, id, name, updatedList){
   for (var i = 0; i < my_priv_message_to.length; i++) {
     my_priv_message_to[i].innerHTML = "To [" + name + "]: ";
   }
-
-  // recargar nueva textura
-  updateTexture(id + "_body", path);
 }
 
 // cambia el nombre de usuario
@@ -548,7 +545,6 @@ function openNav() {
 function closeNav() {
   document.getElementById("mySidenav").style.width = "0";
   document.getElementById("main").style.marginLeft= "0";
-  document.getElementById("stab").style.display = "none";
 }
 
 // tecla ESC cierra el menú

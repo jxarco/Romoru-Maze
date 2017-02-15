@@ -14,7 +14,7 @@ var MAT, MAT2, data;
 var floorMESH, materials;
 var container, tam, audio;
 
-window.walls_on = true;
+window.walls_on = false;
 
 funZero();
 
@@ -42,14 +42,20 @@ function funZero(){
 	// Finally, get the image data
 	// ('data' is an array of RGBA pixel values for each pixel)
 	var data = ctx.getImageData(0, 0, w, h);
+	var pixelsData = data.data;
+	// console.log(data2)
+	// console.log(data2[0])
+	// console.log(data2[1])
+	// console.log(data2[2])
+	// console.log(data2[3]/255)
 
-	MAT = CREATE_MATRIX(data, myImage);
-	MAT2 = TRANSFORM_MATRIX(MAT, 5);
+	MAT = CREATE_MATRIX(pixelsData, myImage);
+	// MAT2 = TRANSFORM_MATRIX(MAT, 5);
 
 	var s = "";
 	for (var i = 0; i < MAT.length; i++) {
-		for (var j = 0; j < MAT.length; j++) {
-			s = s + MAT[i][j] + "\t"
+		for (var j = 0; j < MAT[i].length; j++) {
+			s = s + MAT[i][j] + "\t";
 		}
 		s += "\n"
 	}
@@ -443,12 +449,30 @@ function setCamera(list){
 function CREATE_MATRIX(data, myImage){
 	var matrix = [];
 
-	for(var i = 0; i < data.height; i++){
+	// for(var i = 0; i < data.length; i += 4){
+	// 	// 	var newRow = [];
+	// 	//for(var j = 0; j < myImage.height; j++){
+	// 		var pixelr = data[i];
+	// 		var pixelg = data[i+1];
+	// 		var pixelb = data[i+2];
+	// 		var pixela = data[i+3];
+
+	// 		var s = "r: " + pixelr + ", g: " + pixelg + ", b: " + pixelb + ", a: " + pixela;
+			
+	// 		//newRow.push( s );
+	// 	//}
+
+	// 	matrix.push( s );
+	// }
+
+
+
+	for(var i = 0; i < myImage.height; i++){
 
 		var newRow = [];
-		for(var j = 0; j < data.width; j++){
+		for(var j = 0; j < myImage.width; j++){
 
-			newRow.push( data.data[(i*myImage.width + j)*4] );
+			newRow.push( data[(i*myImage.width + j)*4] );
 		}
 
 		matrix.push( newRow );

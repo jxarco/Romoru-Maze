@@ -75,6 +75,7 @@ function init(){
   document.getElementById("opacitypanel").style.display = "block";
   document.getElementById("opacitypanel").style.zIndex = "20";
   document.getElementById("canvas_info").style.display = "none";
+  document.getElementById("right_info").style.display = "none";
   document.getElementById("solution").style.display = "none";
 
   // ROOM SELECTOR

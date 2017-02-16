@@ -9,13 +9,23 @@ function init_server(){
 	if(op_panel.dataset['boolean'] == "false"){
 		
 		var roominput = document.getElementById("roominput");
-		room = roominput.value;
+		room = roominput.value + "a";
 
 		server.connect("84.89.136.194:9000", room);
 		console.log("connected in room: " + room);
 		op_panel.dataset['boolean'] = "true";
 		hideOpPanel();
 		roominput.style.display = "none";
+
+		var instruction = document.getElementById("canvas_info").style.display = "block";
+		var text = document.getElementById("instructions");
+		text.innerHTML = "<b>WELCOME TO ROMORU MAZE!</b><br/>" + 
+		"<br/>" +
+		"You can talk using the chat (open with 'c' or 'Menu->Open chat'). To see your nickname and avatar" +
+		" use the 'p'. Open this panel with 'i'." + 
+		" Your objetive: Try to reach central room. Other players could find some hints which can be useful..." +
+		"<br/><br/>"  + 
+		"<i>Close me with X or pressing ESC</i>"; 
 	}
 }
 

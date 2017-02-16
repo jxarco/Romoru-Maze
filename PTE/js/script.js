@@ -74,10 +74,45 @@ function init(){
   // estados inicials de ciertos elementos visuales
   document.getElementById("opacitypanel").style.display = "block";
   document.getElementById("opacitypanel").style.zIndex = "20";
+  document.getElementById("canvas_info").style.display = "none";
+  document.getElementById("solution").style.display = "none";
 
   // ROOM SELECTOR
   var roominput = document.querySelector("#roominput");
   roominput.focus();
+
+  // DRAGGABLE INSTRUCTIONS DIV IN CANVAS
+  var mousePosition;
+  var offset = [0,0];
+  var div;
+  var isDown = false;
+  var div = document.getElementById("canvas_info");
+
+  document.addEventListener('mousedown', function(e) {
+      isDown = true;
+      offset = [
+          div.offsetLeft - e.clientX,
+          div.offsetTop - e.clientY
+      ];
+  }, true);
+
+  document.addEventListener('mouseup', function() {
+      isDown = false;
+  }, true);
+
+  document.addEventListener('mousemove', function(event) {
+      event.preventDefault();
+      if (isDown) {
+          mousePosition = {
+      
+              x : event.clientX,
+              y : event.clientY
+      
+          };
+          div.style.left = (mousePosition.x + offset[0]) + 'px';
+          div.style.top  = (mousePosition.y + offset[1]) + 'px';
+      }
+  }, true);
 }
 
 // ****************************************************************************
@@ -237,7 +272,6 @@ function changeMyPic(path){
   avatarPath = path; // aqui solo damos valor a la variable 
   update(); // esta cambia el nombre y la foto
   send_avatar_info(path);
-  updateTexture("player_body", path);
 
   // -> coge las cosas que son de la clase myavatar
   var all_my_avatars = document.getElementsByClassName("myavatar");
@@ -341,6 +375,7 @@ function hideDivs(){
   document.getElementById("uaccept").style.display = "none"; 
   document.getElementById("uinput").style.display = "none";
   document.getElementById("change_id").style.display = "none";
+  document.getElementById("canvas_info").style.display = "none";
 }
   
 // añadir funcionalidad: boton USERNAME cambia el nombre de usuario

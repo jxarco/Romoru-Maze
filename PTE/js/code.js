@@ -140,6 +140,9 @@ function INTERACTION(){
 				case 67: // c
 					openChat();
 					break;
+				case 73: // i
+					document.getElementById("canvas_info").style.display = "block";
+					break;
 				case 81: // q = realign
 					camera.rotation.y = initialRotation;
 					break;

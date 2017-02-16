@@ -84,7 +84,7 @@ html, body{
 }
 
 .personalInfo {
-	display: block;
+	display: none; /* CAMBIAR*/
 	position: absolute;
 	height: 100vh;
 	background: rgba(255,255,255,0.2); 
@@ -128,6 +128,7 @@ html, body{
 
 .personalInfo .pic img:hover{
 	border-radius: 50%;
+	transition: 0.5s;
 	background-color: rgba(100, 100, 100, 0.25);
 }
 
@@ -217,6 +218,7 @@ html, body{
 .dropdown img:hover{
 	background-color: #fbfbfb;
 	border-radius: 50%;
+	transition: 0.5s;
 	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5); 
 }
 
@@ -274,6 +276,7 @@ html, body{
 
 .avatar:hover {
     box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
+    transition: 0.5s;
 }
 
 .msg .myavatar{
@@ -396,6 +399,7 @@ html, body{
 .canvas_container img:hover, .canvas_container img:focus {
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     background: rgba(255,255,255,0.85); 
+    transition: 0.5s;
 }
 
 .sidenav {
@@ -423,6 +427,7 @@ html, body{
 
 .sidenav a:hover, .offcanvas a:focus{
     color: #f1f1f1;
+    transition: 0.5s;
 }
 
 .sidenav .closebtn {
@@ -460,6 +465,7 @@ html, body{
 
 #contact_name:hover{
     color: white;
+    transition: 0.5s;
 }
 
 /* *************************************** */
@@ -471,6 +477,7 @@ html, body{
 	width: 20%;
 	margin-top: 18.9%;
 	position: absolute;
+	display: none; /* CAMBIAR*/
 }
 
 #connected p{
@@ -537,6 +544,59 @@ html, body{
 	top: 0px;
 }
 
+#canvas_info{
+	padding: 0;
+    margin: auto;
+    display: table-column;
+	width: 50%;
+	top: 15vh;
+	left: 25%;
+	height: 350px;
+	position: absolute;
+	background: rgba(255,255,255,0.5);
+	box-shadow: 0px 8px 16px 0px rgba(255,255,255,0.3);
+
+}
+
+#canvas_info a{
+	padding-left: 10px;
+    text-decoration: none;
+    font-size: 2vw;
+    color: rgba(0, 0, 0, 0.5);
+    display: block;
+    transition: 0.5s;
+    width: 6%;
+}
+
+#canvas_info a:hover{
+    color: rgba(255, 255, 255, 1);
+}
+
+#canvas_info p{
+    box-shadow: 0px 8px 10px 0px rgba(0, 0, 0, 0.3);
+    border: none;
+	width: 95%;
+	height: 28vh;
+	resize: none;
+	padding: 1%;
+	font-size: 1vw;
+	margin-left: 15px;
+	margin-top: 10px;
+	overflow-y: scroll;
+}
+
+#canvas_info textarea{
+    background: rgba(255,255,255,0.5); 
+    box-shadow: 0px 8px 10px 0px rgba(0, 0, 0, 0.3);
+    border: none;
+	width: 50%;
+	height: 30px;
+	resize: none;
+	padding: 1%;
+	font-size: 1vw;
+	margin-top: 10px;
+	margin-left: 15px;
+}
 
 
 

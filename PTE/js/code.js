@@ -82,6 +82,7 @@ function INTERACTION(){
 		light2.penumbra = 0.1;
 
 		scene.add(light2)
+		//generateHintList(); //DESCOMENTAR Y QUITAR WALLS PARA IR VIENDO LAS MESHES
 
 		var onKeyDown = function ( event ) {
 
@@ -607,3 +608,82 @@ function isFloat(n){
     return Number(n) === n && n % 1 !== 0;
 }
 
+function generateHintList(){
+
+	/***RING HINT***/
+	var ringGeometry = new THREE.TorusGeometry( 0.5, 0.05, 12, 32 );
+	var ringMat = new THREE.MeshPhongMaterial( { color: 0xddc604, shininess: 300 } );
+	var ringMesh = new THREE.Mesh(ringGeometry, ringMat);
+	ringMesh.name = "hint";
+	/*ringMesh.position.x = 0;
+	ringMesh.position.y = 0;
+	ringMesh.position.z = 0;
+	scene.add(ringMesh);*/
+
+	/***PYRAMID HINT***/
+	var pyramidGeometry = new THREE.CylinderGeometry(0, 1.5, 1.5, 4, false); 
+	var pyramidMaterial = new THREE.MeshPhongMaterial({color: 0xF1D78B, shininess: 50 }); 
+	var pyramidMesh = new THREE.Mesh(pyramidGeometry, pyramidMaterial);
+	ringMesh.name = "hint";
+
+	/*pyramidMesh.position.x = 0;
+	pyramidMesh.position.y = 0;
+	pyramidMesh.position.z = 0;
+	scene.add(pyramidMesh);*/
+
+	/***PLANETA***/
+	var planetGeometry = new THREE.SphereGeometry(0.5, 32, 32); 
+	var planetMaterial = new THREE.MeshPhongMaterial({color: 0xFD772A, shininess: 50 }); 
+	var planetMesh = new THREE.Mesh(planetGeometry, planetMaterial);
+	ringMesh.name = "hint";
+
+	/*planetMesh.position.x = 0;
+	planetMesh.position.y = 0;
+	planetMesh.position.z = 0;
+	scene.add(planetMesh);*/
+
+	/***Pi***/
+	var piGroup = new THREE.Group();
+	var circleGeometry = new THREE.TorusGeometry( 0.8, 0.05, 15, 32 );
+	var circleMaterial = new THREE.MeshPhongMaterial({color: 0xFFFFFF, shininess: 50 }); 
+	var circleMesh = new THREE.Mesh(circleGeometry, circleMaterial);
+	circleMesh.position.x = 0;
+	circleMesh.position.y = 0;
+	circleMesh.position.z = 0;
+
+	var inf1Geometry = new THREE.TorusGeometry( 0.2, 0.02, 15, 32 ); 
+	var inf1Mesh = new THREE.Mesh(inf1Geometry, circleMaterial);
+	inf1Mesh.position.x = circleMesh.position.x - 0.2;
+	inf1Mesh.position.y = 0;
+	inf1Mesh.position.z = 0;
+
+	var inf2Geometry = new THREE.TorusGeometry( 0.2, 0.02, 15, 32 );
+	var inf2Material = new THREE.MeshPhongMaterial({color: 0xFFFFFF, shininess: 50 }); 
+	var inf2Mesh = new THREE.Mesh(inf2Geometry, circleMaterial);
+	inf2Mesh.position.x = circleMesh.position.x + 0.2;
+	inf2Mesh.position.y = 0;
+	inf2Mesh.position.z = 0;
+
+	/*var fishShape = new THREE.Shape();
+	 var x = 0; 
+	 var y = 0;
+	fishShape.quadraticCurveTo(x +1, y , x+5 , y);
+	fishShape.quadraticCurveTo(x , y , x , y);
+	fishShape.quadraticCurveTo(x , y, x , y);
+	fishShape.quadraticCurveTo(x , y , x , y );
+	fishShape.quadraticCurveTo(x, y , x, y);
+
+	var geometry = new THREE.ShapeBufferGeometry( fishShape );
+
+	var mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { side: THREE.DoubleSide, color: 0xffffff } ) );
+	mesh.position.set( 0, 0, 0 );
+	scene.add(mesh);*/
+
+	piGroup.add(circleMesh);
+	piGroup.add(inf1Mesh);
+	piGroup.add(inf2Mesh);
+	piGroup.name = "hint";
+	scene.add(piGroup);
+
+	/******/
+}

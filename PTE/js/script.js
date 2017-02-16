@@ -80,11 +80,6 @@ function init(){
   roominput.focus();
 }
 
-function hideIntro(){
-
-  document.getElementById("hideMe").style.display = "none";  
-}
-
 // ****************************************************************************
 // PEOPLE ********
 // aparecer en la lista de conectados

@@ -15,24 +15,7 @@ html, body{
 
 #maze_img{
 	display: none;
-}
-
-/* Transition for initial info  */
-
-#hideMe {
-    -moz-animation: cssAnimation 0s ease-in 3s forwards;
-    -webkit-animation: cssAnimation 0s ease-in 3s forwards;
-    -o-animation: cssAnimation 0s ease-in 3s forwards;
-    animation: cssAnimation 0s ease-in 3s forwards;
-    -webkit-animation-fill-mode: forwards;
-    animation-fill-mode: forwards;
-
-    font-size: 2vw;
-    text-align: center;
-    background-color: #fbfbfb;
-	margin-bottom: 10px;
-	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-	padding: 15px;
+	position: relative;
 }
 
 @keyframes cssAnimation {
@@ -84,6 +67,7 @@ html, body{
 	height: 100%;
 	position: relative;
 	display: inline-block;
+	top: 0px;
 }
 
 .canvas_container img{
@@ -449,6 +433,7 @@ html, body{
 
 #main {
     transition: margin-left .5s;
+    top: 0px;
 }
 
 @media screen and (max-height: 450px) {
@@ -532,6 +517,7 @@ html, body{
 
 .screen{
 	display: flex;
+	top: 0px;
 }
 
 .rest_org{
@@ -548,6 +534,7 @@ html, body{
 	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 	margin: 0 auto;
 	position: static;
+	top: 0px;
 }
 
 

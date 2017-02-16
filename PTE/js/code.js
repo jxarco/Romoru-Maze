@@ -15,6 +15,7 @@ var floorMESH, materials;
 var container, tam, audio;
 var light, light2;
 var direction = new THREE.Vector3();
+var initialRotation;
 var co = 1;
 
 window.walls_on = true;
@@ -91,21 +92,19 @@ function INTERACTION(){
 			switch ( event.keyCode ) {
 				case 38: // up
 				case 87: // w
-					moveForward = true;
+					moveForward = false;
 					break;
 				case 37: // left
 				case 65: // a
-					moveLeft = true; break;
+					moveLeft = false;
+					break;
 				case 40: // down
 				case 83: // s
-					moveBackward = true;
+					moveBackward = false;
 					break;
 				case 39: // right
 				case 68: // d
-					moveRight = true;
-					break;
-				case 81: // q
-					q = true;
+					moveRight = false;
 					break;
 				case 69: // e
 					e = true;
@@ -121,19 +120,19 @@ function INTERACTION(){
 			switch( event.keyCode ) {
 				case 38: // up
 				case 87: // w
-					moveForward = false;
+					moveForward = true;
 					break;
 				case 37: // left
 				case 65: // a
-					moveLeft = false;
+					moveLeft = true;
 					break;
 				case 40: // down
 				case 83: // s
-					moveBackward = false;
+					moveBackward = true;
 					break;
 				case 39: // right
 				case 68: // d
-					moveRight = false;
+					moveRight = true;
 					break;
 				case 80: // p
 					privateInfo();
@@ -141,8 +140,8 @@ function INTERACTION(){
 				case 67: // c
 					openChat();
 					break;
-				case 81: // q
-					q = false;
+				case 81: // q = realign
+					camera.rotation.y = initialRotation;
 					break;
 				case 69: // e
 					e = false;
@@ -256,22 +255,6 @@ function INTERACTION(){
 					// 	scene.add(wall);
 					// } 
 					// ***********************************************************************************
-
-					// else if(MAT[i][j] == 177){ // 177 LILA
-					// 	wallGeo = new THREE.BoxGeometry(5, 1, 5);
-					// 	var AUX = new THREE.MeshPhongMaterial( {
-					// 			color: "pink",
-					// 			shininess: 100,
-					// 			side: THREE.DoubleSide
-					// 	});
-
-					// 	wall = new THREE.Mesh(wallGeo, AUX);
-					// 	wall.position.x = i * 5;
-					// 	wall.position.y = -1.5;
-					// 	wall.position.z = j * 5;
-					// 	wall.receiveShadow = true;
-					// 	scene.add(wall);
-					// }
 				}
 			}
 		}
@@ -319,10 +302,8 @@ function INTERACTION(){
 		if(dir) co = 1;
 		else co = -1;
 
-		var x = camera.position.x + (co * direction.x);
-		var z = camera.position.z + (co * direction.z);
-
-		if(isFloat(x) || isFloat(z)) return false;
+		var x = Math.floor(camera.position.x + (co * direction.x));
+		var z = Math.floor(camera.position.z + (co * direction.z));
 
 		if (MAT2[x][z] == 0){
 		 	return false;
@@ -337,12 +318,11 @@ function INTERACTION(){
 
 		if(moveForward && limits(1)){
 			new TWEEN.Tween( camera.position ).to( {
-						x: camera.position.x + direction.x,
-						z: camera.position.z + direction.z,
+						x: Math.floor(camera.position.x + direction.x),
+						z: Math.floor(camera.position.z + direction.z),
 			}, 200 ).easing( TWEEN.Easing.Linear.None).start();
 
-			// console.log(camera.position.x)
-			// console.log(camera.position.z)
+			moveForward = false;
 			
 		}
 		if(moveBackward && limits(0)){
@@ -350,16 +330,26 @@ function INTERACTION(){
 						x: camera.position.x - direction.x,
 						z: camera.position.z - direction.z,
 			}, 200 ).easing( TWEEN.Easing.Linear.None).start();
+
+			moveBackward = false;
 		}
 		if(moveLeft){
 			new TWEEN.Tween( camera.rotation ).to( {
 						y: camera.rotation.y + Math.PI / 2
 			}, 300 ).easing( TWEEN.Easing.Sinusoidal.In).start();
+
+			console.log(camera.rotation.y)
+
+			moveLeft = false;
 		}
 		if(moveRight){
 			new TWEEN.Tween( camera.rotation ).to( {
 						y: camera.rotation.y - Math.PI / 2
 			}, 300 ).easing( TWEEN.Easing.Sinusoidal.In).start();
+
+			console.log(camera.rotation.y)
+
+			moveRight = false;
 		}
 
 		light2.position.x = camera.position.x;
@@ -484,6 +474,8 @@ function setCamera(list){
 	camera.position.x = x;
 	camera.position.z = z;
 	camera.rotation.y += rotation;
+
+	initialRotation = camera.rotation.y;
 }
 
 function CREATE_MATRIX(data, myImage){

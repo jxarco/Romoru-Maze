@@ -695,13 +695,10 @@ function generateHintList(){
 	fishShape.quadraticCurveTo(x , y, x , y);
 	fishShape.quadraticCurveTo(x , y , x , y );
 	fishShape.quadraticCurveTo(x, y , x, y);
-<<<<<<< HEAD
 	var geometry = new THREE.ShapeBufferGeometry( fishShape );
-=======
 
 	var geometry = new THREE.ShapeBufferGeometry( fishShape );
 
->>>>>>> 5e2820e1f9ea12e4010a024ac02e9286e9af4393
 	var mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { side: THREE.DoubleSide, color: 0xffffff } ) );
 	mesh.position.set( 0, 0, 0 );
 	scene.add(mesh);*/
@@ -712,10 +709,4 @@ function generateHintList(){
 	piGroup.name = "hint";
 	scene.add(piGroup);
 
-	/******/
-<<<<<<< HEAD
 }
-
-=======
-}
->>>>>>> 5e2820e1f9ea12e4010a024ac02e9286e9af4393

@@ -8,6 +8,8 @@ var app = {
 var confeti_list = [];
 var pop_list = [];
 var collidableMeshList = [];
+var HINTS = generateHintList();
+var hintIterator = 0;
 
 var camera, scene, renderer, controls;
 var MAT, MAT2, data;
@@ -76,7 +78,7 @@ function INTERACTION(){
 		scene.fog = new THREE.Fog( 0xffffff, 0, 1000 );
 
 		// LIGHTS
-		light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.15 );
+		light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 1 );
 		light.position.set( 0.5, 1, 0.75 );
 		scene.add( light );
 
@@ -215,19 +217,14 @@ function INTERACTION(){
 						scene.add(wall);
 					} 
 					else if(MAT[i][j] == 2){ // 2 VERDE MODIFICADO
-						var wallGeo = new THREE.BoxGeometry(5, 4, 5);
-						var AUX = new THREE.MeshPhongMaterial( {
-					 			color: "green",
-					 			shininess: 100,
-					 			side: THREE.DoubleSide
-					 	});
 
-						var wall = new THREE.Mesh(wallGeo, AUX);
-						wall.position.x = i * 5;
-						wall.position.y = 0;
-						wall.position.z = j * 5;
-						wall.receiveShadow = true;
-						scene.add(wall);
+						var hint = HINTS[hintIterator];
+						hint.position.x = i * 5;
+						hint.position.y = 0;
+						hint.position.z = j * 5;
+						hint.receiveShadow = true;
+						scene.add(hint);
+						hintIterator++;
 					} 
 					else if(MAT[i][j] == 3){ // 3 ROJO MODIFICADO
 						var wallGeo = new THREE.BoxGeometry(5, 4, 5);
@@ -247,20 +244,20 @@ function INTERACTION(){
 
 
 					// HACKER MODE ***********************************************************************
-					// else if(MAT[i][j] == 252){ // 252 AMARILLO 
-					// 	wallGeo = new THREE.BoxGeometry(5, 1, 5);
-					// 	var AUX = new THREE.MeshPhongMaterial( {
-					// 			color: "yellow",
-					// 			shininess: 100,
-					// 			side: THREE.DoubleSide
-					// 	});
-					// 	wall = new THREE.Mesh(wallGeo, AUX);
-					// 	wall.position.x = i * 5;
-					// 	wall.position.y = -1.5;
-					// 	wall.position.z = j * 5;
-					// 	wall.receiveShadow = true;
-					// 	scene.add(wall);
-					// } 
+					else if(MAT[i][j] == 252){ // 252 AMARILLO 
+						wallGeo = new THREE.BoxGeometry(5, 1, 5);
+						var AUX = new THREE.MeshPhongMaterial( {
+								color: "yellow",
+								shininess: 100,
+								side: THREE.DoubleSide
+						});
+						wall = new THREE.Mesh(wallGeo, AUX);
+						wall.position.x = i * 5;
+						wall.position.y = -1.5;
+						wall.position.z = j * 5;
+						wall.receiveShadow = true;
+						scene.add(wall);
+					} 
 					// ***********************************************************************************
 				}
 			}
@@ -362,6 +359,13 @@ function INTERACTION(){
 		light2.position.x = camera.position.x;
 		light2.position.y = camera.position.y;
 		light2.position.z = camera.position.z;
+
+		// hints rotation
+		for(var i = 0; i < scene.children.length; i++){
+			if(scene.children[i].name == "hint"){
+				scene.children[i].rotation.y += 0.05;
+			}
+		}
 
 		TWEEN.update();
 		renderer.render( scene, camera );
@@ -608,6 +612,8 @@ function isFloat(n){
 
 function generateHintList(){
 
+	var list = [];
+
 	/***RING HINT***/
 	var ringGeometry = new THREE.TorusGeometry( 0.5, 0.05, 12, 32 );
 	ringGeometry.applyMatrix( new THREE.Matrix4().makeScale( 1.0, 1.0, 3 ) );
@@ -615,8 +621,7 @@ function generateHintList(){
 	var ringMesh = new THREE.Mesh(ringGeometry, ringMat);
 	ringMesh.name = "hint";
 
-	//scene.add(ringMesh);
-
+	list.push( ringMesh );
 
 	/***PYRAMID HINT***/
 	var pyramidGeometry = new THREE.CylinderGeometry(0, 1.5, 1.5, 4, false); 
@@ -624,7 +629,7 @@ function generateHintList(){
 	var pyramidMesh = new THREE.Mesh(pyramidGeometry, pyramidMaterial);
 	pyramidMesh.name = "hint";
 
-	//scene.add(pyramidMesh);
+	list.push( pyramidMesh );
 
 
 	/***PLANETA***/
@@ -633,7 +638,7 @@ function generateHintList(){
 	var planetMesh = new THREE.Mesh(planetGeometry, planetMaterial);
 	planetMesh.name = "hint";
 
-	//scene.add(planetMesh);
+	list.push( planetMesh );
 
 
 	/***Pi***/
@@ -645,19 +650,20 @@ function generateHintList(){
 	var inf1Geometry = new THREE.TorusGeometry( 0.2, 0.02, 15, 32 ); 
 	inf1Geometry.applyMatrix( new THREE.Matrix4().makeScale( 1.2, 1.0, 1.5 ) );
 	var inf1Mesh = new THREE.Mesh(inf1Geometry, circleMaterial);
-	//inf1Mesh.position.x = circleMesh.position.x - 0.24;
+	inf1Mesh.position.x = circleMesh.position.x - 0.24;
 
 	var inf2Geometry = new THREE.TorusGeometry( 0.2, 0.02, 15, 32 );
 	inf2Geometry.applyMatrix( new THREE.Matrix4().makeScale( 1.2, 1.0, 1.5 ) );
 	var inf2Material = new THREE.MeshPhongMaterial({color: 0xFFFFFF, shininess: 50 }); 
 	var inf2Mesh = new THREE.Mesh(inf2Geometry, circleMaterial);
-	//inf2Mesh.position.x = circleMesh.position.x + 0.24;
+	inf2Mesh.position.x = circleMesh.position.x + 0.24;
 
 	piGroup.add(circleMesh);
 	piGroup.add(inf1Mesh);
 	piGroup.add(inf2Mesh);
 	piGroup.name = "hint";
-	//scene.add(piGroup);
+
+	list.push( piGroup );
 
 
 	/***TWIN TOWERS***/
@@ -665,16 +671,16 @@ function generateHintList(){
 	var towerGeometry = new THREE.BoxGeometry( 0.5, 3, 0.5, 12, 32 );
 	var towerMat = new THREE.MeshPhongMaterial( { color: "grey", shininess: 300 } );
 	var towerMesh = new THREE.Mesh(towerGeometry, towerMat);
-	towerMesh.name = "hint";
 
 
 	var tower2Mesh = new THREE.Mesh(towerGeometry, towerMat);
-	tower2Mesh.name = "hint";
 	tower2Mesh.position.x = towerMesh.position.x + 0.85;
 	
 	twinTowerGroup.add(towerMesh);
 	twinTowerGroup.add(tower2Mesh);
-	//scene.add(twinTowerGroup);
+	twinTowerGroup.name = "hint";
+
+	list.push( twinTowerGroup );
 
 	/***DIAMOND***/
 
@@ -682,17 +688,17 @@ function generateHintList(){
 	var diamondMat = new THREE.MeshPhongMaterial( { color: 0xff0000, shininess: 50 } );
 	var diamondMesh = new THREE.Mesh(diamondGeo, diamondMat);
 
-	//scene.add(diamondMesh);
+	diamondMesh.name = "hint";
+	list.push( diamondMesh );
 
 	/***PACMAN***/
 	var pacmanGeo = new THREE.TorusGeometry(0.1, 0.5, 30, 20, 5.3);
 	var pacmanMat = new THREE.MeshPhongMaterial( { color: 0xFDDE00, shininess: 50, side: THREE.DoubleSide} );
 	var pacmanMesh = new THREE.Mesh(pacmanGeo,pacmanMat);
 	pacmanMesh.rotation.z += Math.PI/6
-	pacmanMesh.name= "hint";
+	pacmanMesh.name = "hint";
 
-	
-	//scene.add(pacmanMesh);
+	list.push( pacmanMesh );
 
 	/***MIKEY MOUSE***/
 	var mikeyGroup = new THREE.Group();
@@ -723,6 +729,10 @@ function generateHintList(){
 	mikeyGroup.add(mikeyMesh3);
 	mikeyGroup.add(mikeyMesh4);
 
-	//scene.add(mikeyGroup);
+	mikeyGroup.name = "hint";
+
+	list.push( mikeyGroup );
+
+	return list;
 }
 

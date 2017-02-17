@@ -11,18 +11,19 @@ var collidableMeshList = [];
 var HINTS = generateHintList();
 var hintIterator = 0;
 
-var camera, scene, renderer, controls;
+var camera, scene, renderer, controls, startTime;
 var MAT, MAT2, data;
 var floorMESH, materials;
 var container, tam, audio;
 var light, light2;
 var direction = new THREE.Vector3();
+var raycaster = new THREE.Raycaster();
 var initialRotation;
 var co = 1;
 
 window.walls_on = true;
+window.controls = false;
 window.mouse = new THREE.Vector2();
-var raycaster = new THREE.Raycaster();
 
 funZero();
 
@@ -61,7 +62,8 @@ function INTERACTION(){
 	
 	var geometry, material;
 	var objects = [];
-	
+	startTime = Date.now();
+
 	init();
 	animate();
 	var moveForward = false;
@@ -86,7 +88,6 @@ function INTERACTION(){
 		light2.penumbra = 0.1;
 
 		scene.add(light2)
-		//generateHintList(); //DESCOMENTAR Y QUITAR WALLS PARA IR VIENDO LAS MESHES
 
 		var onKeyDown = function ( event ) {
 
@@ -219,6 +220,7 @@ function INTERACTION(){
 					else if(MAT[i][j] == 2){ // 2 VERDE MODIFICADO
 
 						var hint = HINTS[hintIterator];
+						console.log(hint)
 						hint.position.x = i * 5;
 						hint.position.y = 0;
 						hint.position.z = j * 5;
@@ -289,9 +291,11 @@ function INTERACTION(){
 		container.appendChild( renderer.domElement );
 
 		//controls (mouse)
-		controls = new THREE.OrbitControls( camera, renderer.domElement );
-		controls.update();
-
+		if(window.controls){
+			controls = new THREE.OrbitControls( camera, renderer.domElement );
+			controls.update();	
+		}
+		
 		window.addEventListener( 'resize', onWindowResize, false );
 	}
 	function onWindowResize() {
@@ -317,6 +321,8 @@ function INTERACTION(){
 
 	function animate() {
 		requestAnimationFrame( animate );
+		var currentTime = performance.now();
+		var time = ( currentTime - startTime ) / 1000;
 
 		camera.getWorldDirection( direction );
 
@@ -342,16 +348,12 @@ function INTERACTION(){
 						y: camera.rotation.y + Math.PI / 2
 			}, 300 ).easing( TWEEN.Easing.Sinusoidal.In).start();
 
-			console.log(camera.rotation.y)
-
 			moveLeft = false;
 		}
 		if(moveRight){
 			new TWEEN.Tween( camera.rotation ).to( {
 						y: camera.rotation.y - Math.PI / 2
 			}, 300 ).easing( TWEEN.Easing.Sinusoidal.In).start();
-
-			console.log(camera.rotation.y)
 
 			moveRight = false;
 		}
@@ -360,10 +362,14 @@ function INTERACTION(){
 		light2.position.y = camera.position.y;
 		light2.position.z = camera.position.z;
 
+		if(window.controls) controls.target.set(75, 0, 75);
+		
+
 		// hints rotation
 		for(var i = 0; i < scene.children.length; i++){
 			if(scene.children[i].name == "hint"){
-				scene.children[i].rotation.y += 0.05;
+				scene.children[i].rotation.y += 0.01;
+				scene.children[i].position.y = Math.sin( time * 0.75 ) * 0.5;
 			}
 		}
 
@@ -650,13 +656,15 @@ function generateHintList(){
 	var inf1Geometry = new THREE.TorusGeometry( 0.2, 0.02, 15, 32 ); 
 	inf1Geometry.applyMatrix( new THREE.Matrix4().makeScale( 1.2, 1.0, 1.5 ) );
 	var inf1Mesh = new THREE.Mesh(inf1Geometry, circleMaterial);
-	inf1Mesh.position.x = circleMesh.position.x - 0.24;
+	inf1Mesh.position.z = circleMesh.position.x - 0.24;
+	inf1Mesh.rotation.y += Math.PI / 2;
 
 	var inf2Geometry = new THREE.TorusGeometry( 0.2, 0.02, 15, 32 );
 	inf2Geometry.applyMatrix( new THREE.Matrix4().makeScale( 1.2, 1.0, 1.5 ) );
 	var inf2Material = new THREE.MeshPhongMaterial({color: 0xFFFFFF, shininess: 50 }); 
 	var inf2Mesh = new THREE.Mesh(inf2Geometry, circleMaterial);
-	inf2Mesh.position.x = circleMesh.position.x + 0.24;
+	inf2Mesh.position.z = circleMesh.position.x + 0.24;
+	inf2Mesh.rotation.y += Math.PI / 2;
 
 	piGroup.add(circleMesh);
 	piGroup.add(inf1Mesh);

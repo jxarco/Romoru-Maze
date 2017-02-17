@@ -76,7 +76,7 @@ function INTERACTION(){
 		scene.fog = new THREE.Fog( 0xffffff, 0, 1000 );
 
 		// LIGHTS
-		light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 1 );
+		light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.15 );
 		light.position.set( 0.5, 1, 0.75 );
 		scene.add( light );
 
@@ -197,13 +197,13 @@ function INTERACTION(){
 		//WALLS
 		if(window.walls_on){
 			var wallTexture =  new THREE.TextureLoader().load( 'assets/wall2.jpg' );
+			var wallDoorTexture =  new THREE.TextureLoader().load( 'assets/wall3.jpg' );
 			for(var i = 0; i < MAT.length; i++){
 				for(var j = 0; j < MAT.length; j++){
 					if(MAT[i][j] == 0){ // 0 NEGRO
 						var wallGeo = new THREE.BoxGeometry(5, 4, 5);
 						var wallMat = new THREE.MeshPhongMaterial( {
 								map: wallTexture,
-								shininess: 100,
 								side: THREE.DoubleSide
 						});
 
@@ -231,13 +231,12 @@ function INTERACTION(){
 					} 
 					else if(MAT[i][j] == 3){ // 3 ROJO MODIFICADO
 						var wallGeo = new THREE.BoxGeometry(5, 4, 5);
-						var AUX = new THREE.MeshPhongMaterial( {
-					 			color: "red",
-					 			shininess: 100,
-					 			side: THREE.DoubleSide
-					 	});
+						var wallMat = new THREE.MeshPhongMaterial( {
+								map: wallDoorTexture,
+								side: THREE.DoubleSide
+						});
 
-						var wall = new THREE.Mesh(wallGeo, AUX);
+						var wall = new THREE.Mesh(wallGeo, wallMat);
 						wall.name = "red";
 						wall.position.x = i * 5;
 						wall.position.y = 0;
@@ -248,20 +247,20 @@ function INTERACTION(){
 
 
 					// HACKER MODE ***********************************************************************
-					else if(MAT[i][j] == 252){ // 252 AMARILLO 
-						wallGeo = new THREE.BoxGeometry(5, 1, 5);
-						var AUX = new THREE.MeshPhongMaterial( {
-								color: "yellow",
-								shininess: 100,
-								side: THREE.DoubleSide
-						});
-						wall = new THREE.Mesh(wallGeo, AUX);
-						wall.position.x = i * 5;
-						wall.position.y = -1.5;
-						wall.position.z = j * 5;
-						wall.receiveShadow = true;
-						scene.add(wall);
-					} 
+					// else if(MAT[i][j] == 252){ // 252 AMARILLO 
+					// 	wallGeo = new THREE.BoxGeometry(5, 1, 5);
+					// 	var AUX = new THREE.MeshPhongMaterial( {
+					// 			color: "yellow",
+					// 			shininess: 100,
+					// 			side: THREE.DoubleSide
+					// 	});
+					// 	wall = new THREE.Mesh(wallGeo, AUX);
+					// 	wall.position.x = i * 5;
+					// 	wall.position.y = -1.5;
+					// 	wall.position.z = j * 5;
+					// 	wall.receiveShadow = true;
+					// 	scene.add(wall);
+					// } 
 					// ***********************************************************************************
 				}
 			}

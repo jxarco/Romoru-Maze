@@ -5,16 +5,14 @@ var app = {
 	}
 }
 
-var confeti_list = [];
-var pop_list = [];
-var collidableMeshList = [];
 var HINTS = generateHintList();
 var hintIterator = 0;
+var wallIterator = 0;
 
-var camera, scene, renderer, controls, startTime;
+var camera, renderer, controls, startTime;
 var MAT, MAT2, data;
 var floorMESH, materials;
-var container, tam, audio;
+var container, tam;
 var light, light2;
 var direction = new THREE.Vector3();
 var raycaster = new THREE.Raycaster();
@@ -23,6 +21,7 @@ var co = 1;
 
 window.walls_on = true;
 window.controls = false;
+window.scene;
 window.mouse = new THREE.Vector2();
 
 funZero();
@@ -31,7 +30,6 @@ function funZero(){
 
 	container = document.querySelector(".canvas_container");
 	tam = container.getBoundingClientRect();
-	audio = new Audio('assets/audio.mp3');
 
 	// MAZE INFO
 
@@ -80,11 +78,11 @@ function INTERACTION(){
 		scene.fog = new THREE.Fog( 0xffffff, 0, 1000 );
 
 		// LIGHTS
-		light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 1 );
+		light = new THREE.DirectionalLight( 0xffffff, 0.15 );
 		light.position.set( 0.5, 1, 0.75 );
 		scene.add( light );
 
-		light2 = new THREE.PointLight( 0xffffff, 1, 15, 1 );
+		light2 = new THREE.PointLight( 0xffffff, 1, 20, 1.5 );
 		light2.penumbra = 0.1;
 
 		scene.add(light2)
@@ -180,51 +178,48 @@ function INTERACTION(){
 		floorMESH.name = "floor";
 		scene.add( floorMESH );
 
-		// // roof
-		// var roofTexture =  new THREE.TextureLoader().load( 'assets/space.png' );
-	 //    var geometry2 = new THREE.PlaneGeometry(165, 165, 2, 1, 1);
-	 //    geometry2.rotateX( - Math.PI / 2 );
-	 //    geometry2.rotateZ( - Math.PI );
-	    
-		// var material2 = new THREE.MeshPhongMaterial( { color: 0xffffff, map: roofTexture } );
-		// roofTexture.wrapS = roofTexture.wrapT = THREE.RepeatWrapping;
-		// roofTexture.repeat.set( 256, 256 );
-
-	 //    roofMESH = new THREE.Mesh(geometry2, material2);
-	 //    roofMESH.position.x = 80;
-		// roofMESH.position.y = 2;
-		// roofMESH.position.z = 80;
-		// roofMESH.receiveShadow = true;
-		// scene.add( roofMESH );
-
 		//WALLS
 		if(window.walls_on){
-			var wallTexture =  new THREE.TextureLoader().load( 'assets/wall2.jpg' );
+			var wallTexture1 =  new THREE.TextureLoader().load( 'assets/wall2.jpg' );
+			var wallTexture2 =  new THREE.TextureLoader().load( 'assets/wall4.png' );
 			var wallDoorTexture =  new THREE.TextureLoader().load( 'assets/wall3.jpg' );
 			for(var i = 0; i < MAT.length; i++){
 				for(var j = 0; j < MAT.length; j++){
 					if(MAT[i][j] == 0){ // 0 NEGRO
+
+						wallIterator++;
+
 						var wallGeo = new THREE.BoxGeometry(5, 4, 5);
-						var wallMat = new THREE.MeshPhongMaterial( {
-								map: wallTexture,
+						var wallMat1 = new THREE.MeshPhongMaterial( {
+								map: wallTexture1,
+								side: THREE.DoubleSide
+						});
+						var wallMat2 = new THREE.MeshPhongMaterial( {
+								map: wallTexture2,
 								side: THREE.DoubleSide
 						});
 
-						var wall = new THREE.Mesh(wallGeo, wallMat);
+						if(wallIterator % 2 == 0){
+							var wall = new THREE.Mesh(wallGeo, wallMat1);
+						}else{
+							var wall = new THREE.Mesh(wallGeo, wallMat2);
+						}
+
 						wall.position.x = i * 5;
 						wall.position.y = 0;
 						wall.position.z = j * 5;
 						wall.receiveShadow = true;
+						hint.castShadow = true;
 						scene.add(wall);
 					} 
 					else if(MAT[i][j] == 2){ // 2 VERDE MODIFICADO
 
 						var hint = HINTS[hintIterator];
-						console.log(hint)
 						hint.position.x = i * 5;
 						hint.position.y = 0;
 						hint.position.z = j * 5;
 						hint.receiveShadow = true;
+						hint.castShadow = true;
 						scene.add(hint);
 						hintIterator++;
 					} 
@@ -241,6 +236,7 @@ function INTERACTION(){
 						wall.position.y = 0;
 						wall.position.z = j * 5;
 						wall.receiveShadow = true;
+						hint.castShadow = true;
 						scene.add(wall);
 					}
 
@@ -257,7 +253,6 @@ function INTERACTION(){
 						wall.position.x = i * 5;
 						wall.position.y = -1.5;
 						wall.position.z = j * 5;
-						wall.receiveShadow = true;
 						scene.add(wall);
 					} 
 					// ***********************************************************************************
@@ -363,7 +358,6 @@ function INTERACTION(){
 		light2.position.z = camera.position.z;
 
 		if(window.controls) controls.target.set(75, 0, 75);
-		
 
 		// hints rotation
 		for(var i = 0; i < scene.children.length; i++){
@@ -402,118 +396,14 @@ function intersect(){
 	}
 }
 
-function confetiExplosion(){
-
-	removeConfeti();
-
-	audio.play();
-	
-	var confetiMat = new THREE.MeshPhongMaterial( {
-			color: Math.random() * 0x808008 + 0x808080,
-			shininess: 100,
-			side: THREE.DoubleSide
-		} );
-
-	var confetiGeo = new THREE.BoxGeometry(0.12, 0.01, 0.07);
-
-	for(var i = 0; i < 2000; i++){
-
-		confetiMat = new THREE.MeshPhongMaterial( {
-			color: Math.random() * 0x808008 + 0x808080,
-			shininess: 100,
-			side: THREE.DoubleSide
-		} );
-
-		var y = (Math.random() * 30) + 1;
-		var x = (Math.random() * 30) + 1;
-		var z = (Math.random() * 30) + 1;
-
-		confetiMesh  = new THREE.Mesh( confetiGeo, confetiMat );
-		confetiMesh.castShadow = true;
-		confetiMesh.rotation.x = (Math.random() * 2 * Math.PI) + 1;
-		confetiMesh.position.x = x - 15;
-		confetiMesh.position.y = y + 7;
-		confetiMesh.position.z = z - 15;
-		confeti_list.push(confetiMesh);
-		scene.add( confetiMesh );
-	}
-}
-
-function removeConfeti(){
-
-	audio.pause();
-	audio.currentTime = 0;
-
-	// quitar el confeti anterior
-	for( var i = confeti_list.length - 1; i >= 0; i--){
-		scene.remove(confeti_list[i]);
-	}
-}
-
-function deleteUser(user_id){
-	for( var i = 0; i < scene.children.length; i++){
-		// borrará la luz(grupo luz + esfera) y el jugador
-
-		if(scene.children[i].name == user_id){
-			scene.remove(scene.children[i]);
-		}
-	}
-	for( var i = 0; i < scene.children.length; i++){
-		if(scene.children[i].name == (user_id + "_body")){
-			scene.remove(scene.children[i]);
-		}
-	}
-}
-
-function popCube(argumentx, argumentz){
-
-	if(!argumentx){
-		var px = scene.getObjectByName("player_body").position.x;
-		var pz = scene.getObjectByName("player_body").position.z;
-	}else{
-		var px = argumentx;
-		var pz = argumentz;
-	}
-	
-	var poppedGeo = new THREE.BoxGeometry(0.25, 0.25, 0.25);
-	var poppedMat = new THREE.MeshPhongMaterial( {
-			color: Math.random() * 0x808008 + 0x808080,
-			shininess: 100,
-			side: THREE.DoubleSide
-	});
-
-	var popped = new THREE.Mesh(poppedGeo, poppedMat);
-	popped.position.x = px;
-	popped.position.y = 2;
-	popped.position.z = pz;
-	pop_list.push(popped);
-	scene.add(popped);
-
-	if(!argumentx){
-		var poppedPosition = {
-			x: px,
-			z: pz,
-			info: 12
-		}
-
-		if(window.server_on) server.sendMessage(poppedPosition);
-	}
-}
-
-function removePopped(){
-	for( var i = pop_list.length - 1; i >= 0; i--){
-		scene.remove(pop_list[i]);
-	}
-}
-
 function setCamera(list){
 
 	var x = list.posx;
 	var z = list.posz;
 	var rotation = list.rot;
 
-	camera.position.x = x;
-	camera.position.z = z;
+	camera.position.x = 22 * 5;//x;
+	camera.position.z = 2 * 5;//z;
 	camera.rotation.y += rotation;
 
 	initialRotation = camera.rotation.y;

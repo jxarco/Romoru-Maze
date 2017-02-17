@@ -292,9 +292,9 @@ function INTERACTION(){
 		renderer.domElement.id = "my_canvas";
 		container.appendChild( renderer.domElement );
 
-		// controls (mouse)
-		//controls = new THREE.OrbitControls( camera, renderer.domElement );
-		//controls.update();
+		//controls (mouse)
+		controls = new THREE.OrbitControls( camera, renderer.domElement );
+		controls.update();
 
 		window.addEventListener( 'resize', onWindowResize, false );
 	}
@@ -694,5 +694,36 @@ function generateHintList(){
 
 	
 	//scene.add(pacmanMesh);
+
+	/***MIKEY MOUSE***/
+	var mikeyGroup = new THREE.Group();
+	var mikeyGeo1 = new THREE.SphereGeometry(0.5,32,32);
+	mikeyGeo1.applyMatrix( new THREE.Matrix4().makeScale( 1.0, 1.0, 0.85 ) );
+	var mikeyMat = new THREE.MeshPhongMaterial({color: "grey", shininess: 50});
+	var mikeyGeo2 = new THREE.SphereGeometry(0.3,32,32);
+	mikeyGeo2.applyMatrix( new THREE.Matrix4().makeScale( 1.0, 1.0, 0.25 ) );
+	var mikeyGeo3 = new THREE.SphereGeometry(0.3,32,32);
+	mikeyGeo3.applyMatrix( new THREE.Matrix4().makeScale( 1.0, 1.0, 0.25 ) );
+	var mikeyGeo4 = new THREE.SphereGeometry(0.05,32,32);
+	mikeyGeo4.applyMatrix( new THREE.Matrix4().makeScale( 1.5, 1.0, 0.8 ) );
+
+
+	var mikeyMesh1 = new THREE.Mesh(mikeyGeo1, mikeyMat);
+	var mikeyMesh2 = new THREE.Mesh(mikeyGeo2, mikeyMat);
+	var mikeyMesh3 = new THREE.Mesh(mikeyGeo3, mikeyMat);
+	var mikeyMesh4 = new THREE.Mesh(mikeyGeo4, mikeyMat);
+
+	mikeyMesh2.position.x = mikeyMesh1.position.x + 0.4;
+	mikeyMesh2.position.y = mikeyMesh1.position.y + 0.5;
+	mikeyMesh3.position.x = mikeyMesh1.position.x - 0.4;
+	mikeyMesh3.position.y = mikeyMesh1.position.x + 0.5;
+	mikeyMesh4.position.z = mikeyMesh1.position.z + 0.45;
+
+	mikeyGroup.add(mikeyMesh1);
+	mikeyGroup.add(mikeyMesh2);
+	mikeyGroup.add(mikeyMesh3);
+	mikeyGroup.add(mikeyMesh4);
+
+	//scene.add(mikeyGroup);
 }
 

@@ -76,7 +76,7 @@ function INTERACTION(){
 		scene.fog = new THREE.Fog( 0xffffff, 0, 1000 );
 
 		// LIGHTS
-		light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.1 );
+		light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 1 );
 		light.position.set( 0.5, 1, 0.75 );
 		scene.add( light );
 
@@ -174,6 +174,7 @@ function INTERACTION(){
 		floorMESH.position.y = -1.5;
 		floorMESH.position.z = 80;
 		floorMESH.receiveShadow = true;
+		floorMESH.name = "floor";
 		scene.add( floorMESH );
 
 		// // roof
@@ -237,6 +238,7 @@ function INTERACTION(){
 					 	});
 
 						var wall = new THREE.Mesh(wallGeo, AUX);
+						wall.name = "red";
 						wall.position.x = i * 5;
 						wall.position.y = 0;
 						wall.position.z = j * 5;
@@ -246,20 +248,20 @@ function INTERACTION(){
 
 
 					// HACKER MODE ***********************************************************************
-					// else if(MAT[i][j] == 252){ // 252 AMARILLO 
-					// 	wallGeo = new THREE.BoxGeometry(5, 1, 5);
-					// 	var AUX = new THREE.MeshPhongMaterial( {
-					// 			color: "yellow",
-					// 			shininess: 100,
-					// 			side: THREE.DoubleSide
-					// 	});
-					// 	wall = new THREE.Mesh(wallGeo, AUX);
-					// 	wall.position.x = i * 5;
-					// 	wall.position.y = -1.5;
-					// 	wall.position.z = j * 5;
-					// 	wall.receiveShadow = true;
-					// 	scene.add(wall);
-					// } 
+					else if(MAT[i][j] == 252){ // 252 AMARILLO 
+						wallGeo = new THREE.BoxGeometry(5, 1, 5);
+						var AUX = new THREE.MeshPhongMaterial( {
+								color: "yellow",
+								shininess: 100,
+								side: THREE.DoubleSide
+						});
+						wall = new THREE.Mesh(wallGeo, AUX);
+						wall.position.x = i * 5;
+						wall.position.y = -1.5;
+						wall.position.z = j * 5;
+						wall.receiveShadow = true;
+						scene.add(wall);
+					} 
 					// ***********************************************************************************
 				}
 			}
@@ -271,7 +273,7 @@ function INTERACTION(){
 		// for(var i = 0; i < MAT2.length; i++){
 		// 	for(var j = 0; j < MAT2.length; j++){
 		// 		if(MAT2[i][j] == 0){ // 0 NEGRO + AZUL + VERDE
-		// 			var wallGeo = new THREE.BoxGeometry(1, 3.1, 1);
+		// 			var wallGeo = new THREE.BoxGeometry(1, 4, 1);
 
 		// 			var wall = new THREE.Mesh(wallGeo, AUX);
 		// 			wall.position.x = i;
@@ -291,8 +293,8 @@ function INTERACTION(){
 		container.appendChild( renderer.domElement );
 
 		// controls (mouse)
-		controls = new THREE.OrbitControls( camera, renderer.domElement );
-		controls.update();
+		//controls = new THREE.OrbitControls( camera, renderer.domElement );
+		//controls.update();
 
 		window.addEventListener( 'resize', onWindowResize, false );
 	}
@@ -376,16 +378,19 @@ function intersect(){
 
 	if ( intersects.length > 0 ) {
 		var intersect = intersects[ 0 ];
-		intersect.object.material.color.set( 0x0000ff );
+		if(intersect.object.name == "red"){
+			document.getElementById("canvas_info").style.display = "block";
+			document.getElementById("solution").style.display = "block";
+			var text = document.getElementById("instructions");
+			text.innerHTML = "<b>GOOD! DOOR TO NEXT LEVEL HAD BEEN REACHED!</b><br/>" + 
+			"<br/>" +
+			"You are not done yet! Try do solve this enigma to pass the door. Maybe other players "+
+			"could have useful hints for you...<br/><br/>" + 
+			" Hint: HINT1" +
+			"<br/><br/>"  + 
+			"<i>Close me with X or pressing ESC</i>"; 
+		}
 	}
-
-	//if(intersects[0].name = "red") console.log("RED");
-
-	// for ( var i = 0; i < intersects.length; i++ ) {
-
-	// 	intersects[ i ].object.material.color.set( 0x0000ff );
-
-	// }
 }
 
 function confetiExplosion(){
@@ -508,24 +513,6 @@ function setCamera(list){
 function CREATE_MATRIX(data, myImage){
 	var matrix = [];
 
-	// for(var i = 0; i < data.length; i += 4){
-	// 	// 	var newRow = [];
-	// 	//for(var j = 0; j < myImage.height; j++){
-	// 		var pixelr = data[i];
-	// 		var pixelg = data[i+1];
-	// 		var pixelb = data[i+2];
-	// 		var pixela = data[i+3];
-
-	// 		var s = "r: " + pixelr + ", g: " + pixelg + ", b: " + pixelb + ", a: " + pixela;
-			
-	// 		//newRow.push( s );
-	// 	//}
-
-	// 	matrix.push( s );
-	// }
-
-
-
 	for(var i = 0; i < myImage.height; i++){
 
 		var newRow = [];
@@ -536,17 +523,6 @@ function CREATE_MATRIX(data, myImage){
 
 		matrix.push( newRow );
 	}
-
-	// for(var i = 0; i < 3; i++){
-
-	// 	var newRow = [];
-	// 	for(var j = 0; j < 3; j++){
-
-	// 		newRow.push( i+j );
-	// 	}
-
-	// 	matrix.push( newRow );
-	// }
 	
 	return matrix;	
 }
@@ -580,10 +556,10 @@ function MODIFY_MATRIX( m ){
 
 function TRANSFORM_MATRIX( m, space ){
 
-	// if(space%2 == 0){
-	// 	console.log( "Matrix has not been transformed" )
-	// 	return m; 	
-	// } 
+	if(space%2 == 0){
+	 	console.log( "Matrix has not been transformed" )
+	 	return m; 	
+	} 
 
 	var matrix = [];
 	var LEN = m.length;

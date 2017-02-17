@@ -102,9 +102,6 @@ function init(){
       window.mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
       window.mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
 
-      console.log(window.mouse.x)
-      console.log(window.mouse.y)
-
       intersect();
 
   }, true);

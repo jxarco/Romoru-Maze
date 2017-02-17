@@ -95,6 +95,18 @@ function init(){
           div.offsetLeft - e.clientX,
           div.offsetTop - e.clientY
       ];
+
+      // calculate mouse position in normalized device coordinates
+      // (-1 to +1) for both components
+
+      window.mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
+      window.mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
+
+      console.log(window.mouse.x)
+      console.log(window.mouse.y)
+
+      intersect();
+
   }, true);
 
   document.addEventListener('mouseup', function() {
@@ -113,6 +125,7 @@ function init(){
           div.style.left = (mousePosition.x + offset[0]) + 'px';
           div.style.top  = (mousePosition.y + offset[1]) + 'px';
       }
+
   }, true);
 }
 

@@ -611,78 +611,88 @@ function generateHintList(){
 
 	/***RING HINT***/
 	var ringGeometry = new THREE.TorusGeometry( 0.5, 0.05, 12, 32 );
+	ringGeometry.applyMatrix( new THREE.Matrix4().makeScale( 1.0, 1.0, 3 ) );
 	var ringMat = new THREE.MeshPhongMaterial( { color: 0xddc604, shininess: 300 } );
 	var ringMesh = new THREE.Mesh(ringGeometry, ringMat);
 	ringMesh.name = "hint";
-	/*ringMesh.position.x = 0;
-	ringMesh.position.y = 0;
-	ringMesh.position.z = 0;
-	scene.add(ringMesh);*/
+
+	//scene.add(ringMesh);
+
 
 	/***PYRAMID HINT***/
 	var pyramidGeometry = new THREE.CylinderGeometry(0, 1.5, 1.5, 4, false); 
 	var pyramidMaterial = new THREE.MeshPhongMaterial({color: 0xF1D78B, shininess: 50 }); 
 	var pyramidMesh = new THREE.Mesh(pyramidGeometry, pyramidMaterial);
-	ringMesh.name = "hint";
+	pyramidMesh.name = "hint";
 
-	/*pyramidMesh.position.x = 0;
-	pyramidMesh.position.y = 0;
-	pyramidMesh.position.z = 0;
-	scene.add(pyramidMesh);*/
+	//scene.add(pyramidMesh);
+
 
 	/***PLANETA***/
 	var planetGeometry = new THREE.SphereGeometry(0.5, 32, 32); 
 	var planetMaterial = new THREE.MeshPhongMaterial({color: 0xFD772A, shininess: 50 }); 
 	var planetMesh = new THREE.Mesh(planetGeometry, planetMaterial);
-	ringMesh.name = "hint";
+	planetMesh.name = "hint";
 
-	/*planetMesh.position.x = 0;
-	planetMesh.position.y = 0;
-	planetMesh.position.z = 0;
-	scene.add(planetMesh);*/
+	//scene.add(planetMesh);
+
 
 	/***Pi***/
 	var piGroup = new THREE.Group();
 	var circleGeometry = new THREE.TorusGeometry( 0.8, 0.05, 15, 32 );
 	var circleMaterial = new THREE.MeshPhongMaterial({color: 0xFFFFFF, shininess: 50 }); 
 	var circleMesh = new THREE.Mesh(circleGeometry, circleMaterial);
-	circleMesh.position.x = 0;
-	circleMesh.position.y = 0;
-	circleMesh.position.z = 0;
 
 	var inf1Geometry = new THREE.TorusGeometry( 0.2, 0.02, 15, 32 ); 
+	inf1Geometry.applyMatrix( new THREE.Matrix4().makeScale( 1.2, 1.0, 1.5 ) );
 	var inf1Mesh = new THREE.Mesh(inf1Geometry, circleMaterial);
-	inf1Mesh.position.x = circleMesh.position.x - 0.2;
-	inf1Mesh.position.y = 0;
-	inf1Mesh.position.z = 0;
+	//inf1Mesh.position.x = circleMesh.position.x - 0.24;
 
 	var inf2Geometry = new THREE.TorusGeometry( 0.2, 0.02, 15, 32 );
+	inf2Geometry.applyMatrix( new THREE.Matrix4().makeScale( 1.2, 1.0, 1.5 ) );
 	var inf2Material = new THREE.MeshPhongMaterial({color: 0xFFFFFF, shininess: 50 }); 
 	var inf2Mesh = new THREE.Mesh(inf2Geometry, circleMaterial);
-	inf2Mesh.position.x = circleMesh.position.x + 0.2;
-	inf2Mesh.position.y = 0;
-	inf2Mesh.position.z = 0;
-
-	/*var fishShape = new THREE.Shape();
-	 var x = 0; 
-	 var y = 0;
-	fishShape.quadraticCurveTo(x +1, y , x+5 , y);
-	fishShape.quadraticCurveTo(x , y , x , y);
-	fishShape.quadraticCurveTo(x , y, x , y);
-	fishShape.quadraticCurveTo(x , y , x , y );
-	fishShape.quadraticCurveTo(x, y , x, y);
-	var geometry = new THREE.ShapeBufferGeometry( fishShape );
-
-	var geometry = new THREE.ShapeBufferGeometry( fishShape );
-
-	var mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { side: THREE.DoubleSide, color: 0xffffff } ) );
-	mesh.position.set( 0, 0, 0 );
-	scene.add(mesh);*/
+	//inf2Mesh.position.x = circleMesh.position.x + 0.24;
 
 	piGroup.add(circleMesh);
 	piGroup.add(inf1Mesh);
 	piGroup.add(inf2Mesh);
 	piGroup.name = "hint";
-	scene.add(piGroup);
+	//scene.add(piGroup);
 
+
+	/***TWIN TOWERS***/
+	var twinTowerGroup = new THREE.Group();
+	var towerGeometry = new THREE.BoxGeometry( 0.5, 3, 0.5, 12, 32 );
+	var towerMat = new THREE.MeshPhongMaterial( { color: "grey", shininess: 300 } );
+	var towerMesh = new THREE.Mesh(towerGeometry, towerMat);
+	towerMesh.name = "hint";
+
+
+	var tower2Mesh = new THREE.Mesh(towerGeometry, towerMat);
+	tower2Mesh.name = "hint";
+	tower2Mesh.position.x = towerMesh.position.x + 0.85;
+	
+	twinTowerGroup.add(towerMesh);
+	twinTowerGroup.add(tower2Mesh);
+	//scene.add(twinTowerGroup);
+
+	/***DIAMOND***/
+
+	var diamondGeo = new THREE.OctahedronGeometry(1, 0)
+	var diamondMat = new THREE.MeshPhongMaterial( { color: 0xff0000, shininess: 50 } );
+	var diamondMesh = new THREE.Mesh(diamondGeo, diamondMat);
+
+	//scene.add(diamondMesh);
+
+	/***PACMAN***/
+	var pacmanGeo = new THREE.TorusGeometry(0.1, 0.5, 30, 20, 5.3);
+	var pacmanMat = new THREE.MeshPhongMaterial( { color: 0xFDDE00, shininess: 50, side: THREE.DoubleSide} );
+	var pacmanMesh = new THREE.Mesh(pacmanGeo,pacmanMat);
+	pacmanMesh.rotation.z += Math.PI/6
+	pacmanMesh.name= "hint";
+
+	
+	//scene.add(pacmanMesh);
 }
+

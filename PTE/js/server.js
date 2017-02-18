@@ -23,7 +23,7 @@ function init_server(){
 		"<br/>" +
 		"You can talk using the chat (open with 'c' or 'Menu->Open chat'). To see your nickname and avatar" +
 		" use the 'p'. Open this panel with 'i'." + 
-		" Your objetive: Try to reach central room. Other players could find some hints which can be useful..." +
+		" Your objetive: Try to reach central room. Be ready!!" +
 		"<br/><br/>"  + 
 		"<i>Close me with X or pressing ESC</i>"; 
 	}
@@ -164,9 +164,6 @@ server.on_user_disconnected = function(user_id){
 	var parent = div_container.parentNode;
 
 	parent.removeChild(div_container);
-
-	// borrar usuario que se ha ido
-	deleteUser(user_id);
 }
 
 server.on_close = function(){  

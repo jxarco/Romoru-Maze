@@ -271,17 +271,17 @@ function INTERACTION(){
 					}
 
 					// HACKER MODE ***********************************************************************
-					else if(MAT[i][j] == 252){ // 252 AMARILLO 
-						wallGeo = new THREE.BoxGeometry(5, 0.5, 5);
-						var AUX = new THREE.MeshBasicMaterial( {
-								color: "yellow",
-						});
-						wall = new THREE.Mesh(wallGeo, AUX);
-						wall.position.x = i * 5;
-						wall.position.y = -1.7;
-						wall.position.z = j * 5;
-						scene.add(wall);
-					} 
+					// else if(MAT[i][j] == 252){ // 252 AMARILLO 
+					// 	wallGeo = new THREE.BoxGeometry(5, 0.5, 5);
+					// 	var AUX = new THREE.MeshBasicMaterial( {
+					// 			color: "yellow",
+					// 	});
+					// 	wall = new THREE.Mesh(wallGeo, AUX);
+					// 	wall.position.x = i * 5;
+					// 	wall.position.y = -1.7;
+					// 	wall.position.z = j * 5;
+					// 	scene.add(wall);
+					// } 
 					// ***********************************************************************************
 				}
 			}

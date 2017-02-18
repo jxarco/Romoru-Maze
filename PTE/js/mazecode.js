@@ -264,9 +264,6 @@ function INTERACTION(){
 						wall.position.x = i * 5;
 						wall.position.y = 0;
 						wall.position.z = j * 5;
-						console.log("x z")
-						console.log(wall.position.x)
-						console.log(wall.position.z)
 						wall.receiveShadow = true;
 						wall.castShadow = true;
 						scene.add(wall);
@@ -321,8 +318,6 @@ function INTERACTION(){
 		var x = Math.floor(camera.position.x + (co * direction.x));
 		var z = Math.floor(camera.position.z + (co * direction.z));
 
-		console.log(MAT2[x][z])
-
 		if (MAT2[x][z] == 0 || MAT2[x][z] == 3){
 		 	return false;
 		}
@@ -339,7 +334,7 @@ function INTERACTION(){
 		if(moveForward && limits(1)){
 			new TWEEN.Tween( camera.position ).to( {
 						x: Math.floor(camera.position.x + direction.x),
-						z: Math.floor(camera.position.z + direction.z),
+						z: Math.floor(camera.position.z + direction.z)
 			}, 200 ).easing( TWEEN.Easing.Linear.None).start();
 
 			moveForward = false;
@@ -347,8 +342,8 @@ function INTERACTION(){
 		}
 		if(moveBackward && limits(0)){
 			new TWEEN.Tween( camera.position ).to( {
-						x: camera.position.x - direction.x,
-						z: camera.position.z - direction.z,
+						x: Math.floor(camera.position.x - direction.x),
+						z: Math.floor(camera.position.z - direction.z)
 			}, 200 ).easing( TWEEN.Easing.Linear.None).start();
 
 			moveBackward = false;
@@ -413,8 +408,19 @@ function isSolution(){
 			}, 6000 ).easing( TWEEN.Easing.Linear.None).start(); // efecto para bajar
 		
 		setTimeout(function(){
-			MAT2[activeObject.position.x][activeObject.position.z] = -1; // cuando acabe de bajar, quitamos el bloqueo
-			console.log("wefef");
+			
+			var x = activeObject.position.x;
+			var z = activeObject.position.z;
+
+			for(var i = (x - 2); i < (x + 3); i++){
+				for(var j = (z - 2); j < (z + 3); j++){
+					if(MAT2[i][j] == 3){
+						MAT2[i][j] = -1;
+					}
+				}
+			}
+
+
 		}, 6050);
 	}
 }
@@ -429,10 +435,6 @@ function intersect(){
 	if ( intersects.length > 0 ) {
 		var intersect = intersects[ 0 ];
 		if(intersect.object.name == "red"){
-
-			console.log(intersect.object.position.x)
-			console.log(intersect.object.position.z)
-
 			document.getElementById("canvas_info").style.display = "block";
 			document.getElementById("solution").style.display = "block";
 			var text = document.getElementById("instructions");

@@ -9,7 +9,7 @@ function init_server(){
 	if(op_panel.dataset['boolean'] == "false"){
 		
 		var roominput = document.getElementById("roominput");
-		room = roominput.value + "a";
+		room = roominput.value;
 
 		server.connect("84.89.136.194:9000", room);
 		console.log("connected in room: " + room);

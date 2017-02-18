@@ -11,6 +11,8 @@ var hintIterator = 0;
 var textHintIterator = 0;
 var wallIterator = 0;
 
+var activeObject;
+
 var camera, renderer, controls, startTime;
 var MAT, MAT2, data;
 var floorMESH, sphere, materials;
@@ -204,11 +206,11 @@ function INTERACTION(){
 						wallIterator++;
 
 						var wallGeo = new THREE.BoxGeometry(5, 4, 5);
-						var wallMat1 = new THREE.MeshPhongMaterial( {
+						var wallMat1 = new THREE.MeshBasicMaterial( {
 								map: wallTexture1,
 								side: THREE.DoubleSide
 						});
-						var wallMat2 = new THREE.MeshPhongMaterial( {
+						var wallMat2 = new THREE.MeshBasicMaterial( {
 								map: wallTexture2,
 								side: THREE.DoubleSide
 						});
@@ -243,8 +245,23 @@ function INTERACTION(){
 								map: wallDoorTexture,
 								side: THREE.DoubleSide
 						});
+						var wallMat1 = new THREE.MeshPhongMaterial( {
+								map: wallTexture1,
+								side: THREE.DoubleSide
+						});
 
-						var wall = new THREE.Mesh(wallGeo, wallMat);
+						materials = [
+
+						    new THREE.MeshBasicMaterial( { map: wallDoorTexture } ), // right
+						    new THREE.MeshBasicMaterial( { map: wallTexture1 } ), // left
+						    new THREE.MeshBasicMaterial( { map: wallTexture1 } ), // top
+						    new THREE.MeshBasicMaterial( { map: wallTexture1 } ), // bottom
+						    new THREE.MeshBasicMaterial( { map: wallTexture1 } ), // back
+						    new THREE.MeshBasicMaterial( { map: wallTexture1 } )  // front
+
+						];
+
+						var wall = new THREE.Mesh(wallGeo, new THREE.MultiMaterial( materials ));
 						var textHint = TEXT_HINTS[textHintIterator];
 						wall.name = "red";
 						wall.message = textHint.text;
@@ -261,10 +278,8 @@ function INTERACTION(){
 					// HACKER MODE ***********************************************************************
 					// else if(MAT[i][j] == 252){ // 252 AMARILLO 
 					// 	wallGeo = new THREE.BoxGeometry(5, 1, 5);
-					// 	var AUX = new THREE.MeshPhongMaterial( {
+					// 	var AUX = new THREE.MeshBasicMaterial( {
 					// 			color: "yellow",
-					// 			shininess: 100,
-					// 			side: THREE.DoubleSide
 					// 	});
 					// 	wall = new THREE.Mesh(wallGeo, AUX);
 					// 	wall.position.x = i * 5;
@@ -325,7 +340,9 @@ function INTERACTION(){
 		var x = Math.floor(camera.position.x + (co * direction.x));
 		var z = Math.floor(camera.position.z + (co * direction.z));
 
-		if (MAT2[x][z] == 0){
+		console.log(MAT2[x][z])
+
+		if (MAT2[x][z] == 0 || MAT2[x][z] == 3){
 		 	return false;
 		}
 		return true;
@@ -393,20 +410,27 @@ function INTERACTION(){
 }
 
 function isSolution(){
-	console.log("testing");
 	var text = document.getElementById("instructions");
 	var input = document.getElementById("solution");
 	var posibleSolution = document.getElementById("solution").value.toLowerCase();
 	posibleSolution = posibleSolution.substring(0, posibleSolution.length - 1);
 	input.value = "";
 
-	var solution = TEXT_HINTS[parseInt(text.innerHTML[191]) - 1].solution;
+	var index = parseInt(text.innerHTML[191]) - 1;
 
-	console.log(solution)
+	var solution = TEXT_HINTS[index].solution;
 
 	if(posibleSolution === solution){
 		text.innerHTML = "<b><p align='center'><font size='10'>WELL DONE!</font></p></b>";
 		input.style.display = "none";
+		MAT2[activeObject.position.x][activeObject.position.z] = -1; // para poder pasar
+		new TWEEN.Tween( activeObject.position ).to( {
+						y: -3.45
+			}, 6000 ).easing( TWEEN.Easing.Linear.None).start();
+		
+		// setTimeout(function(){
+		// 	scene.remove( activeObject );
+		// }, 6000);
 	}
 }
 
@@ -430,7 +454,9 @@ function intersect(){
 			" Hint: " +
 			intersect.object.message +
 			"<br/><br/>"  + 
-			"<i>Close me with X or pressing ESC</i>"; 
+			"<i>Close me with X or pressing ESC</i>";
+
+			activeObject = intersect.object;
 		}
 	}
 }

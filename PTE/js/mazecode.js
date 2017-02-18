@@ -253,11 +253,11 @@ function INTERACTION(){
 						materials = [
 
 						    new THREE.MeshBasicMaterial( { map: wallDoorTexture } ), // right
-						    new THREE.MeshBasicMaterial( { map: wallTexture1 } ), // left
+						    new THREE.MeshBasicMaterial( { map: wallDoorTexture } ), // left
 						    new THREE.MeshBasicMaterial( { map: wallTexture1 } ), // top
 						    new THREE.MeshBasicMaterial( { map: wallTexture1 } ), // bottom
-						    new THREE.MeshBasicMaterial( { map: wallTexture1 } ), // back
-						    new THREE.MeshBasicMaterial( { map: wallTexture1 } )  // front
+						    new THREE.MeshBasicMaterial( { map: wallDoorTexture } ), // back
+						    new THREE.MeshBasicMaterial( { map: wallDoorTexture } )  // front
 
 						];
 

@@ -5,13 +5,13 @@ var app = {
 	}
 }
 
-var HINTS = generateMeshHints();
-var TEXT_HINTS = generateTextHints();
+var HINTS = generateMeshHints(); // LISTA CON OBJETOS
+var TEXT_HINTS = generateTextHints(); // LISTA CON LOS TEXTOS DE CADA PUERTA
 var hintIterator = 0;
 var textHintIterator = 0;
 var wallIterator = 0;
 
-var activeObject;
+var activeObject; // Este sirve para guardar el ultimo objeto al que hemos clicado
 
 var camera, renderer, controls, startTime;
 var MAT, MAT2, data;
@@ -72,7 +72,6 @@ function INTERACTION(){
 	var moveBackward = false;
 	var moveLeft = false;
 	var moveRight = false;
-	var q = false, e = false;
 	var prevTime = performance.now();
 
 	function init() {
@@ -126,9 +125,6 @@ function INTERACTION(){
 				case 68: // d
 					moveRight = false;
 					break;
-				case 69: // e
-					e = true;
-					break;
 			}
 		};
 		var onKeyUp = function ( event ) {
@@ -165,9 +161,6 @@ function INTERACTION(){
 					break;
 				case 81: // q = realign
 					camera.rotation.y = initialRotation;
-					break;
-				case 69: // e
-					e = false;
 					break;
 			}
 		};
@@ -215,6 +208,8 @@ function INTERACTION(){
 								side: THREE.DoubleSide
 						});
 
+						// intercalar muros con y sin hiedra
+
 						if(wallIterator % 2 == 0){
 							var wall = new THREE.Mesh(wallGeo, wallMat1);
 						}else{
@@ -230,6 +225,7 @@ function INTERACTION(){
 					} 
 					else if(MAT[i][j] == 2){ // 2 VERDE MODIFICADO
 
+						// vamos sacando el siguiente hint de la lista
 						var hint = HINTS[hintIterator];
 						hint.position.x = i * 5;
 						hint.position.y = 0;
@@ -268,22 +264,24 @@ function INTERACTION(){
 						wall.position.x = i * 5;
 						wall.position.y = 0;
 						wall.position.z = j * 5;
+						console.log("x z")
+						console.log(wall.position.x)
+						console.log(wall.position.z)
 						wall.receiveShadow = true;
 						wall.castShadow = true;
 						scene.add(wall);
 						textHintIterator++;
 					}
 
-
 					// HACKER MODE ***********************************************************************
 					// else if(MAT[i][j] == 252){ // 252 AMARILLO 
-					// 	wallGeo = new THREE.BoxGeometry(5, 1, 5);
+					// 	wallGeo = new THREE.BoxGeometry(5, 0.5, 5);
 					// 	var AUX = new THREE.MeshBasicMaterial( {
 					// 			color: "yellow",
 					// 	});
 					// 	wall = new THREE.Mesh(wallGeo, AUX);
 					// 	wall.position.x = i * 5;
-					// 	wall.position.y = -1.5;
+					// 	wall.position.y = -1.7;
 					// 	wall.position.z = j * 5;
 					// 	scene.add(wall);
 					// } 
@@ -291,23 +289,6 @@ function INTERACTION(){
 				}
 			}
 		}
-		
-		// COMPROBAR BLOQUEOS DE COLISIONES
-
-		// WALLS CON MUCHAS MESHS -> DESDE MAT2
-		// for(var i = 0; i < MAT2.length; i++){
-		// 	for(var j = 0; j < MAT2.length; j++){
-		// 		if(MAT2[i][j] == 0){ // 0 NEGRO + AZUL + VERDE
-		// 			var wallGeo = new THREE.BoxGeometry(1, 4, 1);
-
-		// 			var wall = new THREE.Mesh(wallGeo, AUX);
-		// 			wall.position.x = i;
-		// 			wall.position.y = 0;
-		// 			wall.position.z = j;
-		// 			scene.add(wall);
-		// 		} 
-		// 	}
-		// }
 
 		// renderer ************************************************************************************************
 
@@ -412,25 +393,29 @@ function INTERACTION(){
 function isSolution(){
 	var text = document.getElementById("instructions");
 	var input = document.getElementById("solution");
-	var posibleSolution = document.getElementById("solution").value.toLowerCase();
-	posibleSolution = posibleSolution.substring(0, posibleSolution.length - 1);
+	var posibleSolution = document.getElementById("solution").value.toLowerCase(); // cualquier valor con o sin mayus
+	posibleSolution = posibleSolution.substring(0, posibleSolution.length - 1); // quitamos el salto de linea
 	input.value = "";
 
-	var index = parseInt(text.innerHTML[191]) - 1;
+	// cogemos el número de hint que esta en el texto
+	// es decir, cuando pone HINT: X* ..... esa X es el numero de hint
+	// y esta en la pos 191.
+	var index = parseInt(text.innerHTML[191]) - 1; 
 
+	// cogemos la solucion de ese hint
 	var solution = TEXT_HINTS[index].solution;
 
 	if(posibleSolution === solution){
 		text.innerHTML = "<b><p align='center'><font size='10'>WELL DONE!</font></p></b>";
 		input.style.display = "none";
-		MAT2[activeObject.position.x][activeObject.position.z] = -1; // para poder pasar
 		new TWEEN.Tween( activeObject.position ).to( {
 						y: -3.45
-			}, 6000 ).easing( TWEEN.Easing.Linear.None).start();
+			}, 6000 ).easing( TWEEN.Easing.Linear.None).start(); // efecto para bajar
 		
-		// setTimeout(function(){
-		// 	scene.remove( activeObject );
-		// }, 6000);
+		setTimeout(function(){
+			MAT2[activeObject.position.x][activeObject.position.z] = -1; // cuando acabe de bajar, quitamos el bloqueo
+			console.log("wefef");
+		}, 6050);
 	}
 }
 
@@ -444,6 +429,10 @@ function intersect(){
 	if ( intersects.length > 0 ) {
 		var intersect = intersects[ 0 ];
 		if(intersect.object.name == "red"){
+
+			console.log(intersect.object.position.x)
+			console.log(intersect.object.position.z)
+
 			document.getElementById("canvas_info").style.display = "block";
 			document.getElementById("solution").style.display = "block";
 			var text = document.getElementById("instructions");

@@ -25,14 +25,14 @@ document.getElementById("solution").addEventListener("keyup", function(event){
 
 function generateTextHints(){
 	list = [];
-	list.push( {text: "1* <i>Some people call him <b>The Lord</b>...</i>", solution: "sauron" });
-	list.push( {text: "2* <i>Maths would not be the same without this number...</i>", solution: "pi" });
-	list.push( {text: "3* <i>mickey...</i>", solution: "mickey mouse" });
-	list.push( {text: "4* <i>It was terrorism, not an accident...</i>", solution: "11s" });
-	list.push( {text: "5* <i>Maybe people is kinda racist for small ones...</i>", solution: "pluto" });
-	list.push( {text: "6* <i>He was not a king, not a god ...</i>", solution: "tutankamon" });
-	list.push( {text: "7* <i>Maybe you have an ace in the sleeve...</i>", solution: "ace of diamonds" });
-	list.push( {text: "8* <i>You are too young if you have not played it...</i>", solution: "pacman" });
+	list.push( {text: "1* <i>Maybe you have an ace in the sleeve...</i>", solution: "ace of diamonds" });
+	list.push( {text: "2* <i>Disney cartoon...</i>", solution: "mickey mouse" });
+	list.push( {text: "3* <i>In ancient times, he was not a king, not a god...</i>", solution: "tutankamon" });
+	list.push( {text: "4* <i>You are too young if you have not played it...</i>", solution: "pacman" });
+	list.push( {text: "5* <i>Maths would not be the same without this number...</i>", solution: "pi" });
+	list.push( {text: "6* <i>Maybe people is kinda racist for small ones...</i>", solution: "pluto" });
+	list.push( {text: "7* <i>It was terrorism, not an accident...</i>", solution: "11s" });
+	list.push( {text: "8* <i>Some people call him <b>The Lord</b>...</i>", solution: "sauron" });
 
 	return list;
 }
@@ -41,32 +41,21 @@ function generateMeshHints(){
 
 	var list = [];
 
-	/***RING HINT***/
-	var ringGeometry = new THREE.TorusGeometry( 0.5, 0.05, 12, 32 );
-	ringGeometry.applyMatrix( new THREE.Matrix4().makeScale( 1.0, 1.0, 3 ) );
-	var ringMat = new THREE.MeshPhongMaterial( { color: 0xddc604, shininess: 300 } );
-	var ringMesh = new THREE.Mesh(ringGeometry, ringMat);
-	ringMesh.name = "hint";
-
-	list.push( ringMesh );
-
-	/***PYRAMID HINT***/
-	var pyramidGeometry = new THREE.CylinderGeometry(0, 1.5, 1.5, 4, false); 
-	var pyramidMaterial = new THREE.MeshPhongMaterial({color: 0xF1D78B, shininess: 50 }); 
-	var pyramidMesh = new THREE.Mesh(pyramidGeometry, pyramidMaterial);
-	pyramidMesh.name = "hint";
-
-	list.push( pyramidMesh );
+	/***TWIN TOWERS***/
+	var twinTowerGroup = new THREE.Group();
+	var towerGeometry = new THREE.BoxGeometry( 0.5, 3, 0.5, 12, 32 );
+	var towerMat = new THREE.MeshPhongMaterial( { color: "grey", shininess: 300 } );
+	var towerMesh = new THREE.Mesh(towerGeometry, towerMat);
 
 
-	/***PLANETA***/
-	var planetGeometry = new THREE.SphereGeometry(0.5, 32, 32); 
-	var planetMaterial = new THREE.MeshPhongMaterial({color: 0xFD772A, shininess: 50 }); 
-	var planetMesh = new THREE.Mesh(planetGeometry, planetMaterial);
-	planetMesh.name = "hint";
+	var tower2Mesh = new THREE.Mesh(towerGeometry, towerMat);
+	tower2Mesh.position.x = towerMesh.position.x + 0.85;
+	
+	twinTowerGroup.add(towerMesh);
+	twinTowerGroup.add(tower2Mesh);
+	twinTowerGroup.name = "hint";
 
-	list.push( planetMesh );
-
+	list.push( twinTowerGroup );
 
 	/***Pi***/
 	var piGroup = new THREE.Group();
@@ -94,23 +83,6 @@ function generateMeshHints(){
 
 	list.push( piGroup );
 
-
-	/***TWIN TOWERS***/
-	var twinTowerGroup = new THREE.Group();
-	var towerGeometry = new THREE.BoxGeometry( 0.5, 3, 0.5, 12, 32 );
-	var towerMat = new THREE.MeshPhongMaterial( { color: "grey", shininess: 300 } );
-	var towerMesh = new THREE.Mesh(towerGeometry, towerMat);
-
-
-	var tower2Mesh = new THREE.Mesh(towerGeometry, towerMat);
-	tower2Mesh.position.x = towerMesh.position.x + 0.85;
-	
-	twinTowerGroup.add(towerMesh);
-	twinTowerGroup.add(tower2Mesh);
-	twinTowerGroup.name = "hint";
-
-	list.push( twinTowerGroup );
-
 	/***DIAMOND***/
 
 	var diamondGeo = new THREE.OctahedronGeometry(1, 0)
@@ -120,14 +92,21 @@ function generateMeshHints(){
 	diamondMesh.name = "hint";
 	list.push( diamondMesh );
 
-	/***PACMAN***/
-	var pacmanGeo = new THREE.TorusGeometry(0.1, 0.5, 30, 20, 5.3);
-	var pacmanMat = new THREE.MeshPhongMaterial( { color: 0xFDDE00, shininess: 50, side: THREE.DoubleSide} );
-	var pacmanMesh = new THREE.Mesh(pacmanGeo,pacmanMat);
-	pacmanMesh.rotation.z += Math.PI/6
-	pacmanMesh.name = "hint";
+	/***PLANETA***/
+	var planetGeometry = new THREE.SphereGeometry(0.5, 32, 32); 
+	var planetMaterial = new THREE.MeshPhongMaterial({color: 0xFD772A, shininess: 50 }); 
+	var planetMesh = new THREE.Mesh(planetGeometry, planetMaterial);
+	planetMesh.name = "hint";
 
-	list.push( pacmanMesh );
+	list.push( planetMesh );
+
+	/***PYRAMID HINT***/
+	var pyramidGeometry = new THREE.CylinderGeometry(0, 1.5, 1.5, 4, false); 
+	var pyramidMaterial = new THREE.MeshPhongMaterial({color: 0xF1D78B, shininess: 50 }); 
+	var pyramidMesh = new THREE.Mesh(pyramidGeometry, pyramidMaterial);
+	pyramidMesh.name = "hint";
+
+	list.push( pyramidMesh );
 
 	/***MIKEY MOUSE***/
 	var mikeyGroup = new THREE.Group();
@@ -161,6 +140,24 @@ function generateMeshHints(){
 	mikeyGroup.name = "hint";
 
 	list.push( mikeyGroup );
+
+	/***RING HINT***/
+	var ringGeometry = new THREE.TorusGeometry( 0.5, 0.05, 12, 32 );
+	ringGeometry.applyMatrix( new THREE.Matrix4().makeScale( 1.0, 1.0, 3 ) );
+	var ringMat = new THREE.MeshPhongMaterial( { color: 0xddc604, shininess: 300 } );
+	var ringMesh = new THREE.Mesh(ringGeometry, ringMat);
+	ringMesh.name = "hint";
+
+	list.push( ringMesh );
+
+	/***PACMAN***/
+	var pacmanGeo = new THREE.TorusGeometry(0.1, 0.5, 30, 20, 5.3);
+	var pacmanMat = new THREE.MeshPhongMaterial( { color: 0xFDDE00, shininess: 50, side: THREE.DoubleSide} );
+	var pacmanMesh = new THREE.Mesh(pacmanGeo,pacmanMat);
+	pacmanMesh.rotation.z += Math.PI/6
+	pacmanMesh.name = "hint";
+
+	list.push( pacmanMesh );
 
 	return list;
 }

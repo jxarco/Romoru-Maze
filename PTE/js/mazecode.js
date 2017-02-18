@@ -199,11 +199,11 @@ function INTERACTION(){
 						wallIterator++;
 
 						var wallGeo = new THREE.BoxGeometry(5, 4, 5);
-						var wallMat1 = new THREE.MeshBasicMaterial( {
+						var wallMat1 = new THREE.MeshPhongMaterial( {
 								map: wallTexture1,
 								side: THREE.DoubleSide
 						});
-						var wallMat2 = new THREE.MeshBasicMaterial( {
+						var wallMat2 = new THREE.MeshPhongMaterial( {
 								map: wallTexture2,
 								side: THREE.DoubleSide
 						});
@@ -248,12 +248,12 @@ function INTERACTION(){
 
 						materials = [
 
-						    new THREE.MeshBasicMaterial( { map: wallDoorTexture } ), // right
-						    new THREE.MeshBasicMaterial( { map: wallDoorTexture } ), // left
-						    new THREE.MeshBasicMaterial( { map: wallTexture1 } ), // top
-						    new THREE.MeshBasicMaterial( { map: wallTexture1 } ), // bottom
-						    new THREE.MeshBasicMaterial( { map: wallDoorTexture } ), // back
-						    new THREE.MeshBasicMaterial( { map: wallDoorTexture } )  // front
+						    new THREE.MeshPhongMaterial( { map: wallDoorTexture } ), // right
+						    new THREE.MeshPhongMaterial( { map: wallDoorTexture } ), // left
+						    new THREE.MeshPhongMaterial( { map: wallTexture1 } ), // top
+						    new THREE.MeshPhongMaterial( { map: wallTexture1 } ), // bottom
+						    new THREE.MeshPhongMaterial( { map: wallDoorTexture } ), // back
+						    new THREE.MeshPhongMaterial( { map: wallDoorTexture } )  // front
 
 						];
 
@@ -271,17 +271,17 @@ function INTERACTION(){
 					}
 
 					// HACKER MODE ***********************************************************************
-					// else if(MAT[i][j] == 252){ // 252 AMARILLO 
-					// 	wallGeo = new THREE.BoxGeometry(5, 0.5, 5);
-					// 	var AUX = new THREE.MeshBasicMaterial( {
-					// 			color: "yellow",
-					// 	});
-					// 	wall = new THREE.Mesh(wallGeo, AUX);
-					// 	wall.position.x = i * 5;
-					// 	wall.position.y = -1.7;
-					// 	wall.position.z = j * 5;
-					// 	scene.add(wall);
-					// } 
+					else if(MAT[i][j] == 252){ // 252 AMARILLO 
+						wallGeo = new THREE.BoxGeometry(5, 0.5, 5);
+						var AUX = new THREE.MeshBasicMaterial( {
+								color: "yellow",
+						});
+						wall = new THREE.Mesh(wallGeo, AUX);
+						wall.position.x = i * 5;
+						wall.position.y = -1.7;
+						wall.position.z = j * 5;
+						scene.add(wall);
+					} 
 					// ***********************************************************************************
 				}
 			}
@@ -412,14 +412,13 @@ function isSolution(){
 			var x = activeObject.position.x;
 			var z = activeObject.position.z;
 
-			for(var i = (x - 2); i < (x + 3); i++){
+			for(var i = (x - 2); i < (x + 3); i++){ // puerta y alrededores que tengan 3 ponemos -1 para quitar bloqueo
 				for(var j = (z - 2); j < (z + 3); j++){
 					if(MAT2[i][j] == 3){
 						MAT2[i][j] = -1;
 					}
 				}
 			}
-
 
 		}, 6050);
 	}
@@ -458,8 +457,8 @@ function setCamera(list){
 	var z = list.posz;
 	var rotation = list.rot;
 
-	camera.position.x = 75;//x;
-	camera.position.z = 75;//z;
+	camera.position.x = 22*5;//x;
+	camera.position.z = 10;//z;
 	camera.rotation.y += rotation;
 
 	initialRotation = camera.rotation.y;

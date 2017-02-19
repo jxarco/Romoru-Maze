@@ -27,7 +27,7 @@ var co = 1;
 
 var waterObjects = [];
 
-window.walls_on = false;
+window.walls_on = true;
 window.controls = true;
 window.scene;
 window.mouse = new THREE.Vector2();

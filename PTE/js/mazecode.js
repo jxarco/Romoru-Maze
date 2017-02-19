@@ -470,10 +470,17 @@ function createPNJ(user_id){
 		animation = result.animation;
 		animations.push( animation );
 
-		object.scale.set(0.002, 0.002, 0.002);
+		object.scale.set(0.2, 0.2, 0.2);
 	} );
 }
 
+function deletePNJ(user_id){
+
+	if(scene.getObjectByName(user_id)){
+		scene.remove(scene.getObjectByName(user_id));
+
+	}
+}
 function isSolution(){
 	var text = document.getElementById("instructions");
 	var input = document.getElementById("solution");

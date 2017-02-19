@@ -171,6 +171,7 @@ server.on_user_disconnected = function(user_id){
 	var parent = div_container.parentNode;
 
 	parent.removeChild(div_container);
+	deletePNJ(user_id);
 }
 
 server.on_close = function(){  

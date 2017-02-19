@@ -42,23 +42,10 @@ server.on_message = function( user_id, message){
 	var guest_sending = objectReceived.name;
 	var pathBueno = objectReceived.avatar;
 
-	if(objectReceived.info == 5){
-		confetiExplosion();
-		return;
-	}else if(objectReceived.info == 8){
-		removeConfeti();
-		return;
-	}else if(objectReceived.info == 9){
+	if(objectReceived.info == 9){
 		updatePlayerPosition(user_id, objectReceived.px, objectReceived.py, objectReceived.pz, objectReceived.ry);
 		return;
-	}else if(objectReceived.info == 12){
-		popCube(objectReceived.x, objectReceived.z);
-		return;
-	}else if(objectReceived.info == 13){
-		removePopped();
-		return;
 	}
-
 
 	// si info=1 el mensaje solo sirve para indicar que
 	// esa persona esta conectada 

@@ -1,4 +1,5 @@
 
+
 // SCRIPT FOR U TALK CHAT
 
 
@@ -475,23 +476,6 @@ function createMsg(guestname, avatarPath, argument){
 function send(argument, hex_color, list){
 
   var objectToSend = {}; // nuestro objeto a enviar
-
-  if(argument){
-    objectToSend.name = guestname;
-    objectToSend.message = argument;
-    objectToSend.avatar = avatarPath;
-    if(argument == "confeti"){
-      objectToSend.info = 5;
-    }else if(argument == "rem_confeti"){
-      objectToSend.info = 8;
-    }else if (argument == "rem_popped"){
-      objectToSend.info = 13;
-    }
-
-    server.sendMessage(objectToSend);
-    
-    return;
-  }
 
   var input = document.querySelector("#textinput");
 

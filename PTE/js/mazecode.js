@@ -107,20 +107,37 @@ function INTERACTION(){
 		scene.add( light3 );
 
 
-		// var loader = new THREE.AssimpLoader();
-		// 	loader.load( "models/Octaminator.assimp", function ( err, result ) {
-		// 		var object = result.object;
-		// 		object.position.x = 0;
-		// 		object.position.z = 0;
-		// 		object.position.y = -0.35;
-		// 		scene.add( object );
-		// 		animation = result.animation;
+		// GAME ***********************
 
-		// 		object.scale.set(0.002, 0.002, 0.002);
+	    var gameGeoScreen = new THREE.PlaneGeometry(5, 5, 1, 1);
+	    var gameGeoCube = new THREE.BoxGeometry(0.92, 0.92, 0.05);
 
-		// 		PNJ = object;
+		var gameMat = new THREE.MeshPhongMaterial( { color: 0x000000, side: THREE.DoubleSide } );
 
-		// 	} );
+	    var game = new THREE.Mesh(gameGeoScreen, gameMat);
+	    game.position.x = 85;
+		game.position.z = 95;
+		game.receiveShadow = true;
+		scene.add( game );
+
+		var m = 5, n = 5;
+		for(var i = -1; i < 4; i++){
+			n = 5;
+			for(var j = 83; j < 88; j++){
+				var textcube =  new THREE.TextureLoader().load( "puzzle/game1_part" + m + "x" + n + ".jpg" );
+				var cubeMat = new THREE.MeshPhongMaterial( { map: textcube, side: THREE.DoubleSide } );
+				var box = new THREE.Mesh(gameGeoCube, cubeMat);
+				box.position.x = j;
+				box.position.z = 95;
+				box.position.y = i;
+				box.rotation.z += (Math.PI / 2) * (j % 4); // aplicamos una rotacion a cada cubo para desordenarlos
+				box.name = "game";
+				scene.add( box );
+				n--;
+			}m--;
+		}
+
+		// ****************************
 
 		var onKeyDown = function ( event ) {
 
@@ -310,17 +327,17 @@ function INTERACTION(){
 					}
 
 					// HACKER MODE ***********************************************************************
-					// else if(MAT[i][j] == 252){ // 252 AMARILLO 
-					// 	wallGeo = new THREE.BoxGeometry(5, 0.5, 5);
-					// 	var AUX = new THREE.MeshBasicMaterial( {
-					// 			color: "yellow",
-					// 	});
-					// 	wall = new THREE.Mesh(wallGeo, AUX);
-					// 	wall.position.x = i * 5;
-					// 	wall.position.y = -1.7;
-					// 	wall.position.z = j * 5;
-					// 	scene.add(wall);
-					// } 
+					else if(MAT[i][j] == 252){ // 252 AMARILLO 
+						wallGeo = new THREE.BoxGeometry(5, 0.5, 5);
+						var AUX = new THREE.MeshBasicMaterial( {
+								color: "yellow",
+						});
+						wall = new THREE.Mesh(wallGeo, AUX);
+						wall.position.x = i * 5;
+						wall.position.y = -1.7;
+						wall.position.z = j * 5;
+						scene.add(wall);
+					} 
 					// ***********************************************************************************
 				}
 			}
@@ -529,6 +546,7 @@ function intersect(){
 
 	if ( intersects.length > 0 ) {
 		var intersect = intersects[ 0 ];
+		console.log(intersect.object)
 		if(intersect.object.name == "red"){
 			document.getElementById("canvas_info").style.display = "block";
 			document.getElementById("solution").style.display = "block";
@@ -543,6 +561,8 @@ function intersect(){
 			"<i>Close me with X or pressing ESC</i>";
 
 			activeObject = intersect.object;
+		}else if(intersect.object.name == "game"){
+			intersect.object.rotation.z += Math.PI / 2;
 		}
 	}
 }
@@ -553,8 +573,8 @@ function setCamera(list){
 	var z = list.posz;
 	var rotation = list.rot;
 
-	camera.position.x = x;
-	camera.position.z = z;
+	camera.position.x = 85;//x;
+	camera.position.z = 85;//z;
 	camera.rotation.y += rotation;
 
 	initialRotation = camera.rotation.y;

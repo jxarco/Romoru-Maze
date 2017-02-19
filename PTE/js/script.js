@@ -184,19 +184,20 @@ function accept_handshaking(user_id, UPlist){
   EL SEGUNDO MENSAJE DE OTRA PERSONA YA SOBRA!!!
   */
 
-  if(!UPDATED_BEFORE){
-    updatePosList(UPlist);
+  if(window.server_on){
+    if(!UPDATED_BEFORE){
+      updatePosList(UPlist);
+      // UNA VEZ TENGAMOS LA LISTA DE POSICIONES
+      // ACTIVAS, PODREMOS MOVER LA CÁMARA A DONDE
+      // TOQUE.
+      var unactiveIndex = 0;
+      while(list[unactiveIndex].active == true){
+        unactiveIndex++;
+      }
 
-    // UNA VEZ TENGAMOS LA LISTA DE POSICIONES
-    // ACTIVAS, PODREMOS MOVER LA CÁMARA A DONDE
-    // TOQUE.
-    var unactiveIndex = 0;
-    while(list[unactiveIndex].active == true){
-      unactiveIndex++;
-    }
-
-    setCamera(list[unactiveIndex]);
-    list[unactiveIndex].active = true;
+      setCamera(list[unactiveIndex]);
+      list[unactiveIndex].active = true;
+      }
   }
 }
 

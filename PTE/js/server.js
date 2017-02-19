@@ -48,6 +48,10 @@ server.on_message = function( user_id, message){
 	}else if(objectReceived.info == 8){
 		removeConfeti();
 		return;
+	}else if(objectReceived.info == 9){
+		console.log("kjbfejkrbfr")
+		//updatePlayerPosition(user_id, objectReceived.px, objectReceived.py, objectReceived.pz, objectReceived.ry);
+		return;
 	}else if(objectReceived.info == 12){
 		popCube(objectReceived.x, objectReceived.z);
 		return;
@@ -69,6 +73,10 @@ server.on_message = function( user_id, message){
         
 		var people = document.querySelector("#pp"); // cogemos el sitio donde iran los conectados
 		people.appendChild(conectados);
+
+		// Crear PNJ de la persona que se acaba de conectar
+
+		createPNJ(user_id);
 		
 		// una vez el nuevo recibe la información de cada uno, 
 		// devuelve su información para que los demás completen

@@ -203,6 +203,12 @@ function MODIFY_MATRIX( m ){
 	m[20][19] = 3;
 	m[26][21] = 3;//
 
+	// BLUE DOTS
+
+	m[5][15] = 4;//
+	m[5][16] = 4;//
+	m[5][17] = 4;//
+
 	return m;
 }
 

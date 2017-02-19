@@ -12,6 +12,8 @@ var textHintIterator = 0;
 var wallIterator = 0;
 
 var activeObject; // Este sirve para guardar el ultimo objeto al que hemos clicado
+var PNJ;
+var animation;
 
 var camera, renderer, controls, startTime;
 var MAT, MAT2, data;
@@ -23,7 +25,9 @@ var raycaster = new THREE.Raycaster();
 var initialRotation;
 var co = 1;
 
-window.walls_on = true;
+var waterObjects = [];
+
+window.walls_on = false;
 window.controls = true;
 window.scene;
 window.mouse = new THREE.Vector2();
@@ -78,10 +82,10 @@ function INTERACTION(){
 
 		camera = new THREE.PerspectiveCamera( 50, tam.width / tam.height, 0.1, 1000 );
 		scene = new THREE.Scene();
-		scene.fog = new THREE.Fog( 0xffffff, 0, 1000 );
+		//scene.fog = new THREE.Fog( 0xffffff, 0, 1000 );
 
 		// LIGHTS
-		light = new THREE.DirectionalLight( 0xffffff, 0.15 );
+		light = new THREE.DirectionalLight( 0xffffff, 0.25 );
 		light.position.set( 0.5, 1, 0.75 );
 		scene.add( light );
 
@@ -101,6 +105,22 @@ function INTERACTION(){
 		light3 = new THREE.PointLight( 0xffffff, 2, 50, 1.5 );
 		light3.position.set( 77.5, 1, 77.5 );
 		scene.add( light3 );
+
+
+		var loader = new THREE.AssimpLoader();
+			loader.load( "models/Octaminator.assimp", function ( err, result ) {
+				var object = result.object;
+				object.position.x = 0;
+				object.position.z = 0;
+				object.position.y = -0.35;
+				scene.add( object );
+				animation = result.animation;
+
+				object.scale.set(0.002, 0.002, 0.002);
+
+				PNJ = object;
+
+			} );
 
 		var onKeyDown = function ( event ) {
 
@@ -191,6 +211,7 @@ function INTERACTION(){
 		if(window.walls_on){
 			var wallTexture1 =  new THREE.TextureLoader().load( 'assets/wall2.jpg' );
 			var wallTexture2 =  new THREE.TextureLoader().load( 'assets/wall4.png' );
+			var waterTexture =  new THREE.TextureLoader().load( 'assets/water.jpg' );
 			var wallDoorTexture =  new THREE.TextureLoader().load( 'assets/wall3.jpg' );
 			for(var i = 0; i < MAT.length; i++){
 				for(var j = 0; j < MAT.length; j++){
@@ -270,6 +291,24 @@ function INTERACTION(){
 						textHintIterator++;
 					}
 
+					else if(MAT[i][j] == 4){ // 4 AGUA MODIFICADO
+						var waterGeo = new THREE.BoxGeometry(5, 0.15, 5);
+						var waterMat = new THREE.MeshPhongMaterial( {
+								map: waterTexture,
+								side: THREE.DoubleSide
+						});
+
+						var water = new THREE.Mesh(waterGeo, waterMat);
+						var textHint = TEXT_HINTS[textHintIterator];
+						water.position.x = i * 5;
+						water.position.y = -1.57;
+						water.position.z = j * 5;
+						water.receiveShadow = true;
+						water.castShadow = true;
+						scene.add(water);
+						waterObjects.push( water );
+					}
+
 					// HACKER MODE ***********************************************************************
 					// else if(MAT[i][j] == 252){ // 252 AMARILLO 
 					// 	wallGeo = new THREE.BoxGeometry(5, 0.5, 5);
@@ -315,10 +354,10 @@ function INTERACTION(){
 		if(dir) co = 1;
 		else co = -1;
 
-		var x = Math.floor(camera.position.x + (co * direction.x));
-		var z = Math.floor(camera.position.z + (co * direction.z));
+		var x = Math.floor(camera.position.x + (2 * co * direction.x));
+		var z = Math.floor(camera.position.z + (2 * co * direction.z));
 
-		if (MAT2[x][z] == 0 || MAT2[x][z] == 3){
+		if (MAT2[x][z] == 0 || MAT2[x][z] == 3 || MAT2[x][z] == 4){
 		 	return false;
 		}
 		return true;
@@ -353,6 +392,7 @@ function INTERACTION(){
 						y: camera.rotation.y + Math.PI / 2
 			}, 300 ).easing( TWEEN.Easing.Sinusoidal.In).start();
 
+
 			moveLeft = false;
 		}
 		if(moveRight){
@@ -360,9 +400,11 @@ function INTERACTION(){
 						y: camera.rotation.y - Math.PI / 2
 			}, 300 ).easing( TWEEN.Easing.Sinusoidal.In).start();
 
+
 			moveRight = false;
 		}
 
+		// linterna
 		light2.position.x = camera.position.x;
 		light2.position.y = camera.position.y;
 		light2.position.z = camera.position.z;
@@ -375,14 +417,64 @@ function INTERACTION(){
 			}
 		}
 
+		// luz central
 		sphere.position.x = Math.cos( time ) * 2 + 85;
 		sphere.position.z = Math.sin ( time ) * 2 + 85;
   		light3.position.x = Math.cos( time ) * 2 + 85;
  		light3.position.z = Math.sin( time ) * 2 + 85;
 
+ 		// ANIMACIÓN Y MOVIMIENTO DE NUESTRO PNJ
+ 		if( animation ) animation.setTime( performance.now() / 1000 );
+ 		
+ 		if( camera.position.x ){
+
+ 			PNJ.position.x = camera.position.x + direction.x;
+ 			PNJ.position.z = camera.position.z + direction.z;
+			PNJ.rotation.y = camera.rotation.y;
+
+			var POSITION = {
+				px : PNJ.position.x,
+				py : PNJ.position.y,
+				pz : PNJ.position.z,
+				ry : PNJ.rotation.y,
+				info: 11
+			}
+		}
+
+		// PASSING POSITION TO OTHERS TO PRINT IT
+		//if(window.server_on) server.sendMessage(POSITION);
+ 		
 		TWEEN.update();
 		renderer.render( scene, camera );
 	}
+}
+
+function updatePlayerPosition(user_id, ox, oy, oz, ry){
+
+	if(scene.getObjectByName(user_id)){
+		scene.getObjectByName(user_id).position.x = ox;
+		scene.getObjectByName(user_id).position.y = oy;
+		scene.getObjectByName(user_id).position.z = oz;
+		scene.getObjectByName(user_id).rotation.y = ry;
+	}
+}
+
+function createPNJ(user_id){
+	var loader = new THREE.AssimpLoader();
+	loader.load( "models/Octaminator.assimp", function ( err, result ) {
+		var object = result.object;
+		object.position.x = 0;
+		object.position.z = 0;
+		object.position.y = -0.35;
+		scene.add( object );
+		animation = result.animation;
+
+		object.scale.set(0.002, 0.002, 0.002);
+
+		PNJ = object;
+		PNJ.name = "user_id";
+
+	} );
 }
 
 function isSolution(){
@@ -457,8 +549,8 @@ function setCamera(list){
 	var z = list.posz;
 	var rotation = list.rot;
 
-	camera.position.x = 22*5;//x;
-	camera.position.z = 10;//z;
+	camera.position.x = x;
+	camera.position.z = z;
 	camera.rotation.y += rotation;
 
 	initialRotation = camera.rotation.y;

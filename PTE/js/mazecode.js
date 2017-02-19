@@ -470,7 +470,7 @@ function createPNJ(user_id){
 		animation = result.animation;
 		animations.push( animation );
 
-		object.scale.set(0.2, 0.2, 0.2);
+		object.scale.set(0.002, 0.002, 0.002);
 	} );
 }
 

@@ -49,8 +49,7 @@ server.on_message = function( user_id, message){
 		removeConfeti();
 		return;
 	}else if(objectReceived.info == 9){
-		console.log("kjbfejkrbfr")
-		//updatePlayerPosition(user_id, objectReceived.px, objectReceived.py, objectReceived.pz, objectReceived.ry);
+		updatePlayerPosition(user_id, objectReceived.px, objectReceived.py, objectReceived.pz, objectReceived.ry);
 		return;
 	}else if(objectReceived.info == 12){
 		popCube(objectReceived.x, objectReceived.z);

@@ -13,7 +13,7 @@ var wallIterator = 0;
 
 var activeObject; // Este sirve para guardar el ultimo objeto al que hemos clicado
 var PNJ;
-var animation;
+var animations = [];
 
 var camera, renderer, controls, startTime;
 var MAT, MAT2, data;
@@ -107,20 +107,20 @@ function INTERACTION(){
 		scene.add( light3 );
 
 
-		var loader = new THREE.AssimpLoader();
-			loader.load( "models/Octaminator.assimp", function ( err, result ) {
-				var object = result.object;
-				object.position.x = 0;
-				object.position.z = 0;
-				object.position.y = -0.35;
-				scene.add( object );
-				animation = result.animation;
+		// var loader = new THREE.AssimpLoader();
+		// 	loader.load( "models/Octaminator.assimp", function ( err, result ) {
+		// 		var object = result.object;
+		// 		object.position.x = 0;
+		// 		object.position.z = 0;
+		// 		object.position.y = -0.35;
+		// 		scene.add( object );
+		// 		animation = result.animation;
 
-				object.scale.set(0.002, 0.002, 0.002);
+		// 		object.scale.set(0.002, 0.002, 0.002);
 
-				PNJ = object;
+		// 		PNJ = object;
 
-			} );
+		// 	} );
 
 		var onKeyDown = function ( event ) {
 
@@ -342,6 +342,7 @@ function INTERACTION(){
 		
 		window.addEventListener( 'resize', onWindowResize, false );
 	}
+
 	function onWindowResize() {
 		camera.aspect = tam.width / tam.height;
 		camera.updateProjectionMatrix();
@@ -423,26 +424,26 @@ function INTERACTION(){
   		light3.position.x = Math.cos( time ) * 2 + 85;
  		light3.position.z = Math.sin( time ) * 2 + 85;
 
- 		// ANIMACIÓN Y MOVIMIENTO DE NUESTRO PNJ
- 		if( animation ) animation.setTime( performance.now() / 1000 );
+ 		// ANIMACIÓN DE LOS PNJ
+ 		for(var i = 0; i < animations.length; i++){
+ 			var animation = animations[i];
+ 			animation.setTime( performance.now() / 1000 );	
+ 		}
+ 		
  		
  		if( camera.position.x ){
 
- 			PNJ.position.x = camera.position.x + direction.x;
- 			PNJ.position.z = camera.position.z + direction.z;
-			PNJ.rotation.y = camera.rotation.y;
-
 			var POSITION = {
-				px : PNJ.position.x,
-				py : PNJ.position.y,
-				pz : PNJ.position.z,
-				ry : PNJ.rotation.y,
-				info: 11
+				px : camera.position.x,
+				py : camera.position.y,
+				pz : camera.position.z,
+				ry : camera.rotation.y,
+				info: 9
 			}
 		}
 
 		// PASSING POSITION TO OTHERS TO PRINT IT
-		//if(window.server_on) server.sendMessage(POSITION);
+		if(window.server_on) server.sendMessage(POSITION);
  		
 		TWEEN.update();
 		renderer.render( scene, camera );
@@ -463,17 +464,13 @@ function createPNJ(user_id){
 	var loader = new THREE.AssimpLoader();
 	loader.load( "models/Octaminator.assimp", function ( err, result ) {
 		var object = result.object;
-		object.position.x = 0;
-		object.position.z = 0;
-		object.position.y = -0.35;
+		//object.position.y = -0.35;
+		object.name = user_id;
 		scene.add( object );
 		animation = result.animation;
+		animations.push( animation );
 
 		object.scale.set(0.002, 0.002, 0.002);
-
-		PNJ = object;
-		PNJ.name = "user_id";
-
 	} );
 }
 

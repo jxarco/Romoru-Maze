@@ -137,7 +137,7 @@ function generateMeshHints(){
 	/***RING HINT***/
 	var ringGeometry = new THREE.TorusGeometry( 0.5, 0.05, 12, 32 );
 	ringGeometry.applyMatrix( new THREE.Matrix4().makeScale( 1.0, 1.0, 3 ) );
-	var ringMat = new THREE.MeshPhongMaterial( { color: 0xddc604, shininess: 300 } );
+	var ringMat = new THREE.MeshPhongMaterial( { color: 0xD4AF37, shininess: 300 } );
 	var ringMesh = new THREE.Mesh(ringGeometry, ringMat);
 	ringMesh.name = "hint";
 

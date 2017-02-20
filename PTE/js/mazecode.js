@@ -32,6 +32,8 @@ window.controls = true;
 window.scene;
 window.mouse = new THREE.Vector2();
 
+window.keys = [];
+
 funZero();
 
 function funZero(){
@@ -203,8 +205,54 @@ function INTERACTION(){
 			}
 		};
 
-		document.addEventListener( 'keydown', onKeyDown, false );
-		document.addEventListener( 'keyup', onKeyUp, false );
+		// document.addEventListener( 'keydown', onKeyDown, false );
+		// document.addEventListener( 'keyup', onKeyUp, false );
+
+		document.addEventListener( 'keydown', function(event){
+
+			keys[event.keyCode] = true;
+
+			console.log(event.keyCode);
+
+			switch( event.keyCode ) {
+
+				case 87: // w
+					//moveForward = true;
+					mForward();
+					break;
+				case 65: // a
+					//moveLeft = true;
+					mLeft();
+					break;
+				case 83: // s
+					//moveBackward = true;
+					mBackward();
+					break;
+				case 68: // d
+					//moveRight = true;
+					mRight();
+					break;
+				case 80: // p
+					privateInfo();
+					break;
+				case 67: // c
+					openChat();
+					break;
+				case 73: // i
+					document.getElementById("canvas_info").style.display = "block";
+					break;
+				case 81: // q = realign
+					camera.rotation.y = initialRotation;
+					break;
+			}
+
+			event.preventDefault();
+
+			}, false );
+
+		document.addEventListener( 'keyup', function(event){
+			keys[event.keyCode] = false;
+		}, false );
 
 		// objects *************************************************************************************************
 
@@ -468,13 +516,25 @@ function limits(dir){
 	return true;
 }
 
+var is_moving = false;
+
 function mForward(){
-	if(limits(1)){
-		new TWEEN.Tween( camera.position ).to( {
-					x: Math.floor(camera.position.x + direction.x),
-					z: Math.floor(camera.position.z + direction.z)
-		}, 200 ).easing( TWEEN.Easing.Linear.None).start();
-	}
+	if(!limits(1) || is_moving )
+		return;
+
+	console.log("avanzando");
+		is_moving = true;
+	var tween = new TWEEN.Tween( camera.position ).to( {
+				x: Math.floor(camera.position.x + direction.x),
+				z: Math.floor(camera.position.z + direction.z)
+	}, 200 ).easing( TWEEN.Easing.Linear.None);
+
+	tween.onComplete(function(){
+		is_moving = false;
+		if(keys[87]) mForward();
+	});
+
+	tween.start();
 }
 
 function mBackward(){

@@ -44,11 +44,11 @@ function generateMeshHints(){
 
 	/***TWIN TOWERS***/
 	var twinTowerGroup = new THREE.Group();
-	var towerGeometry = new THREE.BoxGeometry( 0.5, 3, 0.5, 12, 32 );
-	var towerMat = new THREE.MeshPhongMaterial( { color: "grey", shininess: 300 } );
+	var towerGeometry = new THREE.BoxGeometry( 0.5, 4, 0.5, 12, 32 );
+	var towerTexture =  new THREE.TextureLoader().load( "assets/towers.jpg" );
+	var towerMat = new THREE.MeshPhongMaterial( { map: towerTexture, shininess: 300 } );
+	
 	var towerMesh = new THREE.Mesh(towerGeometry, towerMat);
-
-
 	var tower2Mesh = new THREE.Mesh(towerGeometry, towerMat);
 	tower2Mesh.position.x = towerMesh.position.x + 0.85;
 	

@@ -589,8 +589,8 @@ function setCamera(list){
 	var z = list.posz;
 	var rotation = list.rot;
 
-	camera.position.x = 85;//x;
-	camera.position.z = 85;//z;
+	camera.position.x = x;//x;
+	camera.position.z = z;//z;
 	camera.rotation.y += rotation;
 
 	initialRotation = camera.rotation.y;

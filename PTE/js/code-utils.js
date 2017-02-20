@@ -107,7 +107,7 @@ function generateMeshHints(){
 	var mikeyGroup = new THREE.Group();
 	var mikeyGeo1 = new THREE.SphereGeometry(0.5,32,32);
 	mikeyGeo1.applyMatrix( new THREE.Matrix4().makeScale( 1.0, 1.0, 0.85 ) );
-	var mikeyMat = new THREE.MeshPhongMaterial({color: "grey", shininess: 50});
+	var mikeyMat = new THREE.MeshPhongMaterial({color: 0xC0C0C0, shininess: 50});
 	var mikeyGeo2 = new THREE.SphereGeometry(0.3,32,32);
 	mikeyGeo2.applyMatrix( new THREE.Matrix4().makeScale( 1.0, 1.0, 0.25 ) );
 	var mikeyGeo3 = new THREE.SphereGeometry(0.3,32,32);

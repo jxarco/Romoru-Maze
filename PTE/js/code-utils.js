@@ -24,14 +24,14 @@ document.getElementById("solution").addEventListener("keyup", function(event){
 function generateTextHints(){
 	list = [];
 	//list.push( {text: "1* <i>Some people call him <b>The Lord</b>...</i>", solution: "sauron" });
-	list.push( {text: "1* <i>Becoming invisible can be dangerous to him...</i>", solution: "frodo bolson" });
-	list.push( {text: "2* <i>One of the biggest tragedies...</i>", solution: "11s" });
+	list.push( {text: "1* <i>Becoming invisible could be dangerous to him...</i>", solution: "frodo bolson" });
+	list.push( {text: "2* <i>One of the greatest tragedies in history...</i>", solution: "11s" });
 	list.push( {text: "3* <i>Maybe you have an ace in the sleeve...</i>", solution: "ace of diamonds" });
 	list.push( {text: "4* <i>In ancient times, he was crowned with just 8 years old...</i>", solution: "tutankamon" });
 	list.push( {text: "5* <i>Maybe second small step for man, and a second giant leap for mankind?</i>", solution: "pluto" });
 	list.push( {text: "6* <i>Maths would not be the same without this number...</i>", solution: "pi" });
 	
-	list.push( {text: "7* <i>Disney cartoon...</i>", solution: "mickey mouse" });
+	list.push( {text: "7* <i>Big ears, funny voice, and a wife with a tie in her head...</i>", solution: "mickey mouse" });
 	
 	list.push( {text: "8* <i>You are too young if you have not played it...</i>", solution: "pacman" });
 	

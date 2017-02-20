@@ -538,12 +538,22 @@ function mForward(){
 }
 
 function mBackward(){
-	if(limits(0)){
-		new TWEEN.Tween( camera.position ).to( {
-					x: Math.floor(camera.position.x - direction.x),
-					z: Math.floor(camera.position.z - direction.z)
-		}, 200 ).easing( TWEEN.Easing.Linear.None).start();
-	}	
+	if(!limits(1) || is_moving )
+		return;
+
+	console.log("retroceciendo");
+		is_moving = true;
+	var tween = new TWEEN.Tween( camera.position ).to( {
+				x: Math.floor(camera.position.x - direction.x),
+				z: Math.floor(camera.position.z - direction.z)
+	}, 200 ).easing( TWEEN.Easing.Linear.None);
+
+	tween.onComplete(function(){
+		is_moving = false;
+		if(keys[87]) mForward();
+	});
+
+	tween.start();
 }
 
 function mRight(){

@@ -29,7 +29,6 @@ var random, guestname, avatarPath, num_rand_avatar;
 var room_bool = false, UPDATED_BEFORE = false;
 var list;
 var color;
-window.player = new THREE.Group();
 window.server_on = false;
 
 init();
@@ -145,8 +144,6 @@ function appear_connected(){
   // NINGUN TIPO DE HANDSHAKING
   setCamera(list[0]);
   list[0].active = true;
-
-  console.log(list)
 }
 
 function updatePosList(UPlist){

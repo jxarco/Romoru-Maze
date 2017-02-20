@@ -28,7 +28,7 @@ function generateTextHints(){
 	list.push( {text: "2* <i>One of the biggest tragedies...</i>", solution: "11s" });
 	list.push( {text: "3* <i>Maybe you have an ace in the sleeve...</i>", solution: "ace of diamonds" });
 	list.push( {text: "4* <i>In ancient times, he was crowned with just 8 years old...</i>", solution: "tutankamon" });
-	list.push( {text: "5* <i>Maybe people is kinda racist for small ones...</i>", solution: "pluto" });
+	list.push( {text: "5* <i>Maybe second small step for man, and a second giant leap for mankind?</i>", solution: "pluto" });
 	list.push( {text: "6* <i>Maths would not be the same without this number...</i>", solution: "pi" });
 	
 	list.push( {text: "7* <i>Disney cartoon...</i>", solution: "mickey mouse" });
@@ -90,8 +90,9 @@ function generateMeshHints(){
 
 	/***PLANETA***/
 	var marsTexture = new THREE.TextureLoader().load( 'assets/mars.jpg' );
+	var marsNormalTexture = new THREE.TextureLoader().load( 'assets/mars_normal.jpg' );
 	var planetGeometry = new THREE.SphereGeometry(0.5, 32, 32); 
-	var planetMaterial = new THREE.MeshPhongMaterial({map: marsTexture, shininess: 50 }); 
+	var planetMaterial = new THREE.MeshPhongMaterial({map: marsTexture, normalMap: marsNormalTexture, normalScale: new THREE.Vector2( 3, 3 ), shininess: 50 }); 
 	var planetMesh = new THREE.Mesh(planetGeometry, planetMaterial);
 	planetMesh.name = "hint";
 

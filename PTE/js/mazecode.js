@@ -367,23 +367,6 @@ function INTERACTION(){
 		renderer.setSize( tam.width, tam.height );
 	}
 
-	function limits(dir){
-
-		// Si va para atrás, tenemos que restar la dirección!!!
-		if(dir) co = 1;
-		else co = -1;
-
-		var x = Math.floor(camera.position.x + (2 * co * direction.x));
-		var z = Math.floor(camera.position.z + (2 * co * direction.z));
-
-		if (MAT2[x][z] == 0 || MAT2[x][z] == 3 || MAT2[x][z] == 4){
-		 	return false;
-		}
-		return true;
-	}
-
-	
-
 	function animate() {
 		requestAnimationFrame( animate );
 		var currentTime = performance.now();
@@ -468,6 +451,21 @@ function INTERACTION(){
 		TWEEN.update();
 		renderer.render( scene, camera );
 	}
+}
+
+function limits(dir){
+
+	// Si va para atrás, tenemos que restar la dirección!!!
+	if(dir) co = 1;
+	else co = -1;
+
+	var x = Math.floor(camera.position.x + (2 * co * direction.x));
+	var z = Math.floor(camera.position.z + (2 * co * direction.z));
+
+	if (MAT2[x][z] == 0 || MAT2[x][z] == 3 || MAT2[x][z] == 4){
+	 	return false;
+	}
+	return true;
 }
 
 function mForward(){
@@ -622,8 +620,8 @@ function setCamera(list){
 	var z = list.posz;
 	var rotation = list.rot;
 
-	camera.position.x = x;//x;
-	camera.position.z = z;//z;
+	camera.position.x = 85;//x;
+	camera.position.z = 85;//z;
 	camera.rotation.y += rotation;
 
 	initialRotation = camera.rotation.y;

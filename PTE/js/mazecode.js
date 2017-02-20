@@ -102,36 +102,37 @@ function INTERACTION(){
 		sphere.position.z = 77.5;
 		scene.add(sphere);
 
-		light3 = new THREE.PointLight( 0xffffff, 2, 50, 1.5 );
+		light3 = new THREE.PointLight( 0xffffff, 0.75, 50, 1.5 );
 		light3.position.set( 77.5, 1, 77.5 );
 		scene.add( light3 );
 
 
 		// GAME ***********************
 
-	    var gameGeoScreen = new THREE.PlaneGeometry(5, 5, 1, 1);
-	    var gameGeoCube = new THREE.BoxGeometry(0.92, 0.92, 0.05);
+	    var gameGeoScreen = new THREE.PlaneGeometry(8, 4, 1, 1);
+	    var gameGeoCube = new THREE.BoxGeometry(0.95, 0.95, 0.05);
 
-		var gameMat = new THREE.MeshPhongMaterial( { color: 0x000000, side: THREE.DoubleSide } );
+		var gameMat = new THREE.MeshPhongMaterial( { color: 0xffffff, side: THREE.DoubleSide } );
 
 	    var game = new THREE.Mesh(gameGeoScreen, gameMat);
-	    game.position.x = 85;
+	    game.position.x = 84.5;
+	    game.position.y = 0.5;
 		game.position.z = 95;
 		game.receiveShadow = true;
 		scene.add( game );
 
-		var m = 5, n = 5;
-		for(var i = -1; i < 4; i++){
-			n = 5;
-			for(var j = 83; j < 88; j++){
-				var textcube =  new THREE.TextureLoader().load( "puzzle/game1_part" + m + "x" + n + ".jpg" );
+		var m = 4, n = 8;
+		for(var i = -1; i < 3; i++){
+			n = 8;
+			for(var j = 81; j < 89; j++){
+				var textcube =  new THREE.TextureLoader().load( "puzzle/caretos_part" + m + "x" + n + ".jpg" );
 				var cubeMat = new THREE.MeshPhongMaterial( { map: textcube, side: THREE.DoubleSide } );
 				var box = new THREE.Mesh(gameGeoCube, cubeMat);
 				box.position.x = j;
 				box.position.z = 95;
 				box.position.y = i;
-				box.rotation.z += (Math.PI / 2) * (j % 4); // aplicamos una rotacion a cada cubo para desordenarlos
-				box.name = "game_"+m+"_"+n;
+				box.rotation.z += (Math.PI / 2) * ((j % 3) + 1); // aplicamos una rotacion a cada cubo para desordenarlos
+				box.name = "caretos_"+m+"_"+n;
 				scene.add( box );
 				n--;
 			}m--;
@@ -561,7 +562,7 @@ function intersect(){
 			"<i>Close me with X or pressing ESC</i>";
 
 			activeObject = intersect.object;
-		}else if(intersect.object.name.includes("game")){
+		}else if(intersect.object.name.includes("caretos")){
 
 			applyRotation(intersect.object.name);
 			console.log(intersect.object.name);

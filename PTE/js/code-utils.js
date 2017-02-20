@@ -23,15 +23,14 @@ document.getElementById("solution").addEventListener("keyup", function(event){
 
 function generateTextHints(){
 	list = [];
-	list.push( {text: "1* <i>Maybe you have an ace in the sleeve...</i>", solution: "ace of diamonds" });
-	list.push( {text: "2* <i>Disney cartoon...</i>", solution: "mickey mouse" });
-	list.push( {text: "3* <i>In ancient times, he was not a king, not a god...</i>", solution: "tutankamon" });
-	list.push( {text: "4* <i>You are too young if you have not played it...</i>", solution: "pacman" });
-	list.push( {text: "5* <i>Maths would not be the same without this number...</i>", solution: "pi" });
-	list.push( {text: "6* <i>Maybe people is kinda racist for small ones...</i>", solution: "pluto" });
-	list.push( {text: "7* <i>It was terrorism, not an accident...</i>", solution: "11s" });
-	list.push( {text: "8* <i>Some people call him <b>The Lord</b>...</i>", solution: "sauron" });
-
+	list.push( {text: "1* <i>Some people call him <b>The Lord</b>...</i>", solution: "sauron" });
+	list.push( {text: "2* <i>It was terrorism, not an accident...</i>", solution: "11s" });
+	list.push( {text: "3* <i>Maybe you have an ace in the sleeve...</i>", solution: "ace of diamonds" });
+	list.push( {text: "4* <i>In ancient times, he was not a king, not a god...</i>", solution: "tutankamon" });
+	list.push( {text: "5* <i>Maybe people is kinda racist for small ones...</i>", solution: "pluto" });
+	list.push( {text: "6* <i>Maths would not be the same without this number...</i>", solution: "pi" });
+	list.push( {text: "7* <i>Disney cartoon...</i>", solution: "mickey mouse" });
+	list.push( {text: "8* <i>You are too young if you have not played it...</i>", solution: "pacman" });
 	return list;
 }
 
@@ -52,8 +51,6 @@ function generateMeshHints(){
 	twinTowerGroup.add(towerMesh);
 	twinTowerGroup.add(tower2Mesh);
 	twinTowerGroup.name = "hint";
-
-	list.push( twinTowerGroup );
 
 	/***Pi***/
 	var piGroup = new THREE.Group();
@@ -79,8 +76,6 @@ function generateMeshHints(){
 	piGroup.add(inf2Mesh);
 	piGroup.name = "hint";
 
-	list.push( piGroup );
-
 	/***DIAMOND***/
 
 	var diamondGeo = new THREE.OctahedronGeometry(1, 0)
@@ -88,7 +83,6 @@ function generateMeshHints(){
 	var diamondMesh = new THREE.Mesh(diamondGeo, diamondMat);
 
 	diamondMesh.name = "hint";
-	list.push( diamondMesh );
 
 	/***PLANETA***/
 	var planetGeometry = new THREE.SphereGeometry(0.5, 32, 32); 
@@ -96,15 +90,12 @@ function generateMeshHints(){
 	var planetMesh = new THREE.Mesh(planetGeometry, planetMaterial);
 	planetMesh.name = "hint";
 
-	list.push( planetMesh );
 
 	/***PYRAMID HINT***/
 	var pyramidGeometry = new THREE.CylinderGeometry(0, 1.5, 1.5, 4, false); 
 	var pyramidMaterial = new THREE.MeshPhongMaterial({color: 0xF1D78B, shininess: 50 }); 
 	var pyramidMesh = new THREE.Mesh(pyramidGeometry, pyramidMaterial);
 	pyramidMesh.name = "hint";
-
-	list.push( pyramidMesh );
 
 	/***MIKEY MOUSE***/
 	var mikeyGroup = new THREE.Group();
@@ -137,16 +128,12 @@ function generateMeshHints(){
 
 	mikeyGroup.name = "hint";
 
-	list.push( mikeyGroup );
-
 	/***RING HINT***/
 	var ringGeometry = new THREE.TorusGeometry( 0.5, 0.05, 12, 32 );
 	ringGeometry.applyMatrix( new THREE.Matrix4().makeScale( 1.0, 1.0, 3 ) );
 	var ringMat = new THREE.MeshPhongMaterial( { color: 0xddc604, shininess: 300 } );
 	var ringMesh = new THREE.Mesh(ringGeometry, ringMat);
 	ringMesh.name = "hint";
-
-	list.push( ringMesh );
 
 	/***PACMAN***/
 	var pacmanGeo = new THREE.TorusGeometry(0.1, 0.5, 30, 20, 5.3);
@@ -155,8 +142,16 @@ function generateMeshHints(){
 	pacmanMesh.rotation.z += Math.PI/6
 	pacmanMesh.name = "hint";
 
+	// ORDER IS IMPORTANT!!!
+	list.push( twinTowerGroup );
+	list.push( diamondMesh );
+	list.push( ringMesh );
+	list.push( planetMesh );
+	list.push( piGroup );
 	list.push( pacmanMesh );
-
+	list.push( mikeyGroup );
+	list.push( pyramidMesh );
+	
 	return list;
 }
 

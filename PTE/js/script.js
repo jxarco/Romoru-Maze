@@ -163,7 +163,6 @@ function new_connection(user_id){
   var unactiveIndex = 0;
   while(list[unactiveIndex].active == true){
         unactiveIndex++;
-        console.log(unactiveIndex);
   }
 
   // esto podria ser un array

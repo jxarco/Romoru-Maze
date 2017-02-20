@@ -89,8 +89,9 @@ function generateMeshHints(){
 	diamondMesh.name = "hint";
 
 	/***PLANETA***/
+	var marsTexture = new THREE.TextureLoader().load( 'assets/mars.jpg' );
 	var planetGeometry = new THREE.SphereGeometry(0.5, 32, 32); 
-	var planetMaterial = new THREE.MeshPhongMaterial({color: 0xFD772A, shininess: 50 }); 
+	var planetMaterial = new THREE.MeshPhongMaterial({map: marsTexture, shininess: 50 }); 
 	var planetMesh = new THREE.Mesh(planetGeometry, planetMaterial);
 	planetMesh.name = "hint";
 

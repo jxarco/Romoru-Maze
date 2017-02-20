@@ -85,7 +85,7 @@ function INTERACTION(){
 		//scene.fog = new THREE.Fog( 0xffffff, 0, 1000 );
 
 		// LIGHTS
-		light = new THREE.DirectionalLight( 0xffffff, 0.25 );
+		light = new THREE.DirectionalLight( 0xffffff, 1.25 );
 		light.position.set( 0.5, 1, 0.75 );
 		scene.add( light );
 
@@ -590,8 +590,8 @@ function setCamera(list){
 	var z = list.posz;
 	var rotation = list.rot;
 
-	camera.position.x = x;//x;
-	camera.position.z = z;//z;
+	camera.position.x = 13*5;//x;
+	camera.position.z = 9*5;//z;
 	camera.rotation.y += rotation;
 
 	initialRotation = camera.rotation.y;

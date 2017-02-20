@@ -131,7 +131,7 @@ function INTERACTION(){
 				box.position.z = 95;
 				box.position.y = i;
 				box.rotation.z += (Math.PI / 2) * (j % 4); // aplicamos una rotacion a cada cubo para desordenarlos
-				box.name = "game";
+				box.name = "game_"+m+"_"+n;
 				scene.add( box );
 				n--;
 			}m--;
@@ -455,7 +455,7 @@ function INTERACTION(){
 				py : camera.position.y,
 				pz : camera.position.z,
 				ry : camera.rotation.y,
-				info: 9
+				info: 3
 			}
 		}
 
@@ -546,7 +546,7 @@ function intersect(){
 
 	if ( intersects.length > 0 ) {
 		var intersect = intersects[ 0 ];
-		console.log(intersect.object)
+		// console.log(intersect.object)
 		if(intersect.object.name == "red"){
 			document.getElementById("canvas_info").style.display = "block";
 			document.getElementById("solution").style.display = "block";
@@ -561,10 +561,26 @@ function intersect(){
 			"<i>Close me with X or pressing ESC</i>";
 
 			activeObject = intersect.object;
-		}else if(intersect.object.name == "game"){
-			intersect.object.rotation.z += Math.PI / 2;
+		}else if(intersect.object.name.includes("game")){
+
+			applyRotation(intersect.object.name);
+			console.log(intersect.object.name);
+
+			var OBJECT = {
+				object: intersect.object.name,
+				info: 4
+			}
+
+			if(window.server_on) server.sendMessage(OBJECT);
 		}
 	}
+}
+
+function applyRotation(name){
+	var object = scene.getObjectByName(name);
+	
+
+	object.rotation.z += Math.PI / 2;
 }
 
 function setCamera(list){

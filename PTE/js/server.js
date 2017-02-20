@@ -9,7 +9,7 @@ function init_server(){
 	if(op_panel.dataset['boolean'] == "false"){
 		
 		var roominput = document.getElementById("roominput");
-		room = roominput.value;
+		room = roominput.value+ "as";
 
 		server.connect("84.89.136.194:9000", room);
 		console.log("connected in room: " + room);
@@ -42,8 +42,11 @@ server.on_message = function( user_id, message){
 	var guest_sending = objectReceived.name;
 	var pathBueno = objectReceived.avatar;
 
-	if(objectReceived.info == 9){
+	if(objectReceived.info == 3){
 		updatePlayerPosition(user_id, objectReceived.px, objectReceived.py, objectReceived.pz, objectReceived.ry);
+		return;
+	}else if(objectReceived.info == 4){
+		applyRotation(objectReceived.object);
 		return;
 	}
 

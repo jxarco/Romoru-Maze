@@ -70,7 +70,7 @@ html, body{
 	top: 0px;
 }
 
-.canvas_container img{
+.canvas_container .menu{
 	width: 50px;
 	height: 50px;
 	left: 10px;
@@ -595,26 +595,65 @@ html, body{
 	margin-left: 15px;
 }
 
+#controller {
+	width: 125px;
+	height: 125px;
+	margin-right: 5%;
+	right:0;
+	bottom: 50px;
+	border-radius: 35%;
+	position: absolute;
+	background: rgba(255,255,255,0.25); 
+}
 
+#controller:hover{
+	background: rgba(255,255,255,0.75); 
+}
 
+.canvas_container .vbutton{
+	width: 2.15%;
+	height: 40px;
+	margin-right: 8%;
+	right:0;
+	position: absolute;
+	background: none;
+	border: none;
+	cursor: pointer;
+	outline: none;
+}
 
+.canvas_container .vbutton:active{
+	background: rgba(0,0,0,0.55);
+}
 
+#up {
+	bottom: 130px;
+}
 
+#down {
+	bottom: 55px;
+}
 
+.canvas_container .hbutton{
+	width: 2.55%;
+	height: 35px;
+	bottom: 95px;
+	right:0;
+	position: absolute;
+	background: none;
+	border: none;
+	cursor: pointer;
+	outline: none;
+}
 
+.canvas_container .hbutton:active{
+	background: rgba(0,0,0,0.55);
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#right {
+	margin-right: 5.3%;
+}
+#left {
+	margin-right: 10.25%;
+}
 

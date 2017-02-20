@@ -382,6 +382,8 @@ function INTERACTION(){
 		return true;
 	}
 
+	
+
 	function animate() {
 		requestAnimationFrame( animate );
 		var currentTime = performance.now();
@@ -466,6 +468,36 @@ function INTERACTION(){
 		TWEEN.update();
 		renderer.render( scene, camera );
 	}
+}
+
+function mForward(){
+	if(limits(1)){
+		new TWEEN.Tween( camera.position ).to( {
+					x: Math.floor(camera.position.x + direction.x),
+					z: Math.floor(camera.position.z + direction.z)
+		}, 200 ).easing( TWEEN.Easing.Linear.None).start();
+	}
+}
+
+function mBackward(){
+	if(limits(0)){
+		new TWEEN.Tween( camera.position ).to( {
+					x: Math.floor(camera.position.x - direction.x),
+					z: Math.floor(camera.position.z - direction.z)
+		}, 200 ).easing( TWEEN.Easing.Linear.None).start();
+	}	
+}
+
+function mRight(){
+	new TWEEN.Tween( camera.rotation ).to( {
+				y: camera.rotation.y - Math.PI / 2
+	}, 300 ).easing( TWEEN.Easing.Sinusoidal.In).start();		
+}
+
+function mLeft(){
+	new TWEEN.Tween( camera.rotation ).to( {
+				y: camera.rotation.y + Math.PI / 2
+	}, 300 ).easing( TWEEN.Easing.Sinusoidal.In).start();	
 }
 
 function updatePlayerPosition(user_id, ox, oy, oz, ry){

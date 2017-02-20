@@ -145,6 +145,8 @@ function appear_connected(){
   // NINGUN TIPO DE HANDSHAKING
   setCamera(list[0]);
   list[0].active = true;
+
+  console.log(list)
 }
 
 function updatePosList(UPlist){
@@ -161,10 +163,19 @@ function new_connection(user_id){
   objectToSend.info = 1;
   objectToSend.activePosList = list;
 
+  var unactiveIndex = 0;
+  while(list[unactiveIndex].active == true){
+        unactiveIndex++;
+        console.log(unactiveIndex);
+  }
+
   // esto podria ser un array
   var send_to = user_id;
 
   server.sendMessage(objectToSend, send_to); // empezamos el handshaking
+
+  // actualizo la cámara que usará el otro player
+  list[unactiveIndex].active = true;
 }
 
 function accept_handshaking(user_id, UPlist){
@@ -193,11 +204,21 @@ function accept_handshaking(user_id, UPlist){
       var unactiveIndex = 0;
       while(list[unactiveIndex].active == true){
         unactiveIndex++;
+        console.log(unactiveIndex)
       }
 
-      setCamera(list[unactiveIndex]);
-      list[unactiveIndex].active = true;
+      // solo hay 4 posiciones
+      if(unactiveIndex < 4){
+        setCamera(list[unactiveIndex]);
+        list[unactiveIndex].active = true;
+        
+      }else{
+        var out = {posx: -1000, posz: -1000, rot: 0, active: true};
+        setCamera( out );
       }
+
+      UPDATED_BEFORE = true;
+    }
   }
 }
 

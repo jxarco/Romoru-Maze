@@ -404,6 +404,9 @@ function hideDivs(){
   document.getElementById("uinput").style.display = "none";
   document.getElementById("change_id").style.display = "none";
   document.getElementById("canvas_info").style.display = "none";
+
+  // colocar controles
+  document.getElementById("controller").style.display = "block";
 }
   
 // añadir funcionalidad: boton USERNAME cambia el nombre de usuario
@@ -436,6 +439,7 @@ document.getElementById("uinput").addEventListener("keyup", function(event){
 function privateInfo() {
   update();
   document.getElementById("right_info").style.display = "block";
+  document.getElementById("controller").style.display = "none";
   closeNav();
 }
 

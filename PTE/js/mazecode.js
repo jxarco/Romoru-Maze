@@ -1,3 +1,4 @@
+
 var app = {
 
 	start3D: function(){
@@ -140,77 +141,11 @@ function INTERACTION(){
 			}m--;
 		}
 
-		// ****************************
-
-		var onKeyDown = function ( event ) {
-
-			if(document.activeElement.localName == "textarea" || document.activeElement.localName == "input"){
-				return;
-			}
-
-			switch ( event.keyCode ) {
-				case 38: // up
-				case 87: // w
-					moveForward = false;
-					break;
-				case 37: // left
-				case 65: // a
-					moveLeft = false;
-					break;
-				case 40: // down
-				case 83: // s
-					moveBackward = false;
-					break;
-				case 39: // right
-				case 68: // d
-					moveRight = false;
-					break;
-			}
-		};
-		var onKeyUp = function ( event ) {
-
-			if(document.activeElement.localName == "textarea" || document.activeElement.localName == "input"){
-				return;
-			}
-
-			switch( event.keyCode ) {
-				case 38: // up
-				case 87: // w
-					moveForward = true;
-					break;
-				case 37: // left
-				case 65: // a
-					moveLeft = true;
-					break;
-				case 40: // down
-				case 83: // s
-					moveBackward = true;
-					break;
-				case 39: // right
-				case 68: // d
-					moveRight = true;
-					break;
-				case 80: // p
-					privateInfo();
-					break;
-				case 67: // c
-					openChat();
-					break;
-				case 73: // i
-					document.getElementById("canvas_info").style.display = "block";
-					break;
-				case 81: // q = realign
-					camera.rotation.y = initialRotation;
-					break;
-			}
-		};
-
-		// document.addEventListener( 'keydown', onKeyDown, false );
-		// document.addEventListener( 'keyup', onKeyUp, false );
-
 		document.addEventListener( 'keydown', function(event){
 
 			keys[event.keyCode] = true;
+
+			//move(event.keyCode); //NUEVA FUNCION DE PRUEBA
 
 			console.log(event.keyCode);
 
@@ -246,7 +181,7 @@ function INTERACTION(){
 					break;
 			}
 
-			event.preventDefault();
+			//event.preventDefault();
 
 			}, false );
 
@@ -422,40 +357,6 @@ function INTERACTION(){
 
 		camera.getWorldDirection( direction );
 
-		if(moveForward && limits(1)){
-			new TWEEN.Tween( camera.position ).to( {
-						x: Math.floor(camera.position.x + direction.x),
-						z: Math.floor(camera.position.z + direction.z)
-			}, 200 ).easing( TWEEN.Easing.Linear.None).start();
-
-			moveForward = false;
-			
-		}
-		if(moveBackward && limits(0)){
-			new TWEEN.Tween( camera.position ).to( {
-						x: Math.floor(camera.position.x - direction.x),
-						z: Math.floor(camera.position.z - direction.z)
-			}, 200 ).easing( TWEEN.Easing.Linear.None).start();
-
-			moveBackward = false;
-		}
-		if(moveLeft){
-			new TWEEN.Tween( camera.rotation ).to( {
-						y: camera.rotation.y + Math.PI / 2
-			}, 300 ).easing( TWEEN.Easing.Sinusoidal.In).start();
-
-
-			moveLeft = false;
-		}
-		if(moveRight){
-			new TWEEN.Tween( camera.rotation ).to( {
-						y: camera.rotation.y - Math.PI / 2
-			}, 300 ).easing( TWEEN.Easing.Sinusoidal.In).start();
-
-
-			moveRight = false;
-		}
-
 		// linterna
 		light2.position.x = camera.position.x;
 		light2.position.y = camera.position.y;
@@ -483,7 +384,6 @@ function INTERACTION(){
  		
  		
  		if( camera.position.x ){
-
 			var POSITION = {
 				px : camera.position.x,
 				py : camera.position.y,
@@ -518,6 +418,81 @@ function limits(dir){
 
 var is_moving = false;
 
+/*function move(direction){
+
+	if( direction == 87 ){
+		if(!limits(1) || is_moving )
+		return;
+
+		console.log("avanzando");
+		is_moving = true;
+		var tween = new TWEEN.Tween( camera.position ).to( {
+					x: Math.floor(camera.position.x + direction.x),
+					z: Math.floor(camera.position.z + direction.z)
+		}, 200 ).easing( TWEEN.Easing.Linear.None);
+
+		//console.log("llego")
+
+		tween.onComplete(function(){
+			is_moving = false;
+			if(keys[87]) move(direction);
+		});
+
+		tween.start();
+
+	}else if ( direction == 83){
+		if(!limits(1) || is_moving )
+		return;
+
+		console.log("retrocediendo");
+		is_moving = true;
+		var tween = new TWEEN.Tween( camera.position ).to( {
+					x: Math.floor(camera.position.x - direction.x),
+					z: Math.floor(camera.position.z - direction.z)
+		}, 200 ).easing( TWEEN.Easing.Linear.None);
+
+		tween.onComplete(function(){
+			is_moving = false;
+			if(keys[83]) move(direction);
+		});
+
+		console.log("Pasado el onComplete")
+
+		tween.start();
+		console.log("Pasado start");
+
+	}else if (direction == 68){
+
+		console.log("girando 1");
+
+		var tween = new TWEEN.Tween( camera.rotation ).to( {
+				y: camera.rotation.y - Math.PI / 2
+		}, 300 ).easing( TWEEN.Easing.Sinusoidal.In)
+
+		tween.onComplete(function(){
+			is_moving = false;
+			if(keys[68]) move(direction);
+		})
+
+		tween.start();
+
+	}else if (direction == 65 ){
+
+		console.log("girando 2");
+		var tween = new TWEEN.Tween( camera.rotation ).to( {
+				y: camera.rotation.y + Math.PI / 2
+		}, 300 ).easing( TWEEN.Easing.Sinusoidal.In)
+
+		tween.onComplete(function(){
+			is_moving = false;
+			if(keys[65]) move(direction);
+		})
+
+		tween.start();
+	}
+
+}*/
+
 function mForward(){
 	if(!limits(1) || is_moving )
 		return;
@@ -541,7 +516,7 @@ function mBackward(){
 	if(!limits(1) || is_moving )
 		return;
 
-	console.log("retroceciendo");
+	console.log("retrocediendo");
 		is_moving = true;
 	var tween = new TWEEN.Tween( camera.position ).to( {
 				x: Math.floor(camera.position.x - direction.x),
@@ -550,7 +525,7 @@ function mBackward(){
 
 	tween.onComplete(function(){
 		is_moving = false;
-		if(keys[87]) mForward();
+		if(keys[83]) mBackward();
 	});
 
 	tween.start();

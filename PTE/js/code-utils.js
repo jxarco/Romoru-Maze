@@ -1,18 +1,6 @@
 
 
-function coinFlip() {
-    return (Math.floor(Math.random() * 2) == 0);
-}
-
-function isInt(n){
-    return Number(n) === n && n % 1 === 0;
-}
-
-function isFloat(n){
-    return Number(n) === n && n % 1 !== 0;
-}
-
-// tecla ENTER para enviar solucion
+// ENTER para envia y comprueba solucion
 document.getElementById("solution").addEventListener("keyup", function(event){
   event.preventDefault();
   if(event.keyCode == 13)
@@ -23,16 +11,13 @@ document.getElementById("solution").addEventListener("keyup", function(event){
 
 function generateTextHints(){
 	list = [];
-	//list.push( {text: "1* <i>Some people call him <b>The Lord</b>...</i>", solution: "sauron" });
 	list.push( {text: "1* <i>Becoming invisible could be dangerous to him...</i>", solution: "frodo bolson" });
 	list.push( {text: "2* <i>One of the greatest tragedies in history...</i>", solution: "11s" });
 	list.push( {text: "3* <i>Maybe you have an ace in the sleeve...</i>", solution: "ace of diamonds" });
 	list.push( {text: "4* <i>In ancient times, he was crowned with just 8 years old...</i>", solution: "tutankamon" });
-	list.push( {text: "5* <i>Maybe second small step for man, and a second giant leap for mankind?</i>", solution: "pluto" });
+	list.push( {text: "5* <i>Maybe second small step for man, and a second giant leap for mankind?</i>", solution: "mars" });
 	list.push( {text: "6* <i>Maths would not be the same without this number...</i>", solution: "pi" });
-	
 	list.push( {text: "7* <i>Big ears, funny voice, and a wife with a tie in her head...</i>", solution: "mickey mouse" });
-	
 	list.push( {text: "8* <i>You are too young if you have not played it...</i>", solution: "pacman" });
 	
 	return list;
@@ -161,6 +146,7 @@ function generateMeshHints(){
 	return list;
 }
 
+// crear la matriz desde la imagen
 function CREATE_MATRIX(data, myImage){
 	var matrix = [];
 
@@ -178,6 +164,8 @@ function CREATE_MATRIX(data, myImage){
 	return matrix;	
 }
 
+// modificar ciertos puntos de la matriz antes de crear la grande
+// agua, pistas, puertas
 function MODIFY_MATRIX( m ){
 
 	// GREEN DOTS
@@ -211,6 +199,7 @@ function MODIFY_MATRIX( m ){
 	return m;
 }
 
+// crear una matriz grande a partir de una pequeña
 function TRANSFORM_MATRIX( m, space ){
 
 	if(space%2 == 0){
@@ -254,4 +243,17 @@ function TRANSFORM_MATRIX( m, space ){
 	}
 
 	return matrix;
+}
+
+
+function coinFlip() {
+    return (Math.floor(Math.random() * 2) == 0);
+}
+
+function isInt(n){
+    return Number(n) === n && n % 1 === 0;
+}
+
+function isFloat(n){
+    return Number(n) === n && n % 1 !== 0;
 }

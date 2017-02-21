@@ -6,6 +6,11 @@ var app = {
 	}
 }
 
+// defines
+var W = 87, A = 65, S = 83, D = 68;
+var FORWARD = 1, BACKWARD = 0;
+
+
 var HINTS = generateMeshHints(); // LISTA CON OBJETOS
 var TEXT_HINTS = generateTextHints(); // LISTA CON LOS TEXTOS DE CADA PUERTA
 var hintIterator = 0;
@@ -26,16 +31,12 @@ var raycaster = new THREE.Raycaster();
 var initialRotation;
 var co = 1;
 
-var waterObjects = [];
-
 window.walls_on = true;
 window.controls = true;
 window.scene;
 window.mouse = new THREE.Vector2();
 
 window.keys = [];
-
-funZero();
 
 function funZero(){
 
@@ -73,6 +74,7 @@ function INTERACTION(){
 	var objects = [];
 	startTime = Date.now();
 
+	funZero();
 	init();
 	animate();
 	var moveForward = false;
@@ -141,29 +143,67 @@ function INTERACTION(){
 			}m--;
 		}
 
+		// Controls by MOUSE
+
+		document.getElementById("up").addEventListener( 'mousedown', function(){
+			keys[W] = true;
+			mForward();
+		} , false);
+
+		document.getElementById("up").addEventListener( 'mouseup', function(){
+			keys[W] = false;
+		} , false);
+
+		document.getElementById("down").addEventListener( 'mousedown', function(){
+			keys[S] = true;
+			mBackward();
+		} , false);
+
+		document.getElementById("down").addEventListener( 'mouseup', function(){
+			keys[S] = false;
+		} , false);
+
+		document.getElementById("left").addEventListener( 'mousedown', function(){
+			keys[A] = true;
+			mLeft();
+		} , false);
+
+		document.getElementById("left").addEventListener( 'mouseup', function(){
+			keys[A] = false;
+		} , false);
+
+		document.getElementById("right").addEventListener( 'mousedown', function(){
+			keys[D] = true;
+			mRight();
+		} , false);
+
+		document.getElementById("right").addEventListener( 'mouseup', function(){
+			keys[D] = false;
+		} , false);
+
+		// KEYBOARD
+
 		document.addEventListener( 'keydown', function(event){
 
 			keys[event.keyCode] = true;
 
 			//move(event.keyCode); //NUEVA FUNCION DE PRUEBA
 
-			console.log(event.keyCode);
-
 			switch( event.keyCode ) {
 
-				case 87: // w
+				case W: // w
 					//moveForward = true;
 					mForward();
 					break;
-				case 65: // a
+				case A: // a
 					//moveLeft = true;
 					mLeft();
 					break;
-				case 83: // s
+				case S: // s
 					//moveBackward = true;
 					mBackward();
 					break;
-				case 68: // d
+				case D: // d
 					//moveRight = true;
 					mRight();
 					break;
@@ -181,9 +221,7 @@ function INTERACTION(){
 					break;
 			}
 
-			//event.preventDefault();
-
-			}, false );
+		}, false );
 
 		document.addEventListener( 'keyup', function(event){
 			keys[event.keyCode] = false;
@@ -307,7 +345,6 @@ function INTERACTION(){
 						water.receiveShadow = true;
 						water.castShadow = true;
 						scene.add(water);
-						waterObjects.push( water );
 					}
 
 					// HACKER MODE ***********************************************************************
@@ -401,7 +438,7 @@ function INTERACTION(){
 	}
 }
 
-function limits(dir){
+function colliding_with(dir){
 
 	// Si va para atrás, tenemos que restar la dirección!!!
 	if(dir) co = 1;
@@ -421,7 +458,7 @@ var is_moving = false;
 /*function move(direction){
 
 	if( direction == 87 ){
-		if(!limits(1) || is_moving )
+		if(!colliding_with(1) || is_moving )
 		return;
 
 		console.log("avanzando");
@@ -441,7 +478,7 @@ var is_moving = false;
 		tween.start();
 
 	}else if ( direction == 83){
-		if(!limits(1) || is_moving )
+		if(!colliding_with(1) || is_moving )
 		return;
 
 		console.log("retrocediendo");
@@ -494,15 +531,14 @@ var is_moving = false;
 }*/
 
 function mForward(){
-	if(!limits(1) || is_moving )
+	if(!colliding_with(FORWARD) || is_moving )
 		return;
 
-	console.log("avanzando");
-		is_moving = true;
+	is_moving = true;
 	var tween = new TWEEN.Tween( camera.position ).to( {
 				x: Math.floor(camera.position.x + direction.x),
 				z: Math.floor(camera.position.z + direction.z)
-	}, 200 ).easing( TWEEN.Easing.Linear.None);
+	}, 300 ).easing( TWEEN.Easing.Linear.None);
 
 	tween.onComplete(function(){
 		is_moving = false;
@@ -513,15 +549,14 @@ function mForward(){
 }
 
 function mBackward(){
-	if(!limits(1) || is_moving )
+	if(!colliding_with(BACKWARD) || is_moving )
 		return;
 
-	console.log("retrocediendo");
-		is_moving = true;
+	is_moving = true;
 	var tween = new TWEEN.Tween( camera.position ).to( {
 				x: Math.floor(camera.position.x - direction.x),
 				z: Math.floor(camera.position.z - direction.z)
-	}, 200 ).easing( TWEEN.Easing.Linear.None);
+	}, 300 ).easing( TWEEN.Easing.Linear.None);
 
 	tween.onComplete(function(){
 		is_moving = false;
@@ -534,13 +569,13 @@ function mBackward(){
 function mRight(){
 	new TWEEN.Tween( camera.rotation ).to( {
 				y: camera.rotation.y - Math.PI / 2
-	}, 300 ).easing( TWEEN.Easing.Sinusoidal.In).start();		
+	}, 600 ).easing( TWEEN.Easing.Sinusoidal.Out).start();		
 }
 
 function mLeft(){
 	new TWEEN.Tween( camera.rotation ).to( {
 				y: camera.rotation.y + Math.PI / 2
-	}, 300 ).easing( TWEEN.Easing.Sinusoidal.In).start();	
+	}, 600 ).easing( TWEEN.Easing.Sinusoidal.Out).start();	
 }
 
 function updatePlayerPosition(user_id, ox, oy, oz, ry){
@@ -571,7 +606,6 @@ function deletePNJ(user_id){
 
 	if(scene.getObjectByName(user_id)){
 		scene.remove(scene.getObjectByName(user_id));
-
 	}
 }
 function isSolution(){

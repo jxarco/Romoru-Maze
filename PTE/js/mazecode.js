@@ -9,7 +9,7 @@ var app = {
 // defines
 var W = 87, A = 65, S = 83, D = 68;
 var FORWARD = 1, BACKWARD = 0;
-
+var is_moving = false;
 
 var HINTS = generateMeshHints(); // LISTA CON OBJETOS
 var TEXT_HINTS = generateTextHints(); // LISTA CON LOS TEXTOS DE CADA PUERTA
@@ -21,7 +21,7 @@ var activeObject; // Este sirve para guardar el ultimo objeto al que hemos clica
 var PNJ;
 var animations = [];
 
-var camera, renderer, controls, startTime;
+var scene, camera, renderer, controls, startTime;
 var MAT, MAT2, data;
 var floorMESH, sphere, materials;
 var container, tam;
@@ -29,11 +29,9 @@ var light, light2, light3;
 var direction = new THREE.Vector3();
 var raycaster = new THREE.Raycaster();
 var initialRotation;
-var co = 1;
 
 window.walls_on = true;
 window.controls = true;
-window.scene;
 window.mouse = new THREE.Vector2();
 
 window.keys = [];
@@ -180,9 +178,9 @@ function INTERACTION(){
 
 		document.addEventListener( 'keydown', function(event){
 
-			keys[event.keyCode] = true;
+			if(document.activeElement.localName == "textarea" || document.activeElement.localName == "input") return;
 
-			//move(event.keyCode); //NUEVA FUNCION DE PRUEBA
+			keys[event.keyCode] = true;
 
 			switch( event.keyCode ) {
 
@@ -432,8 +430,8 @@ function INTERACTION(){
 function colliding_with(dir){
 
 	// Si va para atrás, tenemos que restar la dirección!!!
-	if(dir) co = 1;
-	else co = -1;
+	var co = 1;
+	if(!dir) co = -1;
 
 	var x = Math.floor(camera.position.x + (2 * co * direction.x));
 	var z = Math.floor(camera.position.z + (2 * co * direction.z));
@@ -443,83 +441,6 @@ function colliding_with(dir){
 	}
 	return true;
 }
-
-var is_moving = false;
-
-/*function move(direction){
-
-	if( direction == 87 ){
-		if(!colliding_with(1) || is_moving )
-		return;
-
-		console.log("avanzando");
-		is_moving = true;
-		var tween = new TWEEN.Tween( camera.position ).to( {
-					x: Math.floor(camera.position.x + direction.x),
-					z: Math.floor(camera.position.z + direction.z)
-		}, 200 ).easing( TWEEN.Easing.Linear.None);
-
-		//console.log("llego")
-
-		tween.onComplete(function(){
-			is_moving = false;
-			if(keys[87]) move(direction);
-		});
-
-		tween.start();
-
-	}else if ( direction == 83){
-		if(!colliding_with(1) || is_moving )
-		return;
-
-		console.log("retrocediendo");
-		is_moving = true;
-		var tween = new TWEEN.Tween( camera.position ).to( {
-					x: Math.floor(camera.position.x - direction.x),
-					z: Math.floor(camera.position.z - direction.z)
-		}, 200 ).easing( TWEEN.Easing.Linear.None);
-
-		tween.onComplete(function(){
-			is_moving = false;
-			if(keys[83]) move(direction);
-		});
-
-		console.log("Pasado el onComplete")
-
-		tween.start();
-		console.log("Pasado start");
-
-	}else if (direction == 68){
-
-		console.log("girando 1");
-
-		var tween = new TWEEN.Tween( camera.rotation ).to( {
-				y: camera.rotation.y - Math.PI / 2
-		}, 300 ).easing( TWEEN.Easing.Sinusoidal.In)
-
-		tween.onComplete(function(){
-			is_moving = false;
-			if(keys[68]) move(direction);
-		})
-
-		tween.start();
-
-	}else if (direction == 65 ){
-
-		console.log("girando 2");
-		var tween = new TWEEN.Tween( camera.rotation ).to( {
-				y: camera.rotation.y + Math.PI / 2
-		}, 300 ).easing( TWEEN.Easing.Sinusoidal.In)
-
-		tween.onComplete(function(){
-			is_moving = false;
-			if(keys[65]) move(direction);
-		})
-
-		tween.start();
-	}
-
-}*/
 
 function mForward(){
 	if(!colliding_with(FORWARD) || is_moving )

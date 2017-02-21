@@ -77,11 +77,6 @@ function INTERACTION(){
 	funZero();
 	init();
 	animate();
-	var moveForward = false;
-	var moveBackward = false;
-	var moveLeft = false;
-	var moveRight = false;
-	var prevTime = performance.now();
 
 	function init() {
 
@@ -192,19 +187,15 @@ function INTERACTION(){
 			switch( event.keyCode ) {
 
 				case W: // w
-					//moveForward = true;
 					mForward();
 					break;
 				case A: // a
-					//moveLeft = true;
 					mLeft();
 					break;
 				case S: // s
-					//moveBackward = true;
 					mBackward();
 					break;
 				case D: // d
-					//moveRight = true;
 					mRight();
 					break;
 				case 80: // p
@@ -542,7 +533,7 @@ function mForward(){
 
 	tween.onComplete(function(){
 		is_moving = false;
-		if(keys[87]) mForward();
+		if(keys[W]) mForward();
 	});
 
 	tween.start();
@@ -560,22 +551,45 @@ function mBackward(){
 
 	tween.onComplete(function(){
 		is_moving = false;
-		if(keys[83]) mBackward();
+		if(keys[S]) mBackward();
 	});
 
 	tween.start();
 }
 
 function mRight(){
-	new TWEEN.Tween( camera.rotation ).to( {
+
+	if( is_moving )
+		return;
+
+	is_moving = true;
+	var tween = new TWEEN.Tween( camera.rotation ).to( {
 				y: camera.rotation.y - Math.PI / 2
-	}, 600 ).easing( TWEEN.Easing.Sinusoidal.Out).start();		
+	}, 600 ).easing( TWEEN.Easing.Sinusoidal.Out);
+
+	tween.onComplete(function(){
+		is_moving = false;
+		if(keys[D]) mRight();
+	});
+
+	tween.start();		
 }
 
 function mLeft(){
-	new TWEEN.Tween( camera.rotation ).to( {
+	if( is_moving )
+		return;
+
+	is_moving = true;
+	var tween = new TWEEN.Tween( camera.rotation ).to( {
 				y: camera.rotation.y + Math.PI / 2
-	}, 600 ).easing( TWEEN.Easing.Sinusoidal.Out).start();	
+	}, 600 ).easing( TWEEN.Easing.Sinusoidal.Out);
+
+	tween.onComplete(function(){
+		is_moving = false;
+		if(keys[A]) mLeft();
+	});
+
+	tween.start();	
 }
 
 function updatePlayerPosition(user_id, ox, oy, oz, ry){

@@ -1,4 +1,5 @@
 # ECV
 
-Primera práctica de ECV
-- Chat
+Tercera práctica del curso de Entornos de Comunicación Virtual #UPF
+Alejandro Rodríguez
+David Moreno

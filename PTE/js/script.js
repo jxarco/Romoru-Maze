@@ -28,7 +28,6 @@ else{ // en caso de estar en modo local y no usar el host
 var random, guestname, avatarPath, num_rand_avatar;
 var room_bool = false, UPDATED_BEFORE = false;
 var list;
-var color;
 window.server_on = false;
 
 init();
@@ -42,11 +41,8 @@ function init(){
   label_name.innerHTML = "Create or join a room to begin:";
 
   document.getElementById("roominput").addEventListener("keyup", function(event){
-  event.preventDefault();
-    if(event.keyCode == 13)
-    {
-      init_server();
-    }
+    event.preventDefault();
+    if(event.keyCode == 13) init_server();
   });
 
   // al entrar, asignar nombre de usuario aleatorio
@@ -56,7 +52,6 @@ function init(){
   // asignamos también un avatar por defecto 
   num_rand_avatar = Math.floor((Math.random() * 21) + 1);
   avatarPath = "assets/avatar" + num_rand_avatar +".png"; 
-  color = "#" + ((1<<24) * Math.random() | 0).toString(16);
 
   // aquí asignaremos a cada PLAYER del laberinto una posición hasta ser 4. El 5 no tiene posición
 
@@ -191,31 +186,31 @@ function accept_handshaking(user_id, UPlist){
   EL SEGUNDO MENSAJE DE OTRA PERSONA YA SOBRA!!!
   */
 
-  if(window.server_on){
-    if(!UPDATED_BEFORE){
-      updatePosList(UPlist);
-      // UNA VEZ TENGAMOS LA LISTA DE POSICIONES
-      // ACTIVAS, PODREMOS MOVER LA CÁMARA A DONDE
-      // TOQUE.
-      var unactiveIndex = 0;
-      while(list[unactiveIndex].active == true){
-        unactiveIndex++;
-        console.log(unactiveIndex)
-      }
+  if(!window.server_on || UPDATED_BEFORE)
+    return;
 
-      // solo hay 4 posiciones
-      if(unactiveIndex < 4){
-        setCamera(list[unactiveIndex]);
-        list[unactiveIndex].active = true;
-        
-      }else{
-        var out = {posx: -1000, posz: -1000, rot: 0, active: true};
-        setCamera( out );
-      }
-
-      UPDATED_BEFORE = true;
-    }
+  updatePosList(UPlist);
+  // UNA VEZ TENGAMOS LA LISTA DE POSICIONES
+  // ACTIVAS, PODREMOS MOVER LA CÁMARA A DONDE
+  // TOQUE.
+  var unactiveIndex = 0;
+  while(list[unactiveIndex].active == true){
+    unactiveIndex++;
+    console.log(unactiveIndex)
   }
+
+  // solo hay 4 posiciones
+  if(unactiveIndex < 4){
+    setCamera(list[unactiveIndex]);
+    list[unactiveIndex].active = true;
+    
+  }else{
+    var out = {posx: -1000, posz: -1000, rot: 0, active: true};
+    setCamera( out );
+  }
+
+  UPDATED_BEFORE = true;
+    
 }
 
 // funcion para los chats privados
@@ -235,34 +230,34 @@ function sendTo(id, sendto_name){
   // PQ SE AÑADE EL "\n"
   if(input.value.includes("\n")) input.value = input.value.substring(0, input.value.length - 1);
 
-  if(input.value != ""){
+  if(input.value == "")
+    return;
 
-    var msg = document.createElement("div"); // creamos un div para el mensaje
+  var msg = document.createElement("div"); // creamos un div para el mensaje
 
-    if(checked){
-      input.value = input.value.capitalize(); // si la casilla está marcada, se pone mayus
-    }
-
-    objectToSend.name = guestname;
-    objectToSend.message = input.value;
-    objectToSend.avatar = avatarPath;
-    objectToSend.private = "yes";
-
-    server.sendMessage(objectToSend, id);
-
-    msg.innerHTML = "<div class='msg sent_private'>"+
-    "<p class='guest_console guest_console_"+id+"'>To [" + sendto_name + "]: </p>" +
-    "<div class='myavatar'><img src='" + avatarPath + "'></div>"+
-    "<p class='message'>" + input.value + "</p>"+
-    "</div>"; // escribimos el codigo del mensaje a enviar en el div
-
-    input.value = "" // reiniciamos el input 
-    var msgs = document.querySelector("#log"); // cogemos el sitio donde iran los mensajes
-    msgs.appendChild(msg); // añadir el parrafo MSG al div de los mensajes
-
-    msgs.scrollTop = msgs.scrollHeight; // conseguimos que se haga scroll automatico 
-                                         // al enviar más mensajes
+  if(checked){
+    input.value = input.value.capitalize(); // si la casilla está marcada, se pone mayus
   }
+
+  objectToSend.name = guestname;
+  objectToSend.message = input.value;
+  objectToSend.avatar = avatarPath;
+  objectToSend.private = "yes";
+
+  server.sendMessage(objectToSend, id);
+
+  msg.innerHTML = "<div class='msg sent_private'>"+
+  "<p class='guest_console guest_console_"+id+"'>To [" + sendto_name + "]: </p>" +
+  "<div class='myavatar'><img src='" + avatarPath + "'></div>"+
+  "<p class='message'>" + input.value + "</p>"+
+  "</div>"; // escribimos el codigo del mensaje a enviar en el div
+
+  input.value = "" // reiniciamos el input 
+  var msgs = document.querySelector("#log"); // cogemos el sitio donde iran los mensajes
+  msgs.appendChild(msg); // añadir el parrafo MSG al div de los mensajes
+
+  msgs.scrollTop = msgs.scrollHeight; // conseguimos que se haga scroll automatico 
+                                       // al enviar más mensajes
 }
 
 function update_privateChat_event(id, sendto_name){
@@ -382,15 +377,18 @@ function changeSuInfo(path, id, name, updatedList){
 function modifyName(){
   var input = document.querySelector("#uinput");
   var aux = guestname;
-  if(input.value != ""){
-    guestname = input.value;
-    if(guestname.length > 15){
-      guestname = aux;
-      alert("Choose shorter nickname! (<15)")
-    }
-    input.value = "";
-    send_name_info(guestname); // Si esta vacio, no tenemos que avisar
+  if(input.value == "")
+    return;
+
+  guestname = input.value;
+  
+  if(guestname.length > 15){
+    guestname = aux;
+    alert("Choose shorter nickname! (<15)");
   }
+
+  input.value = "";
+  send_name_info(guestname); // Si esta vacio, no tenemos que avisar
   
   hideDivs();
   update();
@@ -431,10 +429,8 @@ accept.addEventListener("click", modifyName);
 // tecla ENTER modifica el nombre de usuario
 document.getElementById("uinput").addEventListener("keyup", function(event){
   event.preventDefault();
-  if(event.keyCode == 13)
-  {
-    modifyName();
-  }
+  if(event.keyCode == 13) modifyName();
+
 });
 
 function privateInfo() {
@@ -491,7 +487,7 @@ function createMsg(guestname, avatarPath, argument){
 }
 
 // enviar nuestros mensajes al chat
-function send(argument, hex_color, list){
+function send(argument, list){
 
   var objectToSend = {}; // nuestro objeto a enviar
 
@@ -502,22 +498,22 @@ function send(argument, hex_color, list){
   if(input.value.includes("\n"))
     input.value = input.value.substring(0, input.value.length - 1);
 
-  if(input.value != ""){
+  if(input.value == "")
+    return;
 
-    if(checked){
-      input.value = input.value.capitalize(); // si la casilla está marcada, se pone mayus
-    }
-
-    objectToSend.name = guestname;
-    objectToSend.message = input.value;
-    objectToSend.avatar = avatarPath;
-
-    server.sendMessage(objectToSend);
-
-    createMsg(guestname, avatarPath, input.value);
-
-    input.value = "" // reiniciamos el input 
+  if(checked){
+    input.value = input.value.capitalize(); // si la casilla está marcada, se pone mayus
   }
+
+  objectToSend.name = guestname;
+  objectToSend.message = input.value;
+  objectToSend.avatar = avatarPath;
+
+  server.sendMessage(objectToSend);
+
+  createMsg(guestname, avatarPath, input.value);
+
+  input.value = "" // reiniciamos el input 
 }
 
 // boton SEND "envia" el mensaje que hay en el input
@@ -530,10 +526,7 @@ button.addEventListener("click", function(){
 // tecla ENTER hace que boton SEND se active
 document.getElementById("textinput").addEventListener("keyup", function(event){
   event.preventDefault();
-  if(event.keyCode == 13)
-  {
-    send();
-  }
+  if(event.keyCode == 13) send();
 });
 
 function deleteChat(){

@@ -49,7 +49,7 @@ server.on_message = function( user_id, message){
 		applyRotation(objectReceived.object);
 		return;
 	}else if(objectReceived.info == 5){
-		updateDoorsInMatrix(object.newMatrix);
+		updateDoorsInMatrix(objectReceived.newMatrix);
 		return;
 	}
 
@@ -160,7 +160,10 @@ server.on_user_disconnected = function(user_id){
 	console.log("Somebody has disconnected from the room");
 
 	var user_disc = document.querySelector(".user_conn_" + user_id);
-	if(user_disc) var div_container = user_disc.parentNode;
+	
+	if(!user_disc) return;
+
+	var div_container = user_disc.parentNode;
 	var parent = div_container.parentNode;
 
 	parent.removeChild(div_container);

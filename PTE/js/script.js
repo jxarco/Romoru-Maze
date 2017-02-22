@@ -156,6 +156,8 @@ function new_connection(user_id){
   objectToSend.activePosList = list;
 
   var unactiveIndex = 0;
+  if(!list[unactiveIndex]) return;
+  
   while(list[unactiveIndex].active == true){
         unactiveIndex++;
   }

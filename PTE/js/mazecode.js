@@ -525,7 +525,9 @@ function updatePlayerPosition(user_id, ox, oy, oz, ry){
 
 function updateDoorsInMatrix(newMatrix){
 
-	MAT2 = newMatrix;
+	MAT2 = newMatrix.map(function(arr) {
+    	return arr.slice();
+	});
 
 }
 
@@ -605,7 +607,6 @@ function intersect(){
 
 	if ( intersects.length > 0 ) {
 		var intersect = intersects[ 0 ];
-		// console.log(intersect.object)
 		if(intersect.object.name == "red"){
 			document.getElementById("canvas_info").style.display = "block";
 			document.getElementById("solution").style.display = "block";

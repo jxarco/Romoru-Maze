@@ -154,6 +154,7 @@ function new_connection(user_id){
   objectToSend.avatar = avatarPath;
   objectToSend.info = 1;
   objectToSend.activePosList = list;
+  objectToSend.puzzleInfo = getPuzzleInfo();
 
   var unactiveIndex = 0;
   if(!list[unactiveIndex]) return;
@@ -171,17 +172,17 @@ function new_connection(user_id){
   list[unactiveIndex].active = true;
 }
 
-function accept_handshaking(user_id, UPlist){
+function accept_handshaking(user_id, UPDATED_posList, puzzleInfoList){
   var objectToSend = {}; // nuestro objeto a enviar
 
   objectToSend.name = guestname;
   objectToSend.avatar = avatarPath;
   objectToSend.info = 2; // una vez se acaba el handshaking, no queremos volver a hacerlo
 
-  // esto podria ser un array
-  var send_to = user_id;
+  server.sendMessage(objectToSend, user_id);
 
-  server.sendMessage(objectToSend, send_to);
+  // actualizar rotaciones del puzzle
+  setPuzzleRotation(puzzleInfoList);
 
   /*
   SOLO CUANDO NO HAYAMOS ACTUALIZADO YA.
@@ -191,7 +192,7 @@ function accept_handshaking(user_id, UPlist){
   if(!window.server_on || UPDATED_BEFORE)
     return;
 
-  updatePosList(UPlist);
+  updatePosList(UPDATED_posList);
   // UNA VEZ TENGAMOS LA LISTA DE POSICIONES
   // ACTIVAS, PODREMOS MOVER LA CÁMARA A DONDE
   // TOQUE.
@@ -379,7 +380,7 @@ function changeSuInfo(path, id, name, updatedList){
 function modifyName(){
   var input = document.querySelector("#uinput");
   var aux = guestname;
-  
+
   if(input.value == "")
     return;// Si esta vacio, no tenemos que avisar
 

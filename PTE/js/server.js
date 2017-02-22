@@ -6,27 +6,27 @@ function init_server(){
 
 	var op_panel = document.getElementById("opacitypanel");
 
-	if(op_panel.dataset['boolean'] == "false"){
+	if(op_panel.dataset['boolean'] != "false")
+		return;
 		
-		var roominput = document.getElementById("roominput");
-		room = roominput.value+ "as";
+	var roominput = document.getElementById("roominput");
+	room = roominput.value+ "as";
 
-		server.connect("84.89.136.194:9000", room);
-		console.log("connected in room: " + room);
-		op_panel.dataset['boolean'] = "true";
-		hideOpPanel();
-		roominput.style.display = "none";
+	server.connect("84.89.136.194:9000", room);
+	console.log("connected in room: " + room);
+	op_panel.dataset['boolean'] = "true";
+	hideOpPanel();
+	roominput.style.display = "none";
 
-		var instruction = document.getElementById("canvas_info").style.display = "block";
-		var text = document.getElementById("instructions");
-		text.innerHTML = "<b>WELCOME TO ROMORU MAZE!</b><br/>" + 
-		"<br/>" +
-		"You can talk using the chat (open with 'c' or 'Menu->Open chat'). To see your nickname and avatar" +
-		" use the 'p'. Open this panel with 'i'." + 
-		" Your objetive: Try to reach central room. Be ready!!" +
-		"<br/><br/>"  + 
-		"<i>Close me with X or pressing ESC</i>"; 
-	}
+	var instruction = document.getElementById("canvas_info").style.display = "block";
+	var text = document.getElementById("instructions");
+	text.innerHTML = "<b>WELCOME TO ROMORU MAZE!</b><br/>" + 
+	"<br/>" +
+	"You can talk using the chat (open with 'c' or 'Menu->Open chat'). To see your nickname and avatar" +
+	" use the 'p'. Open this panel with 'i'." + 
+	" Your objetive: Try to reach central room. Be ready!!" +
+	"<br/><br/>"  + 
+	"<i>Close me with X or pressing ESC</i>"; 
 }
 
 server.on_connect = function(){  
@@ -41,20 +41,37 @@ server.on_message = function( user_id, message){
 
 	var guest_sending = objectReceived.name;
 	var pathBueno = objectReceived.avatar;
+	var info = objectReceived.info;
 
-	if(objectReceived.info == 3){
-		updatePlayerPosition(user_id, objectReceived.px, objectReceived.pz, objectReceived.ry);
-		return;
-	}else if(objectReceived.info == 4){
-		applyRotation(objectReceived.object);
-		return;
-	}else if(objectReceived.info == 5){
-		updateDoorsInMatrix(objectReceived.i, objectReceived.j);
-		return;
-	}else if(objectReceived.info == 6){
-		openSelectedDoor(objectReceived.x, objectReceived.z);
-		return;
+
+	switch(info){
+		case 3:
+			updatePlayerPosition(user_id, objectReceived.px, objectReceived.pz, objectReceived.ry);
+			return;
+		case 4:
+			applyRotation(objectReceived.object);
+			return;
+		case 5:
+			updateDoorsInMatrix(objectReceived.i, objectReceived.j);
+			return;
+		case 6:
+			openSelectedDoor(objectReceived.x, objectReceived.z);
+			return;
 	}
+
+	// if(objectReceived.info == 3){
+	// 	updatePlayerPosition(user_id, objectReceived.px, objectReceived.pz, objectReceived.ry);
+	// 	return;
+	// }else if(objectReceived.info == 4){
+	// 	applyRotation(objectReceived.object);
+	// 	return;
+	// }else if(objectReceived.info == 5){
+	// 	updateDoorsInMatrix(objectReceived.i, objectReceived.j);
+	// 	return;
+	// }else if(objectReceived.info == 6){
+	// 	openSelectedDoor(objectReceived.x, objectReceived.z);
+	// 	return;
+	// }
 
 	// si info=1 el mensaje solo sirve para indicar que
 	// esa persona esta conectada 
@@ -78,7 +95,7 @@ server.on_message = function( user_id, message){
 		// su registro:
 
 		if(objectReceived.info == 1){
-			accept_handshaking(user_id, objectReceived.activePosList);
+			accept_handshaking(user_id, objectReceived.activePosList, objectReceived.puzzleInfo);
 		}
 
 		// añadir posibilidad de chat privado para cada

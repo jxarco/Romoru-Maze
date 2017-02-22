@@ -22,6 +22,9 @@ var activeObject; // Este sirve para guardar el ultimo objeto al que hemos clica
 var PNJ;
 var animations = [];
 
+// DOORS
+var PIECES = [];
+
 var scene, camera, renderer, controls, startTime;
 var MAT, MAT2, data;
 var floorMESH, sphere, materials;
@@ -38,7 +41,7 @@ window.mouse = new THREE.Vector2();
 
 window.keys = [];
 
-function funZero(){
+function loadData_fromImg(){
 
 	container = document.querySelector(".canvas_container");
 	tam = container.getBoundingClientRect();
@@ -74,7 +77,7 @@ function INTERACTION(){
 	var objects = [];
 	startTime = Date.now();
 
-	funZero();
+	loadData_fromImg();
 	init();
 	animate();
 
@@ -134,6 +137,9 @@ function INTERACTION(){
 				box.rotation.z += (Math.PI / 2) * ((j % 3) + 1); // aplicamos una rotacion a cada cubo para desordenarlos
 				box.name = "caretos_"+m+"_"+n;
 				scene.add( box );
+
+				PIECES.push( box );
+
 				n--;
 			}m--;
 		}
@@ -245,114 +251,131 @@ function INTERACTION(){
 			var wallDoorTexture =  new THREE.TextureLoader().load( 'assets/wall3.jpg' );
 			for(var i = 0; i < MAT.length; i++){
 				for(var j = 0; j < MAT.length; j++){
-					if(MAT[i][j] == 0){ // 0 NEGRO
+					
+					var value = MAT[i][j];
 
-						wallIterator++;
+					switch(value){
 
-						var wallGeo = new THREE.BoxGeometry(5, 4, 5);
-						var wallMat1 = new THREE.MeshPhongMaterial( {
-								map: wallTexture1,
-								side: THREE.DoubleSide
-						});
-						var wallMat2 = new THREE.MeshPhongMaterial( {
-								map: wallTexture2,
-								side: THREE.DoubleSide
-						});
+						case 0: // 0 NEGRO
 
-						// intercalar muros con y sin hiedra
+							wallIterator++;
 
-						if(wallIterator % 2 == 0){
-							var wall = new THREE.Mesh(wallGeo, wallMat1);
-						}else{
-							var wall = new THREE.Mesh(wallGeo, wallMat2);
-						}
+							var wallGeo = new THREE.BoxGeometry(5, 4, 5);
+							var wallMat1 = new THREE.MeshPhongMaterial( {
+									map: wallTexture1,
+									side: THREE.DoubleSide
+							});
+							var wallMat2 = new THREE.MeshPhongMaterial( {
+									map: wallTexture2,
+									side: THREE.DoubleSide
+							});
 
-						wall.position.x = i * 5;
-						wall.position.y = 0;
-						wall.position.z = j * 5;
-						wall.receiveShadow = true;
-						wall.castShadow = true;
-						scene.add(wall);
-					} 
-					else if(MAT[i][j] == 2){ // 2 VERDE MODIFICADO
+							// intercalar muros con y sin hiedra
 
-						// vamos sacando el siguiente hint de la lista
-						var hint = HINTS[hintIterator];
-						hint.position.x = i * 5;
-						hint.position.y = 0;
-						hint.position.z = j * 5;
-						hint.receiveShadow = true;
-						hint.castShadow = true;
-						scene.add(hint);
-						hintIterator++;
-					} 
-					else if(MAT[i][j] == 3){ // 3 ROJO MODIFICADO -> PUERTAS
-						var wallGeo = new THREE.BoxGeometry(5, 4, 5);
-						var wallMat = new THREE.MeshPhongMaterial( {
-								map: wallDoorTexture,
-								side: THREE.DoubleSide
-						});
-						var wallMat1 = new THREE.MeshPhongMaterial( {
-								map: wallTexture1,
-								side: THREE.DoubleSide
-						});
+							if(wallIterator % 2 == 0){
+								var wall = new THREE.Mesh(wallGeo, wallMat1);
+							}else{
+								var wall = new THREE.Mesh(wallGeo, wallMat2);
+							}
 
-						materials = [
+							wall.position.x = i * 5;
+							wall.position.y = 0;
+							wall.position.z = j * 5;
+							wall.receiveShadow = true;
+							wall.castShadow = true;
+							scene.add(wall);
+						
+							break;
 
-						    new THREE.MeshPhongMaterial( { map: wallDoorTexture } ), // right
-						    new THREE.MeshPhongMaterial( { map: wallDoorTexture } ), // left
-						    new THREE.MeshPhongMaterial( { map: wallTexture1 } ), // top
-						    new THREE.MeshPhongMaterial( { map: wallTexture1 } ), // bottom
-						    new THREE.MeshPhongMaterial( { map: wallDoorTexture } ), // back
-						    new THREE.MeshPhongMaterial( { map: wallDoorTexture } )  // front
+						case 2: // 2 VERDE MODIFICADO
 
-						];
+							// vamos sacando el siguiente hint de la lista
+							var hint = HINTS[hintIterator];
+							hint.position.x = i * 5;
+							hint.position.y = 0;
+							hint.position.z = j * 5;
+							hint.receiveShadow = true;
+							hint.castShadow = true;
+							scene.add(hint);
+							hintIterator++;
 
-						var wall = new THREE.Mesh(wallGeo, new THREE.MultiMaterial( materials ));
-						var textHint = TEXT_HINTS[textHintIterator];
-						wall.message = textHint.text;
-						wall.position.x = i * 5;
-						wall.position.z = j * 5;
-						wall.name = "red_" + wall.position.x + "_" + wall.position.z;
-						wall.receiveShadow = true;
-						wall.castShadow = true;
-						scene.add(wall);
-						textHintIterator++;
+							break;
+						
+						case 3: // 3 ROJO MODIFICADO -> PUERTAS
+
+							var wallGeo = new THREE.BoxGeometry(5, 4, 5);
+							var wallMat = new THREE.MeshPhongMaterial( {
+									map: wallDoorTexture,
+									side: THREE.DoubleSide
+							});
+							var wallMat1 = new THREE.MeshPhongMaterial( {
+									map: wallTexture1,
+									side: THREE.DoubleSide
+							});
+
+							materials = [
+
+							    new THREE.MeshPhongMaterial( { map: wallDoorTexture } ), // right
+							    new THREE.MeshPhongMaterial( { map: wallDoorTexture } ), // left
+							    new THREE.MeshPhongMaterial( { map: wallTexture1 } ), // top
+							    new THREE.MeshPhongMaterial( { map: wallTexture1 } ), // bottom
+							    new THREE.MeshPhongMaterial( { map: wallDoorTexture } ), // back
+							    new THREE.MeshPhongMaterial( { map: wallDoorTexture } )  // front
+
+							];
+
+							var wall = new THREE.Mesh(wallGeo, new THREE.MultiMaterial( materials ));
+							var textHint = TEXT_HINTS[textHintIterator];
+							wall.message = textHint.text;
+							wall.position.x = i * 5;
+							wall.position.z = j * 5;
+							wall.name = "red_" + wall.position.x + "_" + wall.position.z;
+							wall.receiveShadow = true;
+							wall.castShadow = true;
+							scene.add(wall);
+							textHintIterator++;
+							
+							break;
+
+						case 4: // 4 AGUA MODIFICADO
+
+							var waterGeo = new THREE.BoxGeometry(5, 0.15, 5);
+							var waterMat = new THREE.MeshPhongMaterial( {
+									map: waterTexture,
+									side: THREE.DoubleSide
+							});
+
+							var water = new THREE.Mesh(waterGeo, waterMat);
+							var textHint = TEXT_HINTS[textHintIterator];
+							water.position.x = i * 5;
+							water.position.y = -1.57;
+							water.position.z = j * 5;
+							water.receiveShadow = true;
+							water.castShadow = true;
+							scene.add(water);
+
+							break;
+
+						// HACKER MODE ***********************************************************************
+						case 252: // 252 AMARILLO 
+							wallGeo = new THREE.BoxGeometry(5, 0.5, 5);
+							var AUX = new THREE.MeshBasicMaterial( {
+									color: "yellow",
+							});
+							wall = new THREE.Mesh(wallGeo, AUX);
+							wall.position.x = i * 5;
+							wall.position.y = -1.7;
+							wall.position.z = j * 5;
+							scene.add(wall);
+
+							break;
+						// ***********************************************************************************
 					}
-
-					else if(MAT[i][j] == 4){ // 4 AGUA MODIFICADO
-						var waterGeo = new THREE.BoxGeometry(5, 0.15, 5);
-						var waterMat = new THREE.MeshPhongMaterial( {
-								map: waterTexture,
-								side: THREE.DoubleSide
-						});
-
-						var water = new THREE.Mesh(waterGeo, waterMat);
-						var textHint = TEXT_HINTS[textHintIterator];
-						water.position.x = i * 5;
-						water.position.y = -1.57;
-						water.position.z = j * 5;
-						water.receiveShadow = true;
-						water.castShadow = true;
-						scene.add(water);
-					}
-
-					// HACKER MODE ***********************************************************************
-					else if(MAT[i][j] == 252){ // 252 AMARILLO 
-						wallGeo = new THREE.BoxGeometry(5, 0.5, 5);
-						var AUX = new THREE.MeshBasicMaterial( {
-								color: "yellow",
-						});
-						wall = new THREE.Mesh(wallGeo, AUX);
-						wall.position.x = i * 5;
-						wall.position.y = -1.7;
-						wall.position.z = j * 5;
-						scene.add(wall);
-					} 
-					// ***********************************************************************************
 				}
 			}
 		}
+
+		getPuzzleInfo();
 
 		// renderer ************************************************************************************************
 
@@ -405,7 +428,7 @@ function INTERACTION(){
  		light3.position.z = Math.sin( time ) * 2 + 85;
 
  		// ANIMACIÓN DE LOS PNJ
- 		for(var i = 0; i < animations.length; i++){
+ 		for(i in animations){
  			var animation = animations[i];
  			animation.setTime( performance.now() / 1000 );	
  		}
@@ -535,7 +558,25 @@ function updatePlayerPosition(user_id, ox, oz, ry){
 function updateDoorsInMatrix(i, j){
 
 	MAT2[i][j] = -1;
+}
 
+function getPuzzleInfo(){
+	var INFO = [];
+
+	//console.log(PIECES)
+	
+	for (i in PIECES){
+		INFO.push( PIECES[i].rotation.z );
+	}
+
+	return INFO;
+}
+
+function setPuzzleRotation(LIST){
+
+	for (i in PIECES){
+		PIECES[i].rotation.z = LIST[i];
+	}
 }
 
 function createPNJ(user_id){
@@ -558,6 +599,7 @@ function deletePNJ(user_id){
 
 	scene.remove(scene.getObjectByName(user_id));
 }
+
 function isSolution(){
 	var text = document.getElementById("instructions");
 	var input = document.getElementById("solution");
@@ -672,6 +714,8 @@ function applyRotation(name){
 	// 				z: object.rotation.z + Math.PI / 2
 	// }, 500 ).easing( TWEEN.Easing.Sinusoidal.In).start();
 	object.rotation.z += Math.PI / 2;
+
+	getPuzzleInfo();
 }
 
 function setCamera(list){

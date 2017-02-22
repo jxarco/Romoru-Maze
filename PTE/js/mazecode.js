@@ -308,11 +308,10 @@ function INTERACTION(){
 
 						var wall = new THREE.Mesh(wallGeo, new THREE.MultiMaterial( materials ));
 						var textHint = TEXT_HINTS[textHintIterator];
-						wall.name = "red";
 						wall.message = textHint.text;
 						wall.position.x = i * 5;
-						wall.position.y = 0;
 						wall.position.z = j * 5;
+						wall.name = "red_" + wall.position.x + "_" + wall.position.z;
 						wall.receiveShadow = true;
 						wall.castShadow = true;
 						scene.add(wall);
@@ -570,11 +569,13 @@ function isSolution(){
 	text.innerHTML = "<b><p align='center'><font size='10'>WELL DONE!</font></p></b>";
 	input.style.display = "none";
 	new TWEEN.Tween( activeObject.position ).to( {
-					y: -3.45;
-
+					y: -3.45
 		}, 6000 ).easing( TWEEN.Easing.Linear.None).start(); // efecto para bajar
+
+
 	var doorDown = {
-		door: activeObject,
+		x: activeObject.position.x,
+		z: activeObject.position.z,
 		info: 6
 	}
 
@@ -605,10 +606,15 @@ function isSolution(){
 
 }
 
-function doorDown(active){
-	new TWEEN.Tween( activeObject.position ).to( {
-					y: -3.45;
+function openSelectedDoor(x, z){
 
+	var door = scene.getObjectByName("red_" + x + "_" + z);
+
+	if(!door)
+		return;
+
+	new TWEEN.Tween( door.position ).to( {
+					y: -3.45
 	}, 6000 ).easing( TWEEN.Easing.Linear.None).start(); // efecto para bajar
 }
 
@@ -621,7 +627,7 @@ function intersect(){
 
 	if ( intersects.length > 0 ) {
 		var intersect = intersects[ 0 ];
-		if(intersect.object.name == "red"){
+		if(intersect.object.name.includes("red")){
 			document.getElementById("canvas_info").style.display = "block";
 			document.getElementById("solution").style.display = "block";
 			var text = document.getElementById("instructions");

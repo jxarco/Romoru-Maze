@@ -52,7 +52,7 @@ server.on_message = function( user_id, message){
 		updateDoorsInMatrix(objectReceived.i, objectReceived.j);
 		return;
 	}else if(objectReceived.info == 6){
-		doorDown(objectReceived.door);
+		openSelectedDoor(objectReceived.x, objectReceived.z);
 		return;
 	}
 

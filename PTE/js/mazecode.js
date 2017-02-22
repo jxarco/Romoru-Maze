@@ -523,6 +523,12 @@ function updatePlayerPosition(user_id, ox, oy, oz, ry){
 	}
 }
 
+function updateDoorsInMatrix(newMatrix){
+
+	MAT2 = newMatrix;
+
+}
+
 function createPNJ(user_id){
 	var loader = new THREE.AssimpLoader();
 	loader.load( "models/Octaminator.assimp", function ( err, result ) {
@@ -579,6 +585,14 @@ function isSolution(){
 			}
 
 		}, 6050);
+
+		var MATRIX = {
+				newMatrix: MAT2,
+				info: 5
+		}
+
+		if(window.server_on) server.sendMessage(MATRIX);
+
 	}
 }
 

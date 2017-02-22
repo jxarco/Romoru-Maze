@@ -48,6 +48,9 @@ server.on_message = function( user_id, message){
 	}else if(objectReceived.info == 4){
 		applyRotation(objectReceived.object);
 		return;
+	}else if(objectReceived.info == 5){
+		updateDoorsInMatrix(object.newMatrix);
+		return;
 	}
 
 	// si info=1 el mensaje solo sirve para indicar que

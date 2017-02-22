@@ -51,6 +51,9 @@ server.on_message = function( user_id, message){
 	}else if(objectReceived.info == 5){
 		updateDoorsInMatrix(objectReceived.i, objectReceived.j);
 		return;
+	}else if(objectReceived.info == 6){
+		doorDown(objectReceived.door);
+		return;
 	}
 
 	// si info=1 el mensaje solo sirve para indicar que

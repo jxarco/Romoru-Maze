@@ -515,12 +515,13 @@ function mLeft(){
 
 function updatePlayerPosition(user_id, ox, oy, oz, ry){
 
-	if(scene.getObjectByName(user_id)){
-		scene.getObjectByName(user_id).position.x = ox;
-		scene.getObjectByName(user_id).position.y = oy;
-		scene.getObjectByName(user_id).position.z = oz;
-		scene.getObjectByName(user_id).rotation.y = ry;
-	}
+	if(!scene.getObjectByName(user_id))
+		return;
+
+	scene.getObjectByName(user_id).position.x = ox;
+	scene.getObjectByName(user_id).position.y = oy;
+	scene.getObjectByName(user_id).position.z = oz;
+	scene.getObjectByName(user_id).rotation.y = ry;
 }
 
 function updateDoorsInMatrix(i, j){
@@ -569,9 +570,16 @@ function isSolution(){
 	text.innerHTML = "<b><p align='center'><font size='10'>WELL DONE!</font></p></b>";
 	input.style.display = "none";
 	new TWEEN.Tween( activeObject.position ).to( {
-					y: -3.45
+					y: -3.45;
+
 		}, 6000 ).easing( TWEEN.Easing.Linear.None).start(); // efecto para bajar
-	
+	var doorDown = {
+		door: activeObject,
+		info: 6
+	}
+
+	if(window.server_on) server.sendMessage(doorDown);
+
 	setTimeout(function(){
 		
 		var x = activeObject.position.x;
@@ -595,6 +603,13 @@ function isSolution(){
 
 	}, 6050);
 
+}
+
+function doorDown(active){
+	new TWEEN.Tween( activeObject.position ).to( {
+					y: -3.45;
+
+	}, 6000 ).easing( TWEEN.Easing.Linear.None).start(); // efecto para bajar
 }
 
 function intersect(){

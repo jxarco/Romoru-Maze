@@ -43,7 +43,7 @@ server.on_message = function( user_id, message){
 	var pathBueno = objectReceived.avatar;
 
 	if(objectReceived.info == 3){
-		updatePlayerPosition(user_id, objectReceived.px, objectReceived.py, objectReceived.pz, objectReceived.ry);
+		updatePlayerPosition(user_id, objectReceived.px, objectReceived.pz, objectReceived.ry);
 		return;
 	}else if(objectReceived.info == 4){
 		applyRotation(objectReceived.object);

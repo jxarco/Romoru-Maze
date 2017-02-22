@@ -10,6 +10,7 @@ var app = {
 var W = 87, A = 65, S = 83, D = 68;
 var FORWARD = 1, BACKWARD = 0;
 var is_moving = false;
+// *************************+
 
 var HINTS = generateMeshHints(); // LISTA CON OBJETOS
 var TEXT_HINTS = generateTextHints(); // LISTA CON LOS TEXTOS DE CADA PUERTA
@@ -27,6 +28,7 @@ var floorMESH, sphere, materials;
 var container, tam;
 var light, light2, light3;
 var direction = new THREE.Vector3();
+var auxiliar = new THREE.Vector3();
 var raycaster = new THREE.Raycaster();
 var initialRotation;
 
@@ -80,7 +82,7 @@ function INTERACTION(){
 
 		camera = new THREE.PerspectiveCamera( 50, tam.width / tam.height, 0.1, 1000 );
 		scene = new THREE.Scene();
-		//scene.fog = new THREE.Fog( 0xffffff, 0, 1000 );
+		scene.fog = new THREE.Fog( 0xffffff, 0, 1000 );
 
 		// LIGHTS
 		light = new THREE.DirectionalLight( 0xffffff, 1.25 );
@@ -360,13 +362,14 @@ function INTERACTION(){
 		renderer.domElement.id = "my_canvas";
 		container.appendChild( renderer.domElement );
 
-		//controls (mouse)
-		if(window.controls){
-			controls = new THREE.OrbitControls( camera, renderer.domElement );
-			controls.update();
-		}
-		
 		window.addEventListener( 'resize', onWindowResize, false );
+
+		//controls (mouse)
+		if(!window.controls)
+			return;
+
+		controls = new THREE.OrbitControls( camera, renderer.domElement );
+		controls.update();
 	}
 
 	function onWindowResize() {
@@ -407,22 +410,23 @@ function INTERACTION(){
  			animation.setTime( performance.now() / 1000 );	
  		}
  		
- 		
- 		if( camera.position.x ){
-			var POSITION = {
-				px : camera.position.x,
-				py : camera.position.y,
-				pz : camera.position.z,
-				ry : camera.rotation.y,
-				info: 3
-			}
-		}
-
-		// PASSING POSITION TO OTHERS TO PRINT IT
-		if(window.server_on) server.sendMessage(POSITION);
- 		
 		TWEEN.update();
 		renderer.render( scene, camera );
+
+		// solo enviamos si esta el server ON y si nos hemos movido o rotado
+		if(!window.server_on || ((auxiliar.x == camera.position.x) && (auxiliar.z == camera.position.z) && (auxiliar.y == camera.rotation.y)))
+			return;
+
+		// PASSING POSITION TO OTHERS TO PRINT IT
+		// console.log("sending");
+		var POSITION = {
+			px : camera.position.x,
+			pz : camera.position.z,
+			ry : camera.rotation.y,
+			info: 3
+		}
+
+		server.sendMessage(POSITION);
 	}
 }
 
@@ -453,6 +457,8 @@ function mForward(){
 
 	tween.onComplete(function(){
 		is_moving = false;
+		auxiliar.x = camera.position.x;
+		auxiliar.z = camera.position.z;
 		if(keys[W]) mForward();
 	});
 
@@ -471,6 +477,8 @@ function mBackward(){
 
 	tween.onComplete(function(){
 		is_moving = false;
+		auxiliar.x = camera.position.x;
+		auxiliar.z = camera.position.z;
 		if(keys[S]) mBackward();
 	});
 
@@ -489,6 +497,7 @@ function mRight(){
 
 	tween.onComplete(function(){
 		is_moving = false;
+		auxiliar.y = camera.rotation.y;
 		if(keys[D]) mRight();
 	});
 
@@ -506,19 +515,19 @@ function mLeft(){
 
 	tween.onComplete(function(){
 		is_moving = false;
+		auxiliar.y = camera.rotation.y;
 		if(keys[A]) mLeft();
 	});
 
 	tween.start();	
 }
 
-function updatePlayerPosition(user_id, ox, oy, oz, ry){
+function updatePlayerPosition(user_id, ox, oz, ry){
 
 	if(!scene.getObjectByName(user_id))
 		return;
 
 	scene.getObjectByName(user_id).position.x = ox;
-	scene.getObjectByName(user_id).position.y = oy;
 	scene.getObjectByName(user_id).position.z = oz;
 	scene.getObjectByName(user_id).rotation.y = ry;
 }
@@ -544,9 +553,10 @@ function createPNJ(user_id){
 
 function deletePNJ(user_id){
 
-	if(scene.getObjectByName(user_id)){
-		scene.remove(scene.getObjectByName(user_id));
-	}
+	if(!scene.getObjectByName(user_id))
+		return;
+
+	scene.remove(scene.getObjectByName(user_id));
 }
 function isSolution(){
 	var text = document.getElementById("instructions");
@@ -603,7 +613,6 @@ function isSolution(){
 		}
 
 	}, 6050);
-
 }
 
 function openSelectedDoor(x, z){
@@ -625,41 +634,43 @@ function intersect(){
 	// calculate objects intersecting the picking ray
 	var intersects = raycaster.intersectObjects( scene.children, true );
 
-	if ( intersects.length > 0 ) {
-		var intersect = intersects[ 0 ];
-		if(intersect.object.name.includes("red")){
-			document.getElementById("canvas_info").style.display = "block";
-			document.getElementById("solution").style.display = "block";
-			var text = document.getElementById("instructions");
-			text.innerHTML = "<b>GOOD! DOOR TO NEXT LEVEL HAD BEEN REACHED!</b><br/>" + 
-			"<br/>" +
-			"You are not done yet! Try to solve this enigma to pass the door. Maybe other players "+
-			"could have useful hints for you...<br/><br/>" + 
-			" Hint: " +
-			intersect.object.message +
-			"<br/><br/>"  + 
-			"<i>Close me with X or pressing ESC</i>";
+	if ( intersects.length <= 0 )
+		return;
 
-			activeObject = intersect.object;
-		}else if(intersect.object.name.includes("caretos")){
+	var intersect = intersects[ 0 ];
+	if(intersect.object.name.includes("red")){
+		document.getElementById("canvas_info").style.display = "block";
+		document.getElementById("solution").style.display = "block";
+		var text = document.getElementById("instructions");
+		text.innerHTML = "<b>GOOD! DOOR TO NEXT LEVEL HAD BEEN REACHED!</b><br/>" + 
+		"<br/>" +
+		"You are not done yet! Try to solve this enigma to pass the door. Maybe other players "+
+		"could have useful hints for you...<br/><br/>" + 
+		" Hint: " +
+		intersect.object.message +
+		"<br/><br/>"  + 
+		"<i>Close me with X or pressing ESC</i>";
 
-			applyRotation(intersect.object.name);
-			console.log(intersect.object.name);
+		activeObject = intersect.object;
+	}else if(intersect.object.name.includes("caretos")){
 
-			var OBJECT = {
-				object: intersect.object.name,
-				info: 4
-			}
+		applyRotation(intersect.object.name);
 
-			if(window.server_on) server.sendMessage(OBJECT);
+		var OBJECT = {
+			object: intersect.object.name,
+			info: 4
 		}
+
+		if(window.server_on) server.sendMessage(OBJECT);
 	}
 }
 
 function applyRotation(name){
 	var object = scene.getObjectByName(name);
 	
-
+	// new TWEEN.Tween( object.rotation ).to( {
+	// 				z: object.rotation.z + Math.PI / 2
+	// }, 500 ).easing( TWEEN.Easing.Sinusoidal.In).start();
 	object.rotation.z += Math.PI / 2;
 }
 
@@ -672,6 +683,10 @@ function setCamera(list){
 	camera.position.x = 85;//x;
 	camera.position.z = 85;//z;
 	camera.rotation.y += rotation;
+
+	auxiliar.x = camera.position.x;
+	auxiliar.z = camera.position.z;
+	auxiliar.y = camera.rotation.y;	
 
 	initialRotation = camera.rotation.y;
 }

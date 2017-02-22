@@ -523,11 +523,9 @@ function updatePlayerPosition(user_id, ox, oy, oz, ry){
 	}
 }
 
-function updateDoorsInMatrix(newMatrix){
+function updateDoorsInMatrix(i, j){
 
-	MAT2 = newMatrix.map(function(arr) {
-    	return arr.slice();
-	});
+	MAT2[i][j] = -1;
 
 }
 
@@ -535,7 +533,6 @@ function createPNJ(user_id){
 	var loader = new THREE.AssimpLoader();
 	loader.load( "models/Octaminator.assimp", function ( err, result ) {
 		var object = result.object;
-		//object.position.y = -0.35;
 		object.name = user_id;
 		scene.add( object );
 		animation = result.animation;
@@ -566,36 +563,38 @@ function isSolution(){
 	// cogemos la solucion de ese hint
 	var solution = TEXT_HINTS[index].solution;
 
-	if(posibleSolution === solution){
-		text.innerHTML = "<b><p align='center'><font size='10'>WELL DONE!</font></p></b>";
-		input.style.display = "none";
-		new TWEEN.Tween( activeObject.position ).to( {
-						y: -3.45
-			}, 6000 ).easing( TWEEN.Easing.Linear.None).start(); // efecto para bajar
-		
-		setTimeout(function(){
-			
-			var x = activeObject.position.x;
-			var z = activeObject.position.z;
+	if(posibleSolution !== solution)
+		return;
 
-			for(var i = (x - 2); i < (x + 3); i++){ // puerta y alrededores que tengan 3 ponemos -1 para quitar bloqueo
-				for(var j = (z - 2); j < (z + 3); j++){
-					if(MAT2[i][j] == 3){
-						MAT2[i][j] = -1;
+	text.innerHTML = "<b><p align='center'><font size='10'>WELL DONE!</font></p></b>";
+	input.style.display = "none";
+	new TWEEN.Tween( activeObject.position ).to( {
+					y: -3.45
+		}, 6000 ).easing( TWEEN.Easing.Linear.None).start(); // efecto para bajar
+	
+	setTimeout(function(){
+		
+		var x = activeObject.position.x;
+		var z = activeObject.position.z;
+
+		for(var i = (x - 2); i < (x + 3); i++){ // puerta y alrededores que tengan 3 ponemos -1 para quitar bloqueo
+			for(var j = (z - 2); j < (z + 3); j++){
+				if(MAT2[i][j] == 3){
+					MAT2[i][j] = -1;
+
+					var toChange = {
+						i: i,
+						j: j,
+						info: 5
 					}
+
+					if(window.server_on) server.sendMessage(toChange);
 				}
 			}
-
-		}, 6050);
-
-		var MATRIX = {
-				newMatrix: MAT2,
-				info: 5
 		}
 
-		if(window.server_on) server.sendMessage(MATRIX);
+	}, 6050);
 
-	}
 }
 
 function intersect(){

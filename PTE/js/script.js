@@ -157,7 +157,7 @@ function new_connection(user_id){
 
   var unactiveIndex = 0;
   if(!list[unactiveIndex]) return;
-  
+
   while(list[unactiveIndex].active == true){
         unactiveIndex++;
   }
@@ -379,8 +379,9 @@ function changeSuInfo(path, id, name, updatedList){
 function modifyName(){
   var input = document.querySelector("#uinput");
   var aux = guestname;
+  
   if(input.value == "")
-    return;
+    return;// Si esta vacio, no tenemos que avisar
 
   guestname = input.value;
   
@@ -390,7 +391,7 @@ function modifyName(){
   }
 
   input.value = "";
-  send_name_info(guestname); // Si esta vacio, no tenemos que avisar
+  send_name_info(guestname);
   
   hideDivs();
   update();
@@ -538,9 +539,9 @@ document.getElementById("textinput").addEventListener("keyup", function(event){
 function deleteChat(){
 
   var div = document.getElementById('log');
-    while(div.firstChild){
-      div.removeChild(div.firstChild);
-    }
+  while(div.firstChild){
+    div.removeChild(div.firstChild);
+  }
   closeNav();
 }
 

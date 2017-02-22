@@ -49,7 +49,7 @@ server.on_message = function( user_id, message){
 		applyRotation(objectReceived.object);
 		return;
 	}else if(objectReceived.info == 5){
-		updateDoorsInMatrix(objectReceived.newMatrix);
+		updateDoorsInMatrix(objectReceived.i, objectReceived.j);
 		return;
 	}
 

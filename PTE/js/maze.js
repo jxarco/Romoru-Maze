@@ -85,10 +85,9 @@ function INTERACTION(){
 
 		camera = new THREE.PerspectiveCamera( 50, tam.width / tam.height, 0.1, 1000 );
 		scene = new THREE.Scene();
-		scene.fog = new THREE.Fog( 0xffffff, 0, 1000 );
 
 		// LIGHTS
-		light = new THREE.DirectionalLight( 0xffffff, 1.25 );
+		light = new THREE.DirectionalLight( 0xffffff, 0.2 );
 		light.position.set( 0.5, 1, 0.75 );
 		scene.add( light );
 
@@ -109,6 +108,23 @@ function INTERACTION(){
 		light3.position.set( 77.5, 1, 77.5 );
 		scene.add( light3 );
 
+		// SKY *********************************
+
+		var imagePrefix = "assets/dawnmountain-";
+		var directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
+		var imageSuffix = ".png";
+		var skyGeometry = new THREE.CubeGeometry( 1000, 1000, 1000 );	
+		
+		var materialArray = [];
+		for (var i = 0; i < 6; i++)
+			materialArray.push( new THREE.MeshBasicMaterial({
+				map: THREE.ImageUtils.loadTexture( imagePrefix + directions[i] + imageSuffix ),
+				side: THREE.BackSide
+			}));
+		var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
+		var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+		skyBox.position.y = 50;
+		scene.add( skyBox );
 
 		// GAME ***********************
 
@@ -724,8 +740,8 @@ function setCamera(list){
 	var z = list.posz;
 	var rotation = list.rot;
 
-	camera.position.x = 85;//x;
-	camera.position.z = 85;//z;
+	camera.position.x = x;//x;
+	camera.position.z = z;//z;
 	camera.rotation.y += rotation;
 
 	auxiliar.x = camera.position.x;

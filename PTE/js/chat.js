@@ -83,29 +83,32 @@ function init(){
   var div;
   var isDown = false;
   var div = document.getElementById("canvas_info");
+  var canvas = document.querySelector(".canvas_container");
+  canvas.addEventListener('mousedown', function(e) {
 
-  document.addEventListener('mousedown', function(e) {
-      isDown = true;
-      offset = [
-          div.offsetLeft - e.clientX,
-          div.offsetTop - e.clientY
-      ];
+    isDown = true;
+    offset = [
+        div.offsetLeft - e.clientX,
+        div.offsetTop - e.clientY
+    ];
 
-      // calculate mouse position in normalized device coordinates
-      // (-1 to +1) for both components
+    // calculate mouse position in normalized device coordinates
+    // (-1 to +1) for both components
 
-      window.mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
-      window.mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
+    window.mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
+    window.mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
 
-      intersect();
+    intersect();
+    e.stopImmediatePropagation();
 
-  }, true);
 
-  document.addEventListener('mouseup', function() {
+  }, false);
+
+  canvas.addEventListener('mouseup', function() {
       isDown = false;
   }, true);
 
-  document.addEventListener('mousemove', function(event) {
+  canvas.addEventListener('mousemove', function(event) {
       event.preventDefault();
       if (isDown) {
           mousePosition = {

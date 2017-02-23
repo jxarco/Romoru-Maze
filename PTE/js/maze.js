@@ -223,9 +223,6 @@ function INTERACTION(){
 				case 80: // p
 					privateInfo();
 					break;
-				case 67: // c
-					openChat();
-					break;
 				case 73: // i
 					document.getElementById("canvas_info").style.display = "block";
 					break;
@@ -238,6 +235,14 @@ function INTERACTION(){
 
 		document.addEventListener( 'keyup', function(event){
 			keys[event.keyCode] = false;
+
+			switch( event.keyCode ) {
+
+				case 67: // c
+					openChat();
+					break;
+			}
+
 		}, false );
 
 		// objects *************************************************************************************************

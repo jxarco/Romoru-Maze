@@ -36,7 +36,7 @@ var raycaster = new THREE.Raycaster();
 var initialRotation;
 
 window.walls_on = true;
-window.controls = true;
+window.controls = false;
 window.mouse = new THREE.Vector2();
 
 window.keys = [];
@@ -373,18 +373,18 @@ function INTERACTION(){
 							break;
 
 						// HACKER MODE ***********************************************************************
-						case 252: // 252 AMARILLO 
-							wallGeo = new THREE.BoxGeometry(5, 0.5, 5);
-							var AUX = new THREE.MeshBasicMaterial( {
-									color: "yellow",
-							});
-							wall = new THREE.Mesh(wallGeo, AUX);
-							wall.position.x = i * 5;
-							wall.position.y = -1.7;
-							wall.position.z = j * 5;
-							scene.add(wall);
+						// case 252: // 252 AMARILLO 
+						// 	wallGeo = new THREE.BoxGeometry(5, 0.5, 5);
+						// 	var AUX = new THREE.MeshBasicMaterial( {
+						// 			color: "yellow",
+						// 	});
+						// 	wall = new THREE.Mesh(wallGeo, AUX);
+						// 	wall.position.x = i * 5;
+						// 	wall.position.y = -1.7;
+						// 	wall.position.z = j * 5;
+						// 	scene.add(wall);
 
-							break;
+						// 	break;
 						// ***********************************************************************************
 					}
 				}

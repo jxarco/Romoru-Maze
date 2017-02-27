@@ -239,7 +239,8 @@ function INTERACTION(){
 			switch( event.keyCode ) {
 
 				case 67: // c
-					openChat();
+					if(document.activeElement.localName == "textarea" || document.activeElement.localName == "input") 
+						return;openChat();
 					break;
 			}
 
@@ -248,7 +249,7 @@ function INTERACTION(){
 		// objects *************************************************************************************************
 
 		// floor
-		var floorTexture =  new THREE.TextureLoader().load( 'assets/grass_texture.png' );
+		var floorTexture =  new THREE.TextureLoader().load( 'assets/grass_text.jpg' );
 	    var geometry = new THREE.PlaneGeometry(165, 165, 1, 1);
 	    geometry.rotateX( - Math.PI / 2 );
 	    

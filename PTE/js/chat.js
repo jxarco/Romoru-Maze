@@ -76,52 +76,6 @@ function init(){
   // ROOM SELECTOR
   var roominput = document.querySelector("#roominput");
   roominput.focus();
-
-  // DRAGGABLE INSTRUCTIONS DIV IN CANVAS
-  var mousePosition;
-  var offset = [0,0];
-  var div;
-  var isDown = false;
-  var div = document.getElementById("canvas_info");
-  var canvas = document.querySelector(".canvas_container");
-  canvas.addEventListener('mousedown', function(e) {
-
-    isDown = true;
-    offset = [
-        div.offsetLeft - e.clientX,
-        div.offsetTop - e.clientY
-    ];
-
-    // calculate mouse position in normalized device coordinates
-    // (-1 to +1) for both components
-
-    window.mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
-    window.mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
-
-    intersect();
-    e.stopImmediatePropagation();
-
-
-  }, false);
-
-  canvas.addEventListener('mouseup', function() {
-      isDown = false;
-  }, true);
-
-  canvas.addEventListener('mousemove', function(event) {
-      event.preventDefault();
-      if (isDown) {
-          mousePosition = {
-      
-              x : event.clientX,
-              y : event.clientY
-      
-          };
-          div.style.left = (mousePosition.x + offset[0]) + 'px';
-          div.style.top  = (mousePosition.y + offset[1]) + 'px';
-      }
-
-  }, true);
 }
 
 // ****************************************************************************

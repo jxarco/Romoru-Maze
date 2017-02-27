@@ -9,6 +9,53 @@ document.getElementById("solution").addEventListener("keyup", function(event){
   }
 });
 
+ // DRAGGABLE INSTRUCTIONS DIV IN CANVAS
+var mousePosition;
+var offset = [0,0];
+var div;
+var isDown = false;
+var div = document.getElementById("canvas_info");
+var canvas = document.querySelector(".canvas_container");
+div.addEventListener('mousedown', function(e) {
+
+	isDown = true;
+	offset = [
+    	div.offsetLeft - e.clientX,
+    	div.offsetTop - e.clientY
+	];
+
+	// calculate mouse position in normalized device coordinates
+	// (-1 to +1) for both components
+
+	window.mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
+	window.mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
+
+	intersect();
+	e.stopImmediatePropagation();
+	e.stopPropagation();
+	return true;
+
+}, false);
+
+div.addEventListener('mouseup', function() {
+  isDown = false;
+}, true);
+
+div.addEventListener('mousemove', function(event) {
+  	event.preventDefault();
+	if (isDown) {
+		mousePosition = {
+
+		  x : event.clientX,
+		  y : event.clientY
+		};
+
+		div.style.left = (mousePosition.x + offset[0]) + 'px';
+		div.style.top  = (mousePosition.y + offset[1]) + 'px';
+  	}
+
+}, true);
+
 function generateTextHints(){
 	list = [];
 	list.push( {text: "1* <i>Becoming invisible could be dangerous to him...</i>", solution: "frodo bolson" });

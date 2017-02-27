@@ -114,14 +114,16 @@ function INTERACTION(){
 		var directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
 		var imageSuffix = ".png";
 		var skyGeometry = new THREE.CubeGeometry( 1000, 1000, 1000 );	
+
+		var Skyloader = new THREE.TextureLoader();
 		
 		var materialArray = [];
 		for (var i = 0; i < 6; i++)
 			materialArray.push( new THREE.MeshBasicMaterial({
-				map: THREE.ImageUtils.loadTexture( imagePrefix + directions[i] + imageSuffix ),
+				map: Skyloader.load( imagePrefix + directions[i] + imageSuffix ),
 				side: THREE.BackSide
 			}));
-		var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
+		var skyMaterial = new THREE.MultiMaterial( materialArray );
 		var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
 		skyBox.position.y = 50;
 		scene.add( skyBox );
@@ -251,7 +253,7 @@ function INTERACTION(){
 		// objects *************************************************************************************************
 
 		// floor
-		var floorTexture =  new THREE.TextureLoader().load( 'assets/grass_text.jpg' );
+		var floorTexture = new THREE.TextureLoader().load( 'assets/grass_text.jpg' );
 	    var geometry = new THREE.PlaneGeometry(165, 165, 1, 1);
 	    geometry.rotateX( - Math.PI / 2 );
 	    

@@ -610,6 +610,11 @@ html, body{
 	border-radius: 35%;
 	position: absolute;
 	background: rgba(255,255,255,0.25); 
+	user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
 }
 
 #controller:hover{

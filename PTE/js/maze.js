@@ -236,6 +236,8 @@ function INTERACTION(){
 		document.addEventListener( 'keyup', function(event){
 			keys[event.keyCode] = false;
 
+			if(document.activeElement.localName == "textarea" || document.activeElement.localName == "input") return;
+
 			switch( event.keyCode ) {
 
 				case 67: // c
@@ -396,8 +398,6 @@ function INTERACTION(){
 				}
 			}
 		}
-
-		getPuzzleInfo();
 
 		// renderer ************************************************************************************************
 

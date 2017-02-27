@@ -12,11 +12,13 @@ document.getElementById("solution").addEventListener("keyup", function(event){
  // DRAGGABLE INSTRUCTIONS DIV IN CANVAS
 var mousePosition;
 var offset = [0,0];
-var div;
 var isDown = false;
 var div = document.getElementById("canvas_info");
 var canvas = document.querySelector(".canvas_container");
+
 div.addEventListener('mousedown', function(e) {
+
+	console.log("div");
 
 	isDown = true;
 	offset = [
@@ -30,18 +32,16 @@ div.addEventListener('mousedown', function(e) {
 	window.mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
 	window.mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
 
-	intersect();
-	e.stopImmediatePropagation();
 	e.stopPropagation();
-	return true;
+	e.stopImmediatePropagation();
 
 }, false);
 
 div.addEventListener('mouseup', function() {
   isDown = false;
-}, true);
+}, false);
 
-div.addEventListener('mousemove', function(event) {
+canvas.addEventListener('mousemove', function(event) {
   	event.preventDefault();
 	if (isDown) {
 		mousePosition = {
@@ -54,7 +54,14 @@ div.addEventListener('mousemove', function(event) {
 		div.style.top  = (mousePosition.y + offset[1]) + 'px';
   	}
 
-}, true);
+}, false);
+
+canvas.addEventListener('mousedown', function(e) {
+  	console.log("canvas");
+  	window.mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
+	window.mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
+  	intersect();
+}, false);
 
 function generateTextHints(){
 	list = [];

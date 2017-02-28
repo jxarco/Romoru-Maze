@@ -11,7 +11,7 @@
 		<img src="assets/scape_maze.png" id="maze_img">
 	</head>
 
-	<body>
+	<body onload='loader()'>
 
 	<div id="mySidenav" class="sidenav">
 	  <a class="closebtn" href="javascript:void(0)" onclick="closeNav()">&times;</a>
@@ -27,7 +27,8 @@
 	  			<div id='image_avatar'><img src=''>
 	  				<p id="contact_name" ></p>
 	  			</div>
-	  			<textarea id="roominput" class="room"></textarea>
+	  			<div id="loader"></div>
+	  			<textarea id="roominput" class="room" class="animate-bottom"></textarea>
 	  	</div>
 
 		<div class="content" id="cnt">
@@ -44,7 +45,10 @@
 
 					<div class="uppercase">
 						<p>First letter UpperCase</p>
-						<input type="checkbox" id="check1" class="ucselection" onclick="validateBox()">	
+						<label class="switch">
+  							<input type="checkbox" id="check1" class="ucselection" onclick="validateBox()">
+  							<div class="slider round"></div>
+						</label>
 					</div>
 				</div>
 

@@ -29,8 +29,25 @@ var random, guestname, avatarPath, num_rand_avatar;
 var room_bool = false, UPDATED_BEFORE = false;
 var list;
 window.server_on = false;
+window.loader_on = true;
 
 init();
+
+function loader() {
+
+  if(loader_on)
+    var time = 3000;
+  else
+    var time = 10;
+
+  setTimeout(function(){
+
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("roominput").style.display = "block";
+    document.getElementById("roominput").focus();
+
+  }, time);
+}
 
 function init(){
 
@@ -74,8 +91,8 @@ function init(){
   document.getElementById("solution").style.display = "none";
 
   // ROOM SELECTOR
-  var roominput = document.querySelector("#roominput");
-  roominput.focus();
+  var roominput = document.getElementById("roominput");
+  roominput.style.display = "none";
 }
 
 // ****************************************************************************

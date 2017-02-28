@@ -169,25 +169,9 @@ function INTERACTION(){
 			mForward();
 		} , false);
 
-		document.getElementById("up").addEventListener( 'mouseup', function(){
-			keys[W] = false;
-		} , false);
-
-		document.getElementById("canv_cont").addEventListener( 'mouseup', function(){
-			keys[W] = false;
-		} , false);
-
 		document.getElementById("down").addEventListener( 'mousedown', function(){
 			keys[S] = true;
 			mBackward();
-		} , false);
-
-		document.getElementById("down").addEventListener( 'mouseup', function(){
-			keys[S] = false;
-		} , false);
-
-		document.getElementById("canv_cont").addEventListener( 'mouseup', function(){
-			keys[S] = false;
 		} , false);
 
 		document.getElementById("left").addEventListener( 'mousedown', function(){
@@ -195,24 +179,15 @@ function INTERACTION(){
 			mLeft();
 		} , false);
 
-		document.getElementById("left").addEventListener( 'mouseup', function(){
-			keys[A] = false;
-		} , false);
-
-		document.getElementById("canv_cont").addEventListener( 'mouseup', function(){
-			keys[A] = false;
-		} , false);
-
 		document.getElementById("right").addEventListener( 'mousedown', function(){
 			keys[D] = true;
 			mRight();
 		} , false);
 
-		document.getElementById("right").addEventListener( 'mouseup', function(){
-			keys[D] = false;
-		} , false);
-
 		document.getElementById("canv_cont").addEventListener( 'mouseup', function(){
+			keys[W] = false;
+			keys[A] = false;
+			keys[S] = false;
 			keys[D] = false;
 		} , false);
 
@@ -259,8 +234,7 @@ function INTERACTION(){
 			switch( event.keyCode ) {
 
 				case 67: // c
-					if(document.activeElement.localName == "textarea" || document.activeElement.localName == "input") 
-						return;openChat();
+					openChat();
 					break;
 			}
 

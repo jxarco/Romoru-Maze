@@ -624,7 +624,7 @@ html, body{
 .canvas_container .vbutton{
 	width: 2.15%;
 	height: 40px;
-	margin-right: 8%;
+	margin-right: 8.25vw;
 	right:0;
 	position: absolute;
 	background: none;
@@ -662,9 +662,9 @@ html, body{
 }
 
 #right {
-	margin-right: 5.3%;
+	margin-right: 5vw;
 }
 #left {
-	margin-right: 10.25%;
+	margin-right: 11vw;
 }
 

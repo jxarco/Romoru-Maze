@@ -173,12 +173,20 @@ function INTERACTION(){
 			keys[W] = false;
 		} , false);
 
+		document.getElementById("canv_cont").addEventListener( 'mouseup', function(){
+			keys[W] = false;
+		} , false);
+
 		document.getElementById("down").addEventListener( 'mousedown', function(){
 			keys[S] = true;
 			mBackward();
 		} , false);
 
 		document.getElementById("down").addEventListener( 'mouseup', function(){
+			keys[S] = false;
+		} , false);
+
+		document.getElementById("canv_cont").addEventListener( 'mouseup', function(){
 			keys[S] = false;
 		} , false);
 
@@ -191,12 +199,20 @@ function INTERACTION(){
 			keys[A] = false;
 		} , false);
 
+		document.getElementById("canv_cont").addEventListener( 'mouseup', function(){
+			keys[A] = false;
+		} , false);
+
 		document.getElementById("right").addEventListener( 'mousedown', function(){
 			keys[D] = true;
 			mRight();
 		} , false);
 
 		document.getElementById("right").addEventListener( 'mouseup', function(){
+			keys[D] = false;
+		} , false);
+
+		document.getElementById("canv_cont").addEventListener( 'mouseup', function(){
 			keys[D] = false;
 		} , false);
 

@@ -18,6 +18,7 @@ function init_server(){
 	hideOpPanel();
 	roominput.style.display = "none";
 
+	document.getElementById("controller").style.display = "block";
 	var instruction = document.getElementById("canvas_info").style.display = "block";
 	var text = document.getElementById("instructions");
 	text.innerHTML = "<b>WELCOME TO ROMORU MAZE!</b><br/>" + 

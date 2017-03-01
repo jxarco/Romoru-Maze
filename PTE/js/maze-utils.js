@@ -12,25 +12,18 @@ document.getElementById("solution").addEventListener("keyup", function(event){
  // DRAGGABLE INSTRUCTIONS DIV IN CANVAS
 var mousePosition;
 var offset = [0,0];
-var isDown = false;
+var isDown = false, isDown_m;
 var div = document.getElementById("canvas_info");
+var controller = document.getElementById("movement_buttons");
 var canvas = document.querySelector(".canvas_container");
 
 div.addEventListener('mousedown', function(e) {
-
-	console.log("div");
 
 	isDown = true;
 	offset = [
     	div.offsetLeft - e.clientX,
     	div.offsetTop - e.clientY
 	];
-
-	// calculate mouse position in normalized device coordinates
-	// (-1 to +1) for both components
-
-	window.mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
-	window.mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
 
 	e.stopPropagation();
 	e.stopImmediatePropagation();
@@ -39,6 +32,23 @@ div.addEventListener('mousedown', function(e) {
 
 div.addEventListener('mouseup', function() {
   isDown = false;
+}, false);
+
+controller.addEventListener('mousedown', function(e) {
+
+	isDown_m = true;
+	offset = [
+    	controller.offsetLeft - e.clientX,
+    	controller.offsetTop - e.clientY
+	];
+
+	e.stopPropagation();
+	e.stopImmediatePropagation();
+
+}, false);
+
+controller.addEventListener('mouseup', function() {
+  isDown_m = false;
 }, false);
 
 canvas.addEventListener('mousemove', function(event) {
@@ -54,10 +64,20 @@ canvas.addEventListener('mousemove', function(event) {
 		div.style.top  = (mousePosition.y + offset[1]) + 'px';
   	}
 
+  	if (isDown_m) {
+		mousePosition = {
+
+		  x : event.clientX,
+		  y : event.clientY
+		};
+
+		controller.style.left = (mousePosition.x + offset[0]) + 'px';
+		controller.style.top  = (mousePosition.y + offset[1]) + 'px';
+  	}
+
 }, false);
 
 canvas.addEventListener('mousedown', function(e) {
-  	console.log("canvas");
   	window.mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
 	window.mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
   	intersect();

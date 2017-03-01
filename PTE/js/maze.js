@@ -219,9 +219,6 @@ function INTERACTION(){
 				case 73: // i
 					document.getElementById("canvas_info").style.display = "block";
 					break;
-				case 81: // q = realign
-					camera.rotation.y = initialRotation;
-					break;
 			}
 
 		}, false );
@@ -724,9 +721,6 @@ function intersect(){
 function applyRotation(name){
 	var object = scene.getObjectByName(name);
 	
-	// new TWEEN.Tween( object.rotation ).to( {
-	// 				z: object.rotation.z + Math.PI / 2
-	// }, 500 ).easing( TWEEN.Easing.Sinusoidal.In).start();
 	object.rotation.z += Math.PI / 2;
 
 	getPuzzleInfo();

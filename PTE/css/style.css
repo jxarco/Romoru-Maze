@@ -41,7 +41,7 @@ html, body{
 	display: none;
 	position: fixed;
     padding: 30px;
-    background-color: rgba(0,0,0,0.75);
+    background-color: rgba(0,0,0,0.9);
     top: 0;
     left: 0;
     right: 0;
@@ -49,6 +49,7 @@ html, body{
 }
 
 #roominput{
+	display: none;
 	background: none;
 	width: 20%;
 	height: 50px;
@@ -58,57 +59,59 @@ html, body{
 	color: #FFFFFF;
 	padding-top: 10px;
 	padding-left: 10px;
-	display: block;
 	margin: auto;
+	margin-top: 35px;
 }
 
 /* LOADER */
 
-#loader {
-  position: absolute;
-  left: 51%;
-  top: 60%;
-  z-index: 1;
-  margin: -75px 0 0 -75px;
-  border: 16px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 16px solid blue;
-  border-right: 16px solid green;
-  border-bottom: 16px solid red;
-  border-left: 16px solid pink;
-  width: 120px;
-  height: 120px;
-  -webkit-animation: spin 2s linear infinite;
-  animation: spin 2s linear infinite;
+#pixel-loader {
+  width: 10px;
+  height: 10px;
+  background: #f35626;
+  color: #f35626;
+  margin: 80px auto;
+  box-shadow: 15px 15px  0 0,
+                -15px -15px  0 0,
+                15px -15px  0 0,
+                -15px 15px  0 0,
+                0 15px  0 0,
+                15px 0  0 0,
+                -15px 0  0 0,
+                0 -15px 0 0;
+  animation: anim 2s linear infinite;
 }
 
-@-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Add animation to "page content" */
-.animate-bottom {
-  position: relative;
-  -webkit-animation-name: animatebottom;
-  -webkit-animation-duration: 1s;
-  animation-name: animatebottom;
-  animation-duration: 1s
-}
-
-@-webkit-keyframes animatebottom {
-  from { bottom:-100px; opacity:0 } 
-  to { bottom:0px; opacity:1 }
-}
-
-@keyframes animatebottom { 
-  from{ bottom:-100px; opacity:0 } 
-  to{ bottom:0; opacity:1 }
+@keyframes anim {
+  0% {
+    -webkit-filter: hue-rotate(0deg);
+  }
+  50% {
+    box-shadow: 20px 20px  0 0,
+                -20px -20px  0 0,
+                20px -20px  0 0,
+                -20px 20px  0 0,
+                0 10px  0 0,
+                10px 0  0 0,
+                -10px 0  0 0,
+                0 -10px 0 0;
+  }
+  
+  75% {
+    box-shadow: 20px 20px  0 0,
+                -20px -20px  0 0,
+                20px -20px  0 0,
+                -20px 20px  0 0,
+                0 10px  0 0,
+                10px 0  0 0,
+                -10px 0  0 0,
+                0 -10px 0 0;
+  }
+  
+  100% {
+    transform: rotate(360deg);
+    -webkit-filter: hue-rotate(360deg);
+  }
 }
 
 /* ********************** */
@@ -568,6 +571,7 @@ input:checked + .slider:before {
     font-size: 2vw;
     text-align: center;
     color: #818181;
+    margin-top: 15px;
 }
 
 #contact_name:hover{
@@ -634,7 +638,7 @@ input:checked + .slider:before {
 }
 
 .rest_org{
-	display: block;
+	display: none;
 	position: absolute;
 	width: 100%;
 	margin-left: 80%; 
@@ -653,7 +657,7 @@ input:checked + .slider:before {
 #canvas_info{
 	padding: 0;
     margin: auto;
-    display: table-column;
+    display: none;
 	width: 50%;
 	top: 15vh;
 	left: 25%;
@@ -709,12 +713,25 @@ input:checked + .slider:before {
 	margin-left: 15px;
 }
 
-#controller {
+#movement_buttons {
 	width: 125px;
 	height: 125px;
 	margin-right: 5%;
 	right:0;
 	bottom: 50px;
+	border-radius: 35%;
+	position: absolute;
+	user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+}
+
+#controller {
+	display: none;
+	width: 125px;
+	height: 125px;
 	border-radius: 35%;
 	position: absolute;
 	background: rgba(255,255,255,0.25); 
@@ -730,15 +747,15 @@ input:checked + .slider:before {
 }
 
 .canvas_container .vbutton{
-	width: 2.15%;
+	width: 25%;
 	height: 40px;
-	margin-right: 8.25vw;
-	right:0;
+	left: 37.5%;
 	position: absolute;
 	background: none;
 	border: none;
 	cursor: pointer;
 	outline: none;
+	z-index: 5;
 }
 
 .canvas_container .vbutton:active{
@@ -746,23 +763,24 @@ input:checked + .slider:before {
 }
 
 #up {
-	bottom: 130px;
+	bottom: 80px;
 }
 
 #down {
-	bottom: 55px;
+	bottom: 5px;
 }
 
 .canvas_container .hbutton{
-	width: 2.55%;
-	height: 35px;
-	bottom: 95px;
+	width: 34.5%;
+	height: 33px;
+	bottom: 46px;
 	right:0;
 	position: absolute;
 	background: none;
 	border: none;
 	cursor: pointer;
 	outline: none;
+	z-index: 5;
 }
 
 .canvas_container .hbutton:active{
@@ -770,9 +788,9 @@ input:checked + .slider:before {
 }
 
 #right {
-	margin-right: 5vw;
+	margin-right: 3%;
 }
 #left {
-	margin-right: 11vw;
+	margin-right: 65%;
 }
 

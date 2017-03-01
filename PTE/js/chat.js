@@ -29,20 +29,21 @@ var random, guestname, avatarPath, num_rand_avatar;
 var room_bool = false, UPDATED_BEFORE = false;
 var list;
 window.server_on = false;
-window.loader_on = true;
+window.loader_on = false;
 
 init();
 
 function loader() {
 
   if(loader_on)
-    var time = 3000;
+    var time = 5000;
   else
-    var time = 10;
+    var time = 100;
 
   setTimeout(function(){
 
-    document.getElementById("loader").style.display = "none";
+    document.getElementById("pixel-loader").style.display = "none";
+    document.querySelector("#contact_name").innerHTML = "Create or join a room to begin:";
     document.getElementById("roominput").style.display = "block";
     document.getElementById("roominput").focus();
 
@@ -51,11 +52,8 @@ function loader() {
 
 function init(){
 
-  var intro_logo = document.querySelector("#image_avatar img");
-  intro_logo.src = "assets/favicon.png";
-
-  var label_name = document.querySelector("#contact_name");
-  label_name.innerHTML = "Create or join a room to begin:";
+  document.querySelector("#image_avatar img").src = "assets/favicon.png";
+  document.querySelector("#contact_name").innerHTML = "Loading, please wait";
 
   document.getElementById("roominput").addEventListener("keyup", function(event){
     event.preventDefault();
@@ -86,13 +84,7 @@ function init(){
   // estados inicials de ciertos elementos visuales
   document.getElementById("opacitypanel").style.display = "block";
   document.getElementById("opacitypanel").style.zIndex = "20";
-  document.getElementById("canvas_info").style.display = "none";
-  document.getElementById("right_info").style.display = "none";
   document.getElementById("solution").style.display = "none";
-
-  // ROOM SELECTOR
-  var roominput = document.getElementById("roominput");
-  roominput.style.display = "none";
 }
 
 // ****************************************************************************
@@ -368,7 +360,9 @@ function modifyName(){
   input.value = "";
   send_name_info(guestname);
   
-  hideDivs();
+  document.getElementById("uaccept").style.display = "none"; 
+  document.getElementById("uinput").style.display = "none";
+  document.getElementById("change_id").style.display = "none";
   update();
   
   var my_messages = document.querySelectorAll(".mine");
@@ -442,7 +436,12 @@ function update(){
 
 // mostrar coleccion de avatares
 function showAvatars() {
-  hideDivs();
+  
+  // cerrar el resto de menus
+  document.getElementById("uaccept").style.display = "none"; 
+  document.getElementById("uinput").style.display = "none";
+  document.getElementById("change_id").style.display = "none";
+
   var avatar_list = document.getElementById("avatarslist");
   avatar_list.style.display = "block";
   document.body.scrollTop = document.body.scrollHeight;

@@ -36,7 +36,7 @@ init();
 function loader() {
 
   if(loader_on)
-    var time = 5000;
+    var time = 10000;
   else
     var time = 100;
 
@@ -52,7 +52,7 @@ function loader() {
 
 function init(){
 
-  document.querySelector("#image_avatar img").src = "assets/favicon.png";
+  document.querySelector("#image_avatar img").src = "assets/intro.png";
   document.querySelector("#contact_name").innerHTML = "Loading, please wait";
 
   document.getElementById("roominput").addEventListener("keyup", function(event){

@@ -1,5 +1,5 @@
 
-var app = {
+var maze = {
 
 	start3D: function(){
 		INTERACTION();
@@ -9,7 +9,6 @@ var app = {
 // defines
 var W = 87, A = 65, S = 83, D = 68;
 var FORWARD = 1, BACKWARD = 0;
-var is_moving = false;
 // *************************+
 
 var HINTS = generateMeshHints(); // LISTA CON OBJETOS
@@ -35,6 +34,7 @@ var auxiliar = new THREE.Vector3();
 var raycaster = new THREE.Raycaster();
 var initialRotation;
 
+var is_moving = false;
 window.walls_on = true;
 window.controls = false;
 window.mouse = new THREE.Vector2();

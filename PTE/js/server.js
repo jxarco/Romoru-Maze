@@ -10,7 +10,7 @@ function init_server(){
 		return;
 		
 	var roominput = document.getElementById("roominput");
-	room = roominput.value+ "as";
+	room = roominput.value;
 
 	server.connect("84.89.136.194:9000", room);
 	console.log("connected in room: " + room);
@@ -23,9 +23,12 @@ function init_server(){
 	var text = document.getElementById("instructions");
 	text.innerHTML = "<b>WELCOME TO ROMORU MAZE!</b><br/>" + 
 	"<br/>" +
-	"You can talk using the chat (open with 'c' or 'Menu->Open chat'). To see your nickname and avatar" +
-	" use the 'p'. Open this panel with 'i'." + 
-	" Your objetive: Try to reach central room. Be ready!!" +
+	"<b>Your objetive: Try to reach the center of the maze together</b>. Move using WASD keys or use the controller." +
+	" Move it where you want! To talk with other players use the chat (open with 'c' or '<i>Menu -> Open chat</i>')." +
+	" Change your nickname and avatar in <i>User info</i> 'p'. To reopen this panel use 'i'." + 
+	"<br/><br/>"  + 
+	"<br/><br/>"  + 
+	"<br/><br/>"  + 
 	"<br/><br/>"  + 
 	"<i>Close me with X or pressing ESC</i>"; 
 }
@@ -59,20 +62,6 @@ server.on_message = function( user_id, message){
 			openSelectedDoor(objectReceived.x, objectReceived.z);
 			return;
 	}
-
-	// if(objectReceived.info == 3){
-	// 	updatePlayerPosition(user_id, objectReceived.px, objectReceived.pz, objectReceived.ry);
-	// 	return;
-	// }else if(objectReceived.info == 4){
-	// 	applyRotation(objectReceived.object);
-	// 	return;
-	// }else if(objectReceived.info == 5){
-	// 	updateDoorsInMatrix(objectReceived.i, objectReceived.j);
-	// 	return;
-	// }else if(objectReceived.info == 6){
-	// 	openSelectedDoor(objectReceived.x, objectReceived.z);
-	// 	return;
-	// }
 
 	// si info=1 el mensaje solo sirve para indicar que
 	// esa persona esta conectada 
@@ -127,7 +116,7 @@ server.on_message = function( user_id, message){
 
     msg.innerHTML = "<div class='" + msg_type + "'>" +
     display_msg_type + // eso indica si tiene q ser del tipo privado o público
-    "<div class='avatar avatar_"+user_id+"'>" +
+    "<div class='avatar avatar_"+ user_id +"'>" +
     "<img class='profilebutton' src='" + pathBueno + "'>" +
     "</div>"+
     "<p class='message'>" + objectReceived.message + "</p>"+
@@ -170,15 +159,12 @@ server.on_user_connected = function(user_id){
                                          // al enviar más mensajes
 
     // ********************************************************************************
-	// FALTA!!
-	// enviar al q se ha conectado mis datos para que sepa quien
-	// hay en la sala
-	// ********************************************************************************
+
 	new_connection(user_id);
 }
 
 server.on_user_disconnected = function(user_id){  
-	console.log("Somebody has disconnected from the room");
+	console.log(user_id + " has disconnected from the room");
 
 	var user_disc = document.querySelector(".user_conn_" + user_id);
 	

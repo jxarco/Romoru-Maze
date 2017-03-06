@@ -29,14 +29,14 @@ var random, guestname, avatarPath, num_rand_avatar;
 var room_bool = false, UPDATED_BEFORE = false;
 var list;
 window.server_on = false;
-window.loader_on = false;
+window.loader_on = true;
 
 init();
 
 function loader() {
 
   if(loader_on)
-    var time = 10000;
+    var time = 3000;
   else
     var time = 100;
 

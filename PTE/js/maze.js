@@ -83,7 +83,7 @@ function INTERACTION(){
 
 	function init() {
 
-		camera = new THREE.PerspectiveCamera( 50, tam.width / tam.height, 0.1, 1000 );
+		camera = new THREE.PerspectiveCamera( 50, tam.width / tam.height, 0.1, 10000 );
 		scene = new THREE.Scene();
 
 		// LIGHTS
@@ -113,7 +113,7 @@ function INTERACTION(){
 		var imagePrefix = "assets/dawnmountain-";
 		var directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
 		var imageSuffix = ".png";
-		var skyGeometry = new THREE.CubeGeometry( 1000, 1000, 1000 );	
+		var skyGeometry = new THREE.CubeGeometry( 256, 256, 256 );	
 
 		var Skyloader = new THREE.TextureLoader();
 		
@@ -125,7 +125,9 @@ function INTERACTION(){
 			}));
 		var skyMaterial = new THREE.MultiMaterial( materialArray );
 		var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
-		skyBox.position.y = 50;
+		skyBox.position.x = 75;
+		skyBox.position.z = 75;
+		skyBox.position.y = 10;
 		scene.add( skyBox );
 
 		// GAME ***********************
@@ -157,32 +159,26 @@ function INTERACTION(){
 				scene.add( box );
 
 				PIECES.push( box );
-
 				n--;
 			}m--;
 		}
 
 		// Controls by MOUSE
 
-		document.getElementById("up").addEventListener( 'mousedown', function(){
-			keys[W] = true;
-			mForward();
-		} , false);
+		var arrows = document.querySelectorAll(".arrow");
 
-		document.getElementById("down").addEventListener( 'mousedown', function(){
-			keys[S] = true;
-			mBackward();
-		} , false);
+		for(var i = 0; i < arrows.length; i++){
 
-		document.getElementById("left").addEventListener( 'mousedown', function(){
-			keys[A] = true;
-			mLeft();
-		} , false);
+			var button = arrows[i];
+			button.addEventListener( 'mousedown', function(e){
+				keys[ this.dataset['key'] ] = true;
+				var func = window[ this.dataset['func'] ];
+				if(func != null) func();
+				e.stopPropagation();
+				e.stopImmediatePropagation();
 
-		document.getElementById("right").addEventListener( 'mousedown', function(){
-			keys[D] = true;
-			mRight();
-		} , false);
+			} , false);			
+		}
 
 		document.getElementById("canv_cont").addEventListener( 'mouseup', function(){
 			keys[W] = false;
@@ -573,8 +569,6 @@ function updateDoorsInMatrix(i, j){
 
 function getPuzzleInfo(){
 	var INFO = [];
-
-	//console.log(PIECES)
 	
 	for (i in PIECES){
 		INFO.push( PIECES[i].rotation.z );
@@ -732,8 +726,8 @@ function setCamera(list){
 	var z = list.posz;
 	var rotation = list.rot;
 
-	camera.position.x = 85;//x;
-	camera.position.z = 85;//z;
+	camera.position.x = 85;
+	camera.position.z = 85;
 	camera.rotation.y += rotation;
 
 	auxiliar.x = camera.position.x;

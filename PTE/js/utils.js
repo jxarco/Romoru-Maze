@@ -101,10 +101,12 @@ function generateMeshHints(){
 
 	var list = [];
 
+	var texture_loader = new THREE.TextureLoader( window.manager ); 
+
 	/***TWIN TOWERS***/
 	var twinTowerGroup = new THREE.Group();
 	var towerGeometry = new THREE.BoxGeometry( 0.5, 4, 0.5, 12, 32 );
-	var towerTexture =  new THREE.TextureLoader().load( "assets/towers.jpg" );
+	var towerTexture =  texture_loader.load( "assets/towers.jpg" );
 	var towerMat = new THREE.MeshPhongMaterial( { map: towerTexture, shininess: 300 } );
 	
 	var towerMesh = new THREE.Mesh(towerGeometry, towerMat);
@@ -148,8 +150,8 @@ function generateMeshHints(){
 	diamondMesh.name = "hint";
 
 	/***PLANETA***/
-	var marsTexture = new THREE.TextureLoader().load( 'assets/mars.jpg' );
-	var marsNormalTexture = new THREE.TextureLoader().load( 'assets/mars_normal.jpg' );
+	var marsTexture = texture_loader.load( 'assets/mars.jpg' );
+	var marsNormalTexture = texture_loader.load( 'assets/mars_normal.jpg' );
 	var planetGeometry = new THREE.SphereGeometry(0.5, 32, 32); 
 	var planetMaterial = new THREE.MeshPhongMaterial({map: marsTexture, normalMap: marsNormalTexture, normalScale: new THREE.Vector2( 3, 3 ), shininess: 50 }); 
 	var planetMesh = new THREE.Mesh(planetGeometry, planetMaterial);

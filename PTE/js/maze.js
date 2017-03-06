@@ -38,6 +38,7 @@ var is_moving = false;
 window.walls_on = true;
 window.controls = false;
 window.mouse = new THREE.Vector2();
+window.manager = new THREE.LoadingManager();
 
 window.keys = [];
 
@@ -86,6 +87,15 @@ function INTERACTION(){
 		camera = new THREE.PerspectiveCamera( 50, tam.width / tam.height, 0.1, 10000 );
 		scene = new THREE.Scene();
 
+		window.manager.onLoad = function(){
+			document.getElementById("pixel-loader").style.display = "none";
+		    document.querySelector("#contact_name").innerHTML = "Create or join a room to begin:";
+		    document.getElementById("roominput").style.display = "block";
+		    document.getElementById("roominput").focus();
+		}
+
+		texture_loader = new THREE.TextureLoader( window.manager );
+
 		// LIGHTS
 		light = new THREE.DirectionalLight( 0xffffff, 0.2 );
 		light.position.set( 0.5, 1, 0.75 );
@@ -114,13 +124,11 @@ function INTERACTION(){
 		var directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
 		var imageSuffix = ".png";
 		var skyGeometry = new THREE.CubeGeometry( 256, 256, 256 );	
-
-		var Skyloader = new THREE.TextureLoader();
 		
 		var materialArray = [];
 		for (var i = 0; i < 6; i++)
 			materialArray.push( new THREE.MeshBasicMaterial({
-				map: Skyloader.load( imagePrefix + directions[i] + imageSuffix ),
+				map: texture_loader.load( imagePrefix + directions[i] + imageSuffix ),
 				side: THREE.BackSide
 			}));
 		var skyMaterial = new THREE.MultiMaterial( materialArray );
@@ -148,7 +156,7 @@ function INTERACTION(){
 		for(var i = -1; i < 3; i++){
 			n = 8;
 			for(var j = 81; j < 89; j++){
-				var textcube =  new THREE.TextureLoader().load( "puzzle/caretos_part" + m + "x" + n + ".jpg" );
+				var textcube =  texture_loader.load( "puzzle/caretos_part" + m + "x" + n + ".jpg" );
 				var cubeMat = new THREE.MeshPhongMaterial( { map: textcube, side: THREE.DoubleSide } );
 				var box = new THREE.Mesh(gameGeoCube, cubeMat);
 				box.position.x = j;
@@ -236,7 +244,7 @@ function INTERACTION(){
 		// objects *************************************************************************************************
 
 		// floor
-		var floorTexture = new THREE.TextureLoader().load( 'assets/grass_text.jpg' );
+		var floorTexture = texture_loader.load( 'assets/grass_text.jpg' );
 	    var geometry = new THREE.PlaneGeometry(165, 165, 1, 1);
 	    geometry.rotateX( - Math.PI / 2 );
 	    
@@ -254,10 +262,10 @@ function INTERACTION(){
 
 		//WALLS
 		if(window.walls_on){
-			var wallTexture1 =  new THREE.TextureLoader().load( 'assets/wall2.jpg' );
-			var wallTexture2 =  new THREE.TextureLoader().load( 'assets/wall4.png' );
-			var waterTexture =  new THREE.TextureLoader().load( 'assets/water.jpg' );
-			var wallDoorTexture =  new THREE.TextureLoader().load( 'assets/wall3.jpg' );
+			var wallTexture1 =  texture_loader.load( 'assets/wall2.jpg' );
+			var wallTexture2 =  texture_loader.load( 'assets/wall4.png' );
+			var waterTexture =  texture_loader.load( 'assets/water.jpg' );
+			var wallDoorTexture =  texture_loader.load( 'assets/wall3.jpg' );
 			for(var i = 0; i < MAT.length; i++){
 				for(var j = 0; j < MAT.length; j++){
 					

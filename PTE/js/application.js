@@ -1,14 +1,3 @@
-
-
-// SCRIPT FOR U TALK CHAT
-
-
-/* IMPORTANTE: *************************************************************************
- * Necesitamos abrir el chat desde el host de github O XAMPP para hacer funcionar las  *
- * notificaciones. Disponible aquí:  https://jxarco.github.io/ECV1/                    *
- * Si no es así, evitaremos preguntar por permisos.                                    *
- ***************************************************************************************/
-
 var url = window.location.href;
 
 // ask for notifications permission
@@ -29,26 +18,8 @@ var random, guestname, avatarPath, num_rand_avatar;
 var room_bool = false, UPDATED_BEFORE = false;
 var list;
 window.server_on = false;
-window.loader_on = true;
 
 init();
-
-function loader() {
-
-  if(loader_on)
-    var time = 3000;
-  else
-    var time = 100;
-
-  setTimeout(function(){
-
-    document.getElementById("pixel-loader").style.display = "none";
-    document.querySelector("#contact_name").innerHTML = "Create or join a room to begin:";
-    document.getElementById("roominput").style.display = "block";
-    document.getElementById("roominput").focus();
-
-  }, time);
-}
 
 function init(){
 
@@ -165,7 +136,6 @@ function accept_handshaking(user_id, UPDATED_posList, puzzleInfoList){
   var unactiveIndex = 0;
   while(list[unactiveIndex].active == true){
     unactiveIndex++;
-    console.log(unactiveIndex)
   }
 
   // solo hay 4 posiciones
@@ -351,6 +321,9 @@ function modifyName(){
     return;// Si esta vacio, no tenemos que avisar
 
   guestname = input.value;
+
+  if(guestname == "admin") window.admin = true;
+  else window.admin = false;
   
   if(guestname.length > 15){
     guestname = aux;

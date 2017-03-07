@@ -37,6 +37,7 @@ var initialRotation;
 var is_moving = false;
 window.walls_on = true;
 window.controls = false;
+window.admin = false;
 window.mouse = new THREE.Vector2();
 window.manager = new THREE.LoadingManager();
 
@@ -165,7 +166,6 @@ function INTERACTION(){
 				box.rotation.z += (Math.PI / 2) * ((j % 3) + 1); // aplicamos una rotacion a cada cubo para desordenarlos
 				box.name = "caretos_"+m+"_"+n;
 				scene.add( box );
-
 				PIECES.push( box );
 				n--;
 			}m--;
@@ -175,8 +175,8 @@ function INTERACTION(){
 
 		var arrows = document.querySelectorAll(".arrow");
 
+		// por cada botón del controller, añadirle una función al clicar
 		for(var i = 0; i < arrows.length; i++){
-
 			var button = arrows[i];
 			button.addEventListener( 'mousedown', function(e){
 				keys[ this.dataset['key'] ] = true;
@@ -224,21 +224,16 @@ function INTERACTION(){
 					document.getElementById("canvas_info").style.display = "block";
 					break;
 			}
-
 		}, false );
 
 		document.addEventListener( 'keyup', function(event){
 			keys[event.keyCode] = false;
-
 			if(document.activeElement.localName == "textarea" || document.activeElement.localName == "input") return;
-
-			switch( event.keyCode ) {
-
-				case 67: // c
-					openChat();
-					break;
+			else if(event.keyCode == 67) openChat();
+			else if(event.keyCode == 88 && window.admin){
+				camera.position.x = 85;
+				camera.position.z = 85;
 			}
-
 		}, false );
 
 		// objects *************************************************************************************************
@@ -468,14 +463,14 @@ function INTERACTION(){
 	}
 }
 
-function colliding_with(dir){
+function colliding_with(front){
 
 	// Si va para atrás, tenemos que restar la dirección!!!
-	var co = 1;
-	if(!dir) co = -1;
+	var sentit = 1;
+	if(!front) sentit = -1;
 
-	var x = Math.floor(camera.position.x + (2 * co * direction.x));
-	var z = Math.floor(camera.position.z + (2 * co * direction.z));
+	var x = Math.floor(camera.position.x + (2 * sentit * direction.x));
+	var z = Math.floor(camera.position.z + (2 * sentit * direction.z));
 
 	if (MAT2[x][z] == 0 || MAT2[x][z] == 3 || MAT2[x][z] == 4){
 	 	return false;
@@ -593,7 +588,7 @@ function setPuzzleRotation(LIST){
 }
 
 function createPNJ(user_id){
-	var loader = new THREE.AssimpLoader();
+	var loader = new THREE.AssimpLoader( window.manager );
 	loader.load( "models/Octaminator.assimp", function ( err, result ) {
 		var object = result.object;
 		object.name = user_id;
@@ -674,8 +669,7 @@ function openSelectedDoor(x, z){
 
 	var door = scene.getObjectByName("red_" + x + "_" + z);
 
-	if(!door)
-		return;
+	if(!door) return;
 
 	new TWEEN.Tween( door.position ).to( {
 					y: -3.45
@@ -722,10 +716,7 @@ function intersect(){
 
 function applyRotation(name){
 	var object = scene.getObjectByName(name);
-	
 	object.rotation.z += Math.PI / 2;
-
-	getPuzzleInfo();
 }
 
 function setCamera(list){
@@ -734,8 +725,8 @@ function setCamera(list){
 	var z = list.posz;
 	var rotation = list.rot;
 
-	camera.position.x = 85;
-	camera.position.z = 85;
+	camera.position.x = x;
+	camera.position.z = z;
 	camera.rotation.y += rotation;
 
 	auxiliar.x = camera.position.x;

@@ -19,18 +19,14 @@ function init_server(){
 	roominput.style.display = "none";
 
 	document.getElementById("controller").style.display = "block";
+	document.getElementById("options_menu").style.display = "block";
 	var instruction = document.getElementById("canvas_info").style.display = "block";
 	var text = document.getElementById("instructions");
 	text.innerHTML = "<b>WELCOME TO ROMORU MAZE!</b><br/>" + 
 	"<br/>" +
 	"<b>Your objetive: Try to reach the center of the maze together</b>. Move using WASD keys or use the controller." +
 	" Move it where you want! To talk with other players use the chat (open with 'c' or '<i>Menu -> Open chat</i>')." +
-	" Change your nickname and avatar in <i>User info</i> 'p'. To reopen this panel use 'i'." + 
-	"<br/><br/>"  + 
-	"<br/><br/>"  + 
-	"<br/><br/>"  + 
-	"<br/><br/>"  + 
-	"<i>Close me with X or pressing ESC</i>"; 
+	" Change your nickname and avatar in <i>User info</i> 'p'. To reopen this panel use 'i'.";
 }
 
 server.on_connect = function(){  

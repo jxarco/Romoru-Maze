@@ -506,12 +506,6 @@ input:checked + .slider:before {
 
 /* MENU BOX */
 
-.canvas_container img:hover, .canvas_container img:focus {
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    background: rgba(255,255,255,0.85); 
-    transition: 0.5s;
-}
-
 .sidenav {
     height: 100%;
     width: 0;
@@ -663,8 +657,6 @@ input:checked + .slider:before {
 	left: 25%;
 	height: 350px;
 	position: absolute;
-	background: rgba(255,255,255,0.5);
-	box-shadow: 0px 8px 16px 0px rgba(255,255,255,0.3);
     
     user-select: none;
     -moz-user-select: none;
@@ -684,20 +676,32 @@ input:checked + .slider:before {
     width: 6%;
 }
 
-#canvas_info a:hover{
-    color: rgba(255, 255, 255, 1);
+#canvas_info img{
+	position: absolute;
+   	width: 100%;
 }
 
 #canvas_info p{
     border: none;
-	width: 95%;
-	height: 28vh;
+	width: 80%;
+	height: 40vh;
 	resize: none;
 	padding: 1%;
-	font-size: 1vw;
-	margin-left: 15px;
+	font-size: 1.30vw;
+	margin-left: 8%;
 	margin-top: 10px;
 	overflow-y: scroll;
+	z-index: 1;
+	position: absolute;
+	font-family: 'Amita'; 
+}
+
+#canvas_info p b{
+	font-family: 'Amita'; 
+}
+
+#canvas_info p i{
+	font-family: 'Amita'; 
 }
 
 #canvas_info textarea{
@@ -793,4 +797,32 @@ input:checked + .slider:before {
 #left {
 	margin-right: 65%;
 }
+
+
+/* MENU DEL MAZE DESPLEGABLE */
+
+#options_menu{
+	display: none;
+	position: absolute;
+	background: white;
+	bottom: 0;
+	height: 3vh;
+	width: 100%;
+	box-shadow: 0px 8px 10px 15px rgba(255, 255, 255, 0.5);
+
+	-webkit-transition: height 1s; /* Safari */
+    transition: height 1s;
+    z-index: 10;
+}
+
+#options_menu:hover{
+	height: 35vh;
+}
+
+#options_menu img{
+	width: 100%;
+}
+
+
+
 

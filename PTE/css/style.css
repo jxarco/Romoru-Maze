@@ -124,23 +124,11 @@ html, body{
 	top: 0px;
 }
 
-.canvas_container .menu{
-	width: 50px;
-	height: 50px;
-	left: 10px;
-	top: 10px;
-	cursor: pointer;
-	border-radius: 50%;
-	padding: 10px;
-	position: absolute;
-	background: rgba(255,255,255,0.5); 
-
-}
-
 .personalInfo {
 	position: absolute;
 	height: 100vh;
-	background: rgba(255,255,255,0.2); 
+	background: rgba(190,135,93, 0.8);
+	border-radius: 20px;
 	padding: 25px;
 	box-shadow: 0px 10px 18px 2px rgba(0,0,0,0.5);
 	width: 20%;
@@ -286,11 +274,11 @@ html, body{
 	position: absolute;
 	width: 20%;
 	height: 100vh;
-	background: rgba(255,255,255,0.2); 
+	border-radius: 20px;
+	background: rgba(190,135,93, 0.8);  
 	padding: 15px;
 	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 	float: left;
-	z-index: 1000;
 }
 
 .msgs{
@@ -499,55 +487,6 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
-}
-
-
-/*******************************************************/
-
-/* MENU BOX */
-
-.sidenav {
-    height: 100%;
-    width: 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: #111;
-    overflow-x: hidden;
-    transition: 0.5s;
-    padding-top: 60px;
-    z-index: 10;
-}
-
-.sidenav a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 1.6vw;
-    color: #818181;
-    display: block;
-    transition: 0.3s;
-    min-width: 500px;
-}
-
-.sidenav a:hover, .offcanvas a:focus{
-    color: #f1f1f1;
-    transition: 0.5s;
-}
-
-.sidenav .closebtn {
-    position: absolute;
-    top: 0;
-    font-size: 38px;
-}
-
-#main {
-    transition: margin-left .5s;
-    top: 0px;
-}
-
-@media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
-  .sidenav a {font-size: 18px;}
 }
 
 /*******************************************************/
@@ -804,11 +743,9 @@ input:checked + .slider:before {
 #options_menu{
 	display: none;
 	position: absolute;
-	background: white;
 	bottom: 0;
-	height: 3vh;
+	height: 2vh;
 	width: 100%;
-	box-shadow: 0px 8px 10px 15px rgba(255, 255, 255, 0.5);
 
 	-webkit-transition: height 1s; /* Safari */
     transition: height 1s;
@@ -816,13 +753,45 @@ input:checked + .slider:before {
 }
 
 #options_menu:hover{
-	height: 35vh;
+	height: 30vh;
 }
 
-#options_menu img{
+#paper-menu{
+	position: absolute;
+	z-index: 0;
 	width: 100%;
 }
 
+.menu-button{
+	position: absolute;
+	display: flex;
+	width: 20%;
+	height: 20vh;
+	border-radius: 20px;
+	background: rgba(255,255,255, 0.35);
+	margin-top: 7vh;
+}
 
+.menu-button img{
+	margin-top: 10px;
+	width: 50%;
+	height: 17vh;
+	margin-left: 25%;
+}
 
+#div_personal{
+	margin-left: 6%;
+}
+
+#div_info{
+	margin-left: 28%;
+}
+
+#div_oc{
+	margin-left: 50%;
+}
+
+#div_dc{
+	margin-left: 72%;
+}
 

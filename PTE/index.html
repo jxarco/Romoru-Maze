@@ -14,157 +14,149 @@
 
 	<body>
 
-	<div id="mySidenav" class="sidenav">
-	  <a class="closebtn" href="javascript:void(0)" onclick="closeNav()">&times;</a>
-	  <a class="privi" href="#" onclick="privateInfo()">Information</a>
-	  <a class="occhat" href="#" onclick="openChat()">Open chat</a>
-	  <a class="dchat" href="#" onclick="deleteChat()">Delete chat</a>
+	<div data-boolean="false" class="trans" id="opacitypanel">
+		<div id='image_avatar'><img src=''>
+			<p id="contact_name" ></p>
+		</div>
+		<div id="pixel-loader"></div>
+		<textarea id="roominput" class="room"></textarea>
+  	</div>
 
-	</div>
+	<div class="content" id="cnt">
 
-	<div id="main"> <!-- EN ESTE DIV ESTÁ APLICADA LA TRANSICIÓN DEL MENÚ -->
+		<div class="screen">
 
-  		<div data-boolean="false" class="trans" id="opacitypanel">
-	  			<div id='image_avatar'><img src=''>
-	  				<p id="contact_name" ></p>
-	  			</div>
-	  			<div id="pixel-loader"></div>
-	  			<textarea id="roominput" class="room"></textarea>
-	  	</div>
+			<div class="chat" id="chatBox">
+				<div class="msgs" id="log"></div>
 
-		<div class="content" id="cnt">
+				<div class="chatinput">
+					<textarea placeholder="Write here" id="textinput"></textarea>
+					<img id="sendbutton" src="assets/send.png">
+				</div>
 
-			<div class="screen">
+				<div class="uppercase">
+					<p>First letter UpperCase</p>
+					<label class="switch">
+							<input type="checkbox" id="check1" class="ucselection" onclick="validateBox()">
+							<div class="slider round"></div>
+					</label>
+				</div>
+			</div>
 
-				<div class="chat" id="chatBox">
-					<div class="msgs" id="log"></div>
+			<div class="canvas_container" id="canv_cont" width="400">
+				<div id="canvas_info">
+					<img src="assets/pergamino.png">
+					<a class="closebtn" href="javascript:void(0)" onclick="hideDivs()">&times;</a>
+					<p id="instructions"></p>
+					<textarea placeholder="Write your solution here!" id="solution"></textarea>
+				</div>
+				
+				<div id="movement_buttons">
+					<img src="assets/cruceta.gif" class="showContr" id="controller">
+					<button class="vbutton arrow" id="up" data-key="87" data-func="mForward"></button>
+					<button class="vbutton arrow" id="down" data-key="83" data-func="mBackward"></button>
+					<button class="hbutton arrow" id="right" data-key="68" data-func="mRight"></button>
+					<button class="hbutton arrow" id="left" data-key="65" data-func="mLeft"></button>
+				</div>
 
-					<div class="chatinput">
-						<textarea placeholder="Write here" id="textinput"></textarea>
-						<img id="sendbutton" src="assets/send.png">
+				<div id="options_menu">
+					<img src="assets/menu.png" id="paper-menu">
+					<div class="menu-button" id="div_personal" data-func="privateInfo"><img id="menu-personal"></div>
+					<div class="menu-button" id="div_info" data-func="openInfo"><img id="menu-info"></div>
+					<div class="menu-button" id="div_oc" data-func="openChat"><img id="menu-open-chat"></div>
+					<div class="menu-button" id="div_dc" data-func="deleteChat"><img id="menu-delete-chat"></div>
+				</div>
+			</div>   
+
+			<div class="rest_org" id="right_info">				
+
+				<div class="personalInfo" id="persInfoBox">
+					<p>My profile</p>
+				    <div class="pic"><img id="myPic"></div>
+				    <div class="guestName" id="gn"></div>
+				    <div class="profileOptions">
+				    	<button class="nbutton" id="ubutton">NAME</button>
+				    	<button class="showAva" onclick="showAvatars()">AVATAR</button>
+				    	<button class="hideProfile">HIDE</button>
+				    </div>
+				    <div class="change_name" id="change_id">
+					    <input placeholder="Enter new name here" type="text" class="newname" id="uinput">
+					    <button class="accept" id="uaccept">Accept</button>
 					</div>
-
-					<div class="uppercase">
-						<p>First letter UpperCase</p>
-						<label class="switch">
-  							<input type="checkbox" id="check1" class="ucselection" onclick="validateBox()">
-  							<div class="slider round"></div>
-						</label>
+				    <div class=avatars id="avatarslist">
+						<div class="dropdown">
+	  						<img onclick="changeMyPic('assets/avatar1.png')" src="assets/avatar1.png" class="avatartype" width="100" height="100">
+						</div>
+						<div class="dropdown">
+	  						<img onclick="changeMyPic('assets/avatar2.png')" src="assets/avatar2.png" class="avatartype" width="100" height="100">		
+						</div>
+						<div class="dropdown">
+	  						<img onclick="changeMyPic('assets/avatar3.png')" src="assets/avatar3.png" class="avatartype" width="100" height="100">
+						</div>
+						<div class="dropdown">
+	  						<img onclick="changeMyPic('assets/avatar4.png')" src="assets/avatar4.png" class="avatartype" width="100" height="100">
+						</div>
+						<div class="dropdown">
+	  						<img onclick="changeMyPic('assets/avatar5.png')" src="assets/avatar5.png" class="avatartype" width="100" height="100">
+						</div>
+						<div class="dropdown">
+	  						<img onclick="changeMyPic('assets/avatar6.png')" src="assets/avatar6.png" class="avatartype" width="100" height="100">
+						</div>
+						<div class="dropdown">
+	  						<img onclick="changeMyPic('assets/avatar7.png')" src="assets/avatar7.png" class="avatartype" width="100" height="100">
+						</div>
+						<div class="dropdown">
+	  						<img onclick="changeMyPic('assets/avatar8.png')" src="assets/avatar8.png" class="avatartype" width="100" height="100">
+						</div>
+						<div class="dropdown">
+	  						<img onclick="changeMyPic('assets/avatar9.png')" src="assets/avatar9.png" class="avatartype" width="100" height="100">
+						</div>
+						<div class="dropdown">
+	  						<img onclick="changeMyPic('assets/avatar10.png')" src="assets/avatar10.png" class="avatartype" width="100" height="100">
+						</div>
+						<div class="dropdown">
+	  						<img onclick="changeMyPic('assets/avatar11.png')" src="assets/avatar11.png" class="avatartype" width="100" height="100">
+						</div>
+						<div class="dropdown">
+	  						<img onclick="changeMyPic('assets/avatar12.png')" src="assets/avatar12.png" class="avatartype" width="100" height="100">
+						</div>
+						<div class="dropdown">
+	  						<img onclick="changeMyPic('assets/avatar13.png')" src="assets/avatar13.png" class="avatartype" width="100" height="100">
+						</div>
+						<div class="dropdown">
+	  						<img onclick="changeMyPic('assets/avatar14.png')" src="assets/avatar14.png" class="avatartype" width="100" height="100">
+						</div>
+						<div class="dropdown">
+	  						<img onclick="changeMyPic('assets/avatar15.png')" src="assets/avatar15.png" class="avatartype" width="100" height="100">
+						</div>
+						<div class="dropdown">
+	  						<img onclick="changeMyPic('assets/avatar16.png')" src="assets/avatar16.png" class="avatartype" width="100" height="100">
+						</div>
+						<div class="dropdown">
+	  						<img onclick="changeMyPic('assets/avatar17.png')" src="assets/avatar17.png" class="avatartype" width="100" height="100">
+						</div>
+						<div class="dropdown">
+	  						<img onclick="changeMyPic('assets/avatar18.png')" src="assets/avatar18.png" class="avatartype" width="100" height="100">
+						</div>
+						<div class="dropdown">
+	  						<img onclick="changeMyPic('assets/avatar19.png')" src="assets/avatar19.png" class="avatartype" width="100" height="100">
+						</div>
+						<div class="dropdown">
+	  						<img onclick="changeMyPic('assets/avatar20.png')" src="assets/avatar20.png" class="avatartype" width="100" height="100">
+						</div>
+						<div class="dropdown">
+	  						<img onclick="changeMyPic('assets/avatar21.png')" src="assets/avatar21.png" class="avatartype" width="100" height="100">
+						</div>
 					</div>
 				</div>
 
-				<div class="canvas_container" id="canv_cont" width="400">
-					<img class="menu" src="assets/reorder.png" class="showbutton" onclick="openNav()" id="openMenu">
-					<div id="canvas_info">
-						<img src="assets/pergamino.png">
-						<a class="closebtn" href="javascript:void(0)" onclick="hideDivs()">&times;</a>
-						<p id="instructions"></p>
-						<textarea placeholder="Write your solution here!" id="solution"></textarea>
-					</div>
-					
-					<div id="movement_buttons">
-						<img src="assets/cruceta.gif" class="showContr" id="controller">
-						<button class="vbutton arrow" id="up" data-key="87" data-func="mForward"></button>
-						<button class="vbutton arrow" id="down" data-key="83" data-func="mBackward"></button>
-						<button class="hbutton arrow" id="right" data-key="68" data-func="mRight"></button>
-						<button class="hbutton arrow" id="left" data-key="65" data-func="mLeft"></button>
-					</div>
-
-					<div id="options_menu">
-						<img src="assets/wall-menu.jpg" alt="">
-					</div>
-				</div>   
-
-				<div class="rest_org" id="right_info">				
-
-					<div class="personalInfo" id="persInfoBox">
-						<p>My profile</p>
-					    <div class="pic"><img id="myPic"></div>
-					    <div class="guestName" id="gn"></div>
-					    <div class="profileOptions">
-					    	<button class="nbutton" id="ubutton">NAME</button>
-					    	<button class="showAva" onclick="showAvatars()">AVATAR</button>
-					    	<button class="hideProfile">HIDE</button>
-					    </div>
-					    <div class="change_name" id="change_id">
-						    <input placeholder="Enter new name here" type="text" class="newname" id="uinput">
-						    <button class="accept" id="uaccept">Accept</button>
-						</div>
-					    <div class=avatars id="avatarslist">
-							<div class="dropdown">
-		  						<img onclick="changeMyPic('assets/avatar1.png')" src="assets/avatar1.png" class="avatartype" width="100" height="100">
-							</div>
-							<div class="dropdown">
-		  						<img onclick="changeMyPic('assets/avatar2.png')" src="assets/avatar2.png" class="avatartype" width="100" height="100">		
-							</div>
-							<div class="dropdown">
-		  						<img onclick="changeMyPic('assets/avatar3.png')" src="assets/avatar3.png" class="avatartype" width="100" height="100">
-							</div>
-							<div class="dropdown">
-		  						<img onclick="changeMyPic('assets/avatar4.png')" src="assets/avatar4.png" class="avatartype" width="100" height="100">
-							</div>
-							<div class="dropdown">
-		  						<img onclick="changeMyPic('assets/avatar5.png')" src="assets/avatar5.png" class="avatartype" width="100" height="100">
-							</div>
-							<div class="dropdown">
-		  						<img onclick="changeMyPic('assets/avatar6.png')" src="assets/avatar6.png" class="avatartype" width="100" height="100">
-							</div>
-							<div class="dropdown">
-		  						<img onclick="changeMyPic('assets/avatar7.png')" src="assets/avatar7.png" class="avatartype" width="100" height="100">
-							</div>
-							<div class="dropdown">
-		  						<img onclick="changeMyPic('assets/avatar8.png')" src="assets/avatar8.png" class="avatartype" width="100" height="100">
-							</div>
-							<div class="dropdown">
-		  						<img onclick="changeMyPic('assets/avatar9.png')" src="assets/avatar9.png" class="avatartype" width="100" height="100">
-							</div>
-							<div class="dropdown">
-		  						<img onclick="changeMyPic('assets/avatar10.png')" src="assets/avatar10.png" class="avatartype" width="100" height="100">
-							</div>
-							<div class="dropdown">
-		  						<img onclick="changeMyPic('assets/avatar11.png')" src="assets/avatar11.png" class="avatartype" width="100" height="100">
-							</div>
-							<div class="dropdown">
-		  						<img onclick="changeMyPic('assets/avatar12.png')" src="assets/avatar12.png" class="avatartype" width="100" height="100">
-							</div>
-							<div class="dropdown">
-		  						<img onclick="changeMyPic('assets/avatar13.png')" src="assets/avatar13.png" class="avatartype" width="100" height="100">
-							</div>
-							<div class="dropdown">
-		  						<img onclick="changeMyPic('assets/avatar14.png')" src="assets/avatar14.png" class="avatartype" width="100" height="100">
-							</div>
-							<div class="dropdown">
-		  						<img onclick="changeMyPic('assets/avatar15.png')" src="assets/avatar15.png" class="avatartype" width="100" height="100">
-							</div>
-							<div class="dropdown">
-		  						<img onclick="changeMyPic('assets/avatar16.png')" src="assets/avatar16.png" class="avatartype" width="100" height="100">
-							</div>
-							<div class="dropdown">
-		  						<img onclick="changeMyPic('assets/avatar17.png')" src="assets/avatar17.png" class="avatartype" width="100" height="100">
-							</div>
-							<div class="dropdown">
-		  						<img onclick="changeMyPic('assets/avatar18.png')" src="assets/avatar18.png" class="avatartype" width="100" height="100">
-							</div>
-							<div class="dropdown">
-		  						<img onclick="changeMyPic('assets/avatar19.png')" src="assets/avatar19.png" class="avatartype" width="100" height="100">
-							</div>
-							<div class="dropdown">
-		  						<img onclick="changeMyPic('assets/avatar20.png')" src="assets/avatar20.png" class="avatartype" width="100" height="100">
-							</div>
-							<div class="dropdown">
-		  						<img onclick="changeMyPic('assets/avatar21.png')" src="assets/avatar21.png" class="avatartype" width="100" height="100">
-							</div>
-						</div>
-					</div>
-
-					<div id="connected">
-						<p id="con_title">People connected</p>
-						<div class="people" id="pp"></div>
-					</div>
-
+				<div id="connected">
+					<p id="con_title">People connected</p>
+					<div class="people" id="pp"></div>
 				</div>
 
 			</div>
+
 		</div>
 	</div>
 		

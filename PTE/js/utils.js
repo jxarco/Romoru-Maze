@@ -9,6 +9,12 @@ document.getElementById("solution").addEventListener("keyup", function(event){
   }
 });
 
+/**************************************************************************************************************************/
+
+// EVENT LISTENERS
+
+/**************************************************************************************************************************/
+
  // DRAGGABLE INSTRUCTIONS DIV IN CANVAS
 var mousePosition;
 var offset = [0,0];
@@ -82,6 +88,28 @@ canvas.addEventListener('mousedown', function(e) {
 	window.mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
   	intersect();
 }, false);
+
+// events para los botones del menú
+
+var botones = document.querySelectorAll(".menu-button");
+
+// por cada botón del controller, añadirle una función al clicar
+for(var i = 0; i < botones.length; i++){
+	var button = botones[i];
+	button.addEventListener( 'mousedown', function(e){
+		var func = window[ this.dataset['func'] ];
+		if(func != null) func();
+		e.stopPropagation();
+		e.stopImmediatePropagation();
+
+	} , false);			
+}
+
+/**************************************************************************************************************************/
+
+// MESHES
+
+/**************************************************************************************************************************/
 
 function generateTextHints(){
 	list = [];

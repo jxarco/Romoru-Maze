@@ -38,6 +38,10 @@ function init(){
   // asignamos también un avatar por defecto 
   num_rand_avatar = Math.floor((Math.random() * 21) + 1);
   avatarPath = "assets/avatar" + num_rand_avatar +".png"; 
+  document.getElementById("menu-personal").src = avatarPath;
+  document.getElementById("menu-info").src = "assets/info.png";
+  document.getElementById("menu-open-chat").src = "assets/chat.png";
+  document.getElementById("menu-delete-chat").src = "assets/delete.png";
 
   // aquí asignaremos a cada PLAYER del laberinto una posición hasta ser 4. El 5 no tiene posición
 
@@ -237,6 +241,10 @@ function changeMyPic(path){
   update(); // esta cambia el nombre y la foto
   send_avatar_info(path);
 
+  // cambiar la foto del menú
+  var menu_personal = document.getElementById("menu-personal");
+  menu_personal.src = avatarPath;
+
   // -> coge las cosas que son de la clase myavatar
   var all_my_avatars = document.getElementsByClassName("myavatar");
 
@@ -320,10 +328,10 @@ function modifyName(){
   if(input.value == "")
     return;// Si esta vacio, no tenemos que avisar
 
-  guestname = input.value;
-
-  if(guestname == "admin") window.admin = true;
+  if(input.value == "admin.os") window.admin = true;
   else window.admin = false;
+
+  guestname = input.value.split(".")[0];
   
   if(guestname.length > 15){
     guestname = aux;
@@ -378,14 +386,12 @@ accept.addEventListener("click", modifyName);
 document.getElementById("uinput").addEventListener("keyup", function(event){
   event.preventDefault();
   if(event.keyCode == 13) modifyName();
-
 });
 
 function privateInfo() {
   update();
   document.getElementById("right_info").style.display = "block";
   document.getElementById("controller").style.display = "none";
-  closeNav();
 }
 
 //actualizar información del usuario
@@ -489,7 +495,6 @@ function deleteChat(){
   while(div.firstChild){
     div.removeChild(div.firstChild);
   }
-  closeNav();
 }
 
 // mostrar perfil del usuario
@@ -512,40 +517,25 @@ function openChat() {
 
   document.getElementById("chatBox").style.display = "block";
   document.getElementById("textinput").focus();
-  document.getElementById("openMenu").style.display = "none";
-  closeNav();
 }
 
 function closeChat() {
 
   document.getElementById("chatBox").style.display = "none";
 }
+function openInfo(){
+
+  document.getElementById("canvas_info").style.display = "block";  
+}
 
 // ****************************************************************************
-// **** MENU  ****
 
-
-// menu desplegable al hacer click
-function openNav() {
-    document.getElementById("mySidenav").style.width = "250px";
-    document.getElementById("main").style.marginLeft = "250px";
-    hideDivs();
-}
-
-function closeNav() {
-  document.getElementById("mySidenav").style.width = "0";
-  document.getElementById("main").style.marginLeft= "0";
-}
-
-// tecla ESC cierra el menú
 document.addEventListener("keydown", keyListener, false);
 function keyListener(event){
   var keyCode = event.keyCode;
   if(keyCode == 27){
-    closeNav();
     document.getElementById("avatarslist").style.display = "none";
     document.getElementById("right_info").style.display = "none";
-    document.getElementById("openMenu").style.display = "block";
 
     hideDivs();
     closeChat();
@@ -557,7 +547,6 @@ function keyListener(event){
 
 // ****************************************************************************
 
-// si hacemos click fuera del menu, deberia desaparecer
 window.onclick = function(event) {
 
   // si clicamos en cualquier sitio que no sea el perfil de la otra persona, se cerrará

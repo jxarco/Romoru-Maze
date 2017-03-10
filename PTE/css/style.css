@@ -635,6 +635,10 @@ input:checked + .slider:before {
 	font-family: 'Amita'; 
 }
 
+#canvas_info a{
+    z-index: 1;
+}
+
 #canvas_info p b{
 	font-family: 'Amita'; 
 }
@@ -644,6 +648,7 @@ input:checked + .slider:before {
 }
 
 #canvas_info textarea{
+	position: absolute;
     background: rgba(255,255,255,0.5); 
     box-shadow: 0px 8px 10px 0px rgba(0, 0, 0, 0.3);
     border: none;
@@ -652,8 +657,9 @@ input:checked + .slider:before {
 	resize: none;
 	padding: 1%;
 	font-size: 1vw;
-	margin-top: 10px;
-	margin-left: 15px;
+	margin-left: 9%;
+	margin-top: 32.5%;
+	z-index: 3;
 }
 
 #movement_buttons {

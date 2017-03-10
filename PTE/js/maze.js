@@ -694,7 +694,7 @@ function intersect(){
 		text.innerHTML = "<b>GOOD! DOOR TO NEXT LEVEL HAD BEEN REACHED!</b><br/>" + 
 		"<br/>" +
 		"You are not done yet! Try to solve this enigma to pass the door. Maybe other players "+
-		"could have useful hints for you...<br/><br/>" + 
+		"could have useful hints for you...<br/>" + 
 		" Hint: " +
 		intersect.object.message +
 		"<br/><br/>"  + 

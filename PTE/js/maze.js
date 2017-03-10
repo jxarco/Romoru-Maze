@@ -486,7 +486,7 @@ function mForward(){
 	var tween = new TWEEN.Tween( camera.position ).to( {
 				x: Math.floor(camera.position.x + direction.x),
 				z: Math.floor(camera.position.z + direction.z)
-	}, 300 ).easing( TWEEN.Easing.Linear.None);
+	}, 100 ).easing( TWEEN.Easing.Linear.None);
 
 	tween.onComplete(function(){
 		is_moving = false;
@@ -506,7 +506,7 @@ function mBackward(){
 	var tween = new TWEEN.Tween( camera.position ).to( {
 				x: Math.floor(camera.position.x - direction.x),
 				z: Math.floor(camera.position.z - direction.z)
-	}, 300 ).easing( TWEEN.Easing.Linear.None);
+	}, 100 ).easing( TWEEN.Easing.Linear.None);
 
 	tween.onComplete(function(){
 		is_moving = false;

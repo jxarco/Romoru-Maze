@@ -514,7 +514,7 @@ function showProfile(path, name) {
 
 //abrir o cerrar chat
 function openChat() {
-
+  //document.getElementById("options_menu").style.height = "2vh";
   document.getElementById("chatBox").style.display = "block";
   document.getElementById("textinput").focus();
 }
@@ -540,6 +540,7 @@ function keyListener(event){
     hideDivs();
     closeChat();
 
+    // quitar el zoom de un perfil siempre y cuando haya conexión
     var op_panel = document.getElementById("opacitypanel");
     if(op_panel.dataset['boolean'] == "true") hideOpPanel();
   }

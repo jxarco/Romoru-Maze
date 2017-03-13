@@ -37,7 +37,7 @@ var initialRotation;
 var is_moving = false;
 window.walls_on = true;
 window.controls = false;
-window.admin = false;
+window.admin = true;
 window.mouse = new THREE.Vector2();
 window.manager = new THREE.LoadingManager();
 
@@ -615,10 +615,7 @@ function isSolution(){
 	posibleSolution = posibleSolution.substring(0, posibleSolution.length - 1); // quitamos el salto de linea
 	input.value = "";
 
-	// cogemos el número de hint que esta en el texto
-	// es decir, cuando pone HINT: X* ..... esa X es el numero de hint
-	// y esta en la pos 191.
-	var index = parseInt(text.innerHTML[191]) - 1; 
+	var index = parseInt(text.innerHTML[187]) - 1; 
 
 	// cogemos la solucion de ese hint
 	var solution = TEXT_HINTS[index].solution;
@@ -626,7 +623,7 @@ function isSolution(){
 	if(posibleSolution !== solution)
 		return;
 
-	text.innerHTML = "<b><p align='center'><font size='10'>WELL DONE!</font></p></b>";
+	text.innerHTML = "<b><p align='center'>WELL DONE!</p></b>";
 	input.style.display = "none";
 	new TWEEN.Tween( activeObject.position ).to( {
 					y: -3.45
@@ -696,9 +693,7 @@ function intersect(){
 		"You are not done yet! Try to solve this enigma to pass the door. Maybe other players "+
 		"could have useful hints for you...<br/>" + 
 		" Hint: " +
-		intersect.object.message +
-		"<br/><br/>"  + 
-		"<i>Close me with X or pressing ESC</i>";
+		intersect.object.message;
 
 		activeObject = intersect.object;
 	}else if(intersect.object.name.includes("caretos")){

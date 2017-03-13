@@ -127,7 +127,7 @@ html, body{
 .personalInfo {
 	position: absolute;
 	height: 100vh;
-	background: rgba(190,135,93, 0.8);
+	background: rgba(66,64,60, 0.55);
 	border-radius: 20px;
 	padding: 25px;
 	box-shadow: 0px 10px 18px 2px rgba(0,0,0,0.5);
@@ -185,7 +185,7 @@ html, body{
 	width: 30%;
 	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 	position: relative;
-    background-color: #707eb2;
+    background-color: #545046;
     border-radius: 10%;
     color: #FFFFFF;
     padding: 5px 0px;
@@ -207,7 +207,7 @@ html, body{
 	padding: 10px;
 	margin: 10px 2%;
 	position: relative;
-    background-color: #707eb2;
+    background-color: #545046;
     border-radius: 10%;
     color: #FFFFFF;
     padding: 5px 15px;
@@ -275,7 +275,7 @@ html, body{
 	width: 20%;
 	height: 100vh;
 	border-radius: 20px;
-	background: rgba(190,135,93, 0.8);  
+	background: rgba(66,64,60, 0.55);  
 	padding: 15px;
 	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 	float: left;
@@ -558,7 +558,7 @@ input:checked + .slider:before {
 	border-style: outset;
 	font-size: 1vw;
 	word-wrap: break-word;
-	background: rgba(255,255,255,0.25); 
+	background: rgba(84,80,70,0.55); 
 }
 
 /* *************************************** */
@@ -629,7 +629,6 @@ input:checked + .slider:before {
 	font-size: 1.30vw;
 	margin-left: 8%;
 	margin-top: 10px;
-	overflow-y: scroll;
 	z-index: 1;
 	position: absolute;
 	font-family: 'Amita'; 

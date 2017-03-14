@@ -45,11 +45,11 @@ function init(){
 
   // aquí asignaremos a cada PLAYER del laberinto una posición hasta ser 4. El 5 no tiene posición
 
-  list = [];
-  list.push( {posx: 155, posz: 5, rot: (Math.PI / 2), active: false} );
-  list.push( {posx: 155, posz: 155, rot: (Math.PI / 2) - (Math.PI / 2), active: false} );
-  list.push( {posx: 5, posz: 155, rot: (-1 * Math.PI / 2) - Math.PI / 2, active: false} );
-  list.push( {posx: 5, posz: 5, rot: (-1 * Math.PI) - Math.PI / 2, active: false} );
+  myList = [];
+  myList.push( {posx: 155, posz: 5, rot: (Math.PI / 2), active: false} );
+  myList.push( {posx: 155, posz: 155, rot: (Math.PI / 2) - (Math.PI / 2), active: false} );
+  myList.push( {posx: 5, posz: 155, rot: (-1 * Math.PI / 2) - Math.PI / 2, active: false} );
+  myList.push( {posx: 5, posz: 5, rot: (-1 * Math.PI) - Math.PI / 2, active: false} );
 
   // *********************************************************************************************
 
@@ -82,11 +82,6 @@ function appear_connected(){
   list[0].active = true;
 }
 
-function updatePosList(UPlist){
-
-  list = UPlist;
-}
-
 function new_connection(user_id){
 
   var objectToSend = {}; // nuestro objeto a enviar
@@ -94,13 +89,13 @@ function new_connection(user_id){
   objectToSend.name = guestname;
   objectToSend.avatar = avatarPath;
   objectToSend.info = 1;
-  objectToSend.activePosList = list;
+  objectToSend.activePosList = myList;
   objectToSend.puzzleInfo = getPuzzleInfo();
 
   var unactiveIndex = 0;
-  if(!list[unactiveIndex]) return;
+  if(!myList[unactiveIndex]) return;
 
-  while(list[unactiveIndex].active == true){
+  while(myList[unactiveIndex].active == true){
         unactiveIndex++;
   }
 
@@ -110,7 +105,7 @@ function new_connection(user_id){
   server.sendMessage(objectToSend, send_to); // empezamos el handshaking
 
   // actualizo la cámara que usará el otro player
-  list[unactiveIndex].active = true;
+  myList[unactiveIndex].active = true;
 }
 
 function accept_handshaking(user_id, UPDATED_posList, puzzleInfoList){
@@ -133,19 +128,20 @@ function accept_handshaking(user_id, UPDATED_posList, puzzleInfoList){
   if(!window.server_on || UPDATED_BEFORE)
     return;
 
-  updatePosList(UPDATED_posList);
+  if(UPDATED_posList != null) myList = UPDATED_posList;
+
   // UNA VEZ TENGAMOS LA LISTA DE POSICIONES
   // ACTIVAS, PODREMOS MOVER LA CÁMARA A DONDE
   // TOQUE.
   var unactiveIndex = 0;
-  while(list[unactiveIndex].active == true){
+  while(myList[unactiveIndex].active == true){
     unactiveIndex++;
   }
 
   // solo hay 4 posiciones
   if(unactiveIndex < 4){
-    setCamera(list[unactiveIndex]);
-    list[unactiveIndex].active = true;
+    setCamera(myList[unactiveIndex]);
+    myList[unactiveIndex].active = true;
     
   }else{
     var out = {posx: -1000, posz: -1000, rot: 0, active: true};

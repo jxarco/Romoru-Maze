@@ -596,7 +596,7 @@ function createPNJ(user_id){
 		animation = result.animation;
 		animations.push( animation );
 
-		object.scale.set(0.002, 0.002, 0.002);
+		object.scale.set(0.005, 0.005, 0.005);
 	} );
 }
 

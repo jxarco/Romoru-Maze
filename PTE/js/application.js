@@ -96,7 +96,7 @@ function new_connection(user_id){
   var unactiveIndex = 0;
 
   while(myList[unactiveIndex].active == true){
-        if(unactiveIndex < 4)
+        if(unactiveIndex < 3)
           unactiveIndex++;
         else break;
   }

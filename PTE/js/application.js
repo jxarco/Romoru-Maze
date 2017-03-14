@@ -16,7 +16,7 @@ else{ // en caso de estar en modo local y no usar el host
 
 var random, guestname, avatarPath, num_rand_avatar;
 var room_bool = false, UPDATED_BEFORE = false;
-var list;
+var myList = [];
 window.server_on = false;
 
 init();
@@ -45,7 +45,6 @@ function init(){
 
   // aquí asignaremos a cada PLAYER del laberinto una posición hasta ser 4. El 5 no tiene posición
 
-  myList = [];
   myList.push( {posx: 155, posz: 5, rot: (Math.PI / 2), active: false} );
   myList.push( {posx: 155, posz: 155, rot: (Math.PI / 2) - (Math.PI / 2), active: false} );
   myList.push( {posx: 5, posz: 155, rot: (-1 * Math.PI / 2) - Math.PI / 2, active: false} );
@@ -78,8 +77,8 @@ function appear_connected(){
 
   // EL PRIMERO QUE SE CONECTE NO NECESITA 
   // NINGUN TIPO DE HANDSHAKING
-  setCamera(list[0]);
-  list[0].active = true;
+  setCamera(myList[0]);
+  myList[0].active = true;
 }
 
 function new_connection(user_id){
@@ -93,7 +92,6 @@ function new_connection(user_id){
   objectToSend.puzzleInfo = getPuzzleInfo();
 
   var unactiveIndex = 0;
-  if(!myList[unactiveIndex]) return;
 
   while(myList[unactiveIndex].active == true){
         unactiveIndex++;
@@ -532,6 +530,8 @@ function keyListener(event){
   if(keyCode == 27){
     document.getElementById("avatarslist").style.display = "none";
     document.getElementById("right_info").style.display = "none";
+    document.getElementById("instructions").innerHTML = information();
+    document.getElementById("solution").style.display = "none";
 
     hideDivs();
     closeChat();

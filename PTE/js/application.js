@@ -90,13 +90,15 @@ function new_connection(user_id){
   objectToSend.info = 1;
   objectToSend.activePosList = myList;
   objectToSend.howToDoors = getNameFromOpenedDoors();
-  console.log( getNameFromOpenedDoors() )
+
   objectToSend.puzzleInfo = getPuzzleInfo();
 
   var unactiveIndex = 0;
 
   while(myList[unactiveIndex].active == true){
-        unactiveIndex++;
+        if(unactiveIndex < 4)
+          unactiveIndex++;
+        else break;
   }
 
   // esto podria ser un array

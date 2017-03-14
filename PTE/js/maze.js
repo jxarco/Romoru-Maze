@@ -23,6 +23,7 @@ var animations = [];
 
 // DOORS
 var PIECES = [];
+var howAreDoors = [];
 
 var scene, camera, renderer, controls, startTime;
 var MAT, MAT2, data;
@@ -570,6 +571,23 @@ function updateDoorsInMatrix(i, j){
 	MAT2[i][j] = -1;
 }
 
+function appendStringDoor(){
+
+	var door_name = "red_" + activeObject.position.x + "_" + activeObject.position.z;
+	howAreDoors.push( door_name );
+}
+
+function getNameFromOpenedDoors(){
+	return howAreDoors;
+}
+
+function setDoorsFromList(list){
+
+	for (i in list){
+		scene.getObjectByName(list[i]).position.y = -3.45;
+	}
+}
+
 function getPuzzleInfo(){
 	var INFO = [];
 	
@@ -629,11 +647,15 @@ function isSolution(){
 					y: -3.45
 		}, 6000 ).easing( TWEEN.Easing.Linear.None).start(); // efecto para bajar
 
+	// añadir a la lista de puertas abiertas
+	var aux = appendStringDoor();
 
+	// update doors in game
 	var doorDown = {
 		x: activeObject.position.x,
 		z: activeObject.position.z,
-		info: 6
+		info: 6,
+		in_game: true
 	}
 
 	if(window.server_on) server.sendMessage(doorDown);
@@ -648,6 +670,7 @@ function isSolution(){
 				if(MAT2[i][j] == 3){
 					MAT2[i][j] = -1;
 
+					// update doors in matrix
 					var toChange = {
 						i: i,
 						j: j,
@@ -662,15 +685,21 @@ function isSolution(){
 	}, 6050);
 }
 
-function openSelectedDoor(x, z){
+function openSelectedDoor(x, z, in_game){
 
 	var door = scene.getObjectByName("red_" + x + "_" + z);
+	door.how = "opened";
 
 	if(!door) return;
 
-	new TWEEN.Tween( door.position ).to( {
+	if(in_game){
+
+		new TWEEN.Tween( door.position ).to( {
 					y: -3.45
-	}, 6000 ).easing( TWEEN.Easing.Linear.None).start(); // efecto para bajar
+		}, 6000 ).easing( TWEEN.Easing.Linear.None).start(); // efecto para bajar
+	}else{
+		door.position.y = -3.45;
+	}
 }
 
 function intersect(){

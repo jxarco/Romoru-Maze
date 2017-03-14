@@ -51,7 +51,7 @@ server.on_message = function( user_id, message){
 			updateDoorsInMatrix(objectReceived.i, objectReceived.j);
 			return;
 		case 6:
-			openSelectedDoor(objectReceived.x, objectReceived.z);
+			openSelectedDoor(objectReceived.x, objectReceived.z, objectReceived.in_game);
 			return;
 	}
 
@@ -77,7 +77,7 @@ server.on_message = function( user_id, message){
 		// su registro:
 
 		if(objectReceived.info == 1){
-			accept_handshaking(user_id, objectReceived.activePosList, objectReceived.puzzleInfo);
+			accept_handshaking(user_id, objectReceived.activePosList, objectReceived.puzzleInfo, objectReceived.howToDoors);
 		}
 
 		// añadir posibilidad de chat privado para cada

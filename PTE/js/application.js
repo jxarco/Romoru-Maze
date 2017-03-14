@@ -89,6 +89,8 @@ function new_connection(user_id){
   objectToSend.avatar = avatarPath;
   objectToSend.info = 1;
   objectToSend.activePosList = myList;
+  objectToSend.howToDoors = getNameFromOpenedDoors();
+  console.log( getNameFromOpenedDoors() )
   objectToSend.puzzleInfo = getPuzzleInfo();
 
   var unactiveIndex = 0;
@@ -106,7 +108,7 @@ function new_connection(user_id){
   myList[unactiveIndex].active = true;
 }
 
-function accept_handshaking(user_id, UPDATED_posList, puzzleInfoList){
+function accept_handshaking(user_id, UPDATED_posList, puzzleInfoList, stringDoors){
   var objectToSend = {}; // nuestro objeto a enviar
 
   objectToSend.name = guestname;
@@ -117,6 +119,7 @@ function accept_handshaking(user_id, UPDATED_posList, puzzleInfoList){
 
   // actualizar rotaciones del puzzle
   setPuzzleRotation(puzzleInfoList);
+  setDoorsFromList(stringDoors);
 
   /*
   SOLO CUANDO NO HAYAMOS ACTUALIZADO YA.

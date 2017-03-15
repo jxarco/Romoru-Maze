@@ -251,13 +251,13 @@ function generateMeshHints(){
 
 	// ORDER IS IMPORTANT!!!
 	list.push( twinTowerGroup );
-	list.push( diamondMesh );
-	list.push( ringMesh );
+	list.push( pacmanMesh );
 	list.push( planetMesh );
 	list.push( piGroup );
-	list.push( pacmanMesh );
-	list.push( mikeyGroup );
 	list.push( pyramidMesh );
+	list.push( diamondMesh );
+	list.push( ringMesh );
+	list.push( mikeyGroup );
 	
 	return list;
 }
@@ -294,11 +294,11 @@ function MODIFY_MATRIX( m ){
 
 	m[22][2] = 2;
 	m[8][2] = 2;
-	m[19][3] = 2;
-	m[13][9] = 2;
+	m[19][7] = 2;
+	m[15][3] = 2;
 	m[2][24] = 2;
-	m[5][19] = 2;
-	m[31][21] = 2;
+	m[11][19] = 2;
+	m[21][17] = 2;
 	m[28][22] = 2;
 
 	// RED DOTS
